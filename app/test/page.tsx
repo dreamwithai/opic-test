@@ -477,12 +477,12 @@ export default function TestPage() {
 
       const recognition = new SpeechRecognition()
       
-      // STT 정확도 향상을 위한 고급 설정 (모바일 최적화)
+      // 모바일 최적화 설정
       if (isMobile) {
-        // 모바일에서는 더 안정적인 설정 사용
-        recognition.continuous = false
-        recognition.interimResults = false
-        addDebugLog('📱 Mobile Mode: continuous=false, interimResults=false')
+        // 모바일에서도 continuous 모드 시도 (더 오래 지속되도록)
+        recognition.continuous = true
+        recognition.interimResults = false  // 모바일에서는 interim 결과만 비활성화
+        addDebugLog('📱 Mobile Mode: continuous=true, interimResults=false')
       } else {
         recognition.continuous = true
         recognition.interimResults = true
@@ -609,12 +609,17 @@ export default function TestPage() {
 
       recognition.onend = () => {
         addDebugLog('🎤 STT Ended')
-        // 모바일이 아니고 녹음이 계속 진행 중이면 STT도 다시 시작
-        if (!isMobile && isRecording) {
+        // 녹음이 계속 진행 중이면 STT도 다시 시작 (모바일과 데스크톱 모두)
+        if (isRecording) {
           try {
-            recognition.start()
+            addDebugLog('🔄 Auto-restarting STT...')
+            setTimeout(() => {
+              if (isRecording && speechRecognition) {
+                speechRecognition.start()
+                addDebugLog('🔄 STT restarted successfully')
+              }
+            }, 100) // 짧은 지연 후 재시작
           } catch (error) {
-            // STT 재시작 실패는 무시 (정상적일 수 있음)
             addDebugLog(`🔄 STT restart failed: ${error}`)
           }
         }
