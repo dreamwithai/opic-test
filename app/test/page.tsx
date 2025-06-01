@@ -460,14 +460,30 @@ export default function TestPage() {
       if (!SpeechRecognition) {
         setIsSTTSupported(false)
         setSTTError('이 브라우저는 음성 인식을 지원하지 않습니다.')
+        console.log('🔍 SpeechRecognition: Not Available - 브라우저가 지원하지 않음')
         return null
       }
 
+      // 모바일 환경 감지 추가
+      const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)
+      console.log('📱 Device Detection:', isMobile ? 'Mobile' : 'Desktop')
+      console.log('🌐 User Agent:', navigator.userAgent)
+      console.log('🔒 Protocol:', location.protocol)
+      console.log('🏠 Hostname:', location.hostname)
+
       const recognition = new SpeechRecognition()
       
-      // STT 정확도 향상을 위한 고급 설정
-      recognition.continuous = true
-      recognition.interimResults = true
+      // STT 정확도 향상을 위한 고급 설정 (모바일 최적화)
+      if (isMobile) {
+        // 모바일에서는 더 안정적인 설정 사용
+        recognition.continuous = false
+        recognition.interimResults = false
+        console.log('📱 Mobile Mode: continuous=false, interimResults=false')
+      } else {
+        recognition.continuous = true
+        recognition.interimResults = true
+        console.log('💻 Desktop Mode: continuous=true, interimResults=true')
+      }
       recognition.lang = 'en-US' // 영어 설정 (OPIc는 영어 시험)
       
       // 추가 정확도 향상 설정 (타입 안전성을 위해 any로 캐스팅)
@@ -499,8 +515,10 @@ export default function TestPage() {
         try {
           grammarList.addFromString(opic_phrases, 1)
           enhancedRecognition.grammars = grammarList
+          console.log('📝 Grammar hints applied successfully')
         } catch (e) {
           // 문법 힌트 적용 실패는 정상적일 수 있음 (무시)
+          console.log('📝 Grammar hints not supported, continuing without them')
         }
       }
 
@@ -534,16 +552,19 @@ export default function TestPage() {
 
         // 최종 텍스트 업데이트 (신뢰도 기반 필터링)
         if (finalTranscript && bestConfidence > 0.3) { // 30% 이상 신뢰도만 채택
+          console.log('🎤 STT Result:', finalTranscript, `(confidence: ${bestConfidence.toFixed(2)})`)
           setRecognizedText(prev => prev + finalTranscript)
         }
         
-        // 임시 텍스트 업데이트 (실시간 표시용)
-        setInterimText(interimTranscript)
+        // 임시 텍스트 업데이트 (실시간 표시용) - 모바일이 아닐 때만
+        if (!isMobile) {
+          setInterimText(interimTranscript)
+        }
       }
 
       // 에러 처리
       recognition.onerror = (event: SpeechRecognitionErrorEvent) => {
-        console.error('STT 오류:', event.error)
+        console.error('🚨 STT 오류:', event.error, event.message)
         
         // 상세한 에러 메시지
         let errorMessage = `음성 인식 오류: ${event.error}`
@@ -555,13 +576,21 @@ export default function TestPage() {
             errorMessage = '마이크에 접근할 수 없습니다. 마이크 권한을 확인해주세요.'
             break
           case 'not-allowed':
-            errorMessage = '마이크 사용이 차단되었습니다. 브라우저 설정에서 마이크 권한을 허용해주세요.'
+            errorMessage = isMobile 
+              ? '마이크 사용이 차단되었습니다. 브라우저 주소창 옆 설정에서 마이크 권한을 허용해주세요.'
+              : '마이크 사용이 차단되었습니다. 브라우저 설정에서 마이크 권한을 허용해주세요.'
             break
           case 'network':
             errorMessage = '네트워크 오류가 발생했습니다. 인터넷 연결을 확인해주세요.'
             break
           case 'bad-grammar':
             errorMessage = '음성 인식 문법 오류입니다.'
+            break
+          case 'service-not-allowed':
+            errorMessage = '음성 인식 서비스가 차단되었습니다. 브라우저 설정을 확인해주세요.'
+            break
+          case 'language-not-supported':
+            errorMessage = '지원되지 않는 언어입니다.'
             break
         }
         
@@ -570,26 +599,30 @@ export default function TestPage() {
 
       // STT 시작/종료 이벤트
       recognition.onstart = () => {
+        console.log('🎤 STT Started successfully')
         setSTTError(null)
       }
 
       recognition.onend = () => {
-        // 녹음이 계속 진행 중이면 STT도 다시 시작
-        if (isRecording) {
+        console.log('🎤 STT Ended')
+        // 모바일이 아니고 녹음이 계속 진행 중이면 STT도 다시 시작
+        if (!isMobile && isRecording) {
           try {
             recognition.start()
           } catch (error) {
             // STT 재시작 실패는 무시 (정상적일 수 있음)
+            console.log('🔄 STT restart failed:', error)
           }
         }
       }
 
       setSpeechRecognition(recognition)
       setIsSTTSupported(true)
+      console.log('✅ SpeechRecognition initialized successfully', isMobile ? '(Mobile Mode)' : '(Desktop Mode)')
       return recognition
       
     } catch (error) {
-      console.error('STT 초기화 실패:', error)
+      console.error('❌ STT 초기화 실패:', error)
       setIsSTTSupported(false)
       setSTTError('음성 인식 초기화에 실패했습니다.')
       return null
