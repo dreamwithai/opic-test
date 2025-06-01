@@ -611,17 +611,44 @@ export default function TestPage() {
         addDebugLog('🎤 STT Ended')
         addDebugLog(`🔍 Debug: isRecording=${isRecording}, speechRecognition exists=${!!speechRecognition}`)
         
-        // 녹음이 계속 진행 중이면 STT도 다시 시작 (모바일과 데스크톱 모두)
-        if (isRecording) {
+        // 현재 녹음 상태를 별도 변수로 캐시 (상태 변경 전에)
+        const wasRecording = isRecording
+        const recognitionExists = !!speechRecognition
+        
+        addDebugLog(`🔍 Cached state: wasRecording=${wasRecording}, recognitionExists=${recognitionExists}`)
+        
+        // 녹음이 계속 진행 중이면 STT도 다시 시작 (더 적극적인 재시작)
+        if (wasRecording || isRecording) {
           addDebugLog('✅ Restart condition met - attempting restart...')
           try {
             addDebugLog('🔄 Auto-restarting STT...')
             setTimeout(() => {
               addDebugLog(`🔍 Inside timeout: isRecording=${isRecording}, speechRecognition exists=${!!speechRecognition}`)
-              if (isRecording && speechRecognition) {
+              
+              // STT 객체가 없으면 다시 초기화
+              if (!speechRecognition) {
+                addDebugLog('🔧 Reinitializing Speech Recognition...')
+                const newRecognition = initializeSpeechRecognition()
+                if (newRecognition && (isRecording || wasRecording)) {
+                  addDebugLog('🚀 Starting newly initialized STT...')
+                  newRecognition.start()
+                  addDebugLog('🔄 STT restarted with new instance')
+                }
+              } else if (isRecording || wasRecording) {
                 addDebugLog('🚀 Calling speechRecognition.start()...')
-                speechRecognition.start()
-                addDebugLog('🔄 STT restarted successfully')
+                try {
+                  speechRecognition.start()
+                  addDebugLog('🔄 STT restarted successfully')
+                } catch (startError) {
+                  addDebugLog(`❌ STT start failed: ${startError}`)
+                  // STT 시작 실패 시 객체 재초기화 시도
+                  addDebugLog('🔧 Trying to reinitialize after start failure...')
+                  const newRecognition = initializeSpeechRecognition()
+                  if (newRecognition) {
+                    newRecognition.start()
+                    addDebugLog('🔄 STT restarted with new instance after error')
+                  }
+                }
               } else {
                 addDebugLog('❌ Restart condition failed inside timeout')
               }
@@ -630,7 +657,7 @@ export default function TestPage() {
             addDebugLog(`🔄 STT restart failed: ${error}`)
           }
         } else {
-          addDebugLog('❌ Not restarting - isRecording is false')
+          addDebugLog('❌ Not restarting - both current and cached recording state are false')
         }
       }
 
