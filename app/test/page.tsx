@@ -609,19 +609,28 @@ export default function TestPage() {
 
       recognition.onend = () => {
         addDebugLog('🎤 STT Ended')
+        addDebugLog(`🔍 Debug: isRecording=${isRecording}, speechRecognition exists=${!!speechRecognition}`)
+        
         // 녹음이 계속 진행 중이면 STT도 다시 시작 (모바일과 데스크톱 모두)
         if (isRecording) {
+          addDebugLog('✅ Restart condition met - attempting restart...')
           try {
             addDebugLog('🔄 Auto-restarting STT...')
             setTimeout(() => {
+              addDebugLog(`🔍 Inside timeout: isRecording=${isRecording}, speechRecognition exists=${!!speechRecognition}`)
               if (isRecording && speechRecognition) {
+                addDebugLog('🚀 Calling speechRecognition.start()...')
                 speechRecognition.start()
                 addDebugLog('🔄 STT restarted successfully')
+              } else {
+                addDebugLog('❌ Restart condition failed inside timeout')
               }
             }, 100) // 짧은 지연 후 재시작
           } catch (error) {
             addDebugLog(`🔄 STT restart failed: ${error}`)
           }
+        } else {
+          addDebugLog('❌ Not restarting - isRecording is false')
         }
       }
 
@@ -749,11 +758,17 @@ export default function TestPage() {
   }
 
   const handleStartRecording = () => {
+    addDebugLog('🔴 Recording START button clicked')
+    setIsRecording(true)
     startActualRecording()
+    startSpeechRecognition()
   }
 
   const handleStopRecording = () => {
+    addDebugLog('🟥 Recording STOP button clicked')
+    setIsRecording(false)
     stopActualRecording()
+    stopSpeechRecognition()
   }
 
   const handleResetRecording = () => {
