@@ -139,6 +139,10 @@ export default function TestPage() {
   const [isSTTSupported, setIsSTTSupported] = useState(false)
   const [sttError, setSTTError] = useState<string | null>(null)
 
+  // 디버그 로그 상태 추가 (모바일 디버깅용)
+  const [debugLogs, setDebugLogs] = useState<string[]>([])
+  const [showDebugLogs, setShowDebugLogs] = useState(false)
+
   // 모든 함수들을 useEffect보다 먼저 정의
   const loadQuestions = async (category: string) => {
     // 이미 로딩 중이거나 로딩 완료된 경우 중복 실행 방지
@@ -460,16 +464,16 @@ export default function TestPage() {
       if (!SpeechRecognition) {
         setIsSTTSupported(false)
         setSTTError('이 브라우저는 음성 인식을 지원하지 않습니다.')
-        console.log('🔍 SpeechRecognition: Not Available - 브라우저가 지원하지 않음')
+        addDebugLog('🔍 SpeechRecognition: Not Available - 브라우저가 지원하지 않음')
         return null
       }
 
       // 모바일 환경 감지 추가
       const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)
-      console.log('📱 Device Detection:', isMobile ? 'Mobile' : 'Desktop')
-      console.log('🌐 User Agent:', navigator.userAgent)
-      console.log('🔒 Protocol:', location.protocol)
-      console.log('🏠 Hostname:', location.hostname)
+      addDebugLog(`📱 Device Detection: ${isMobile ? 'Mobile' : 'Desktop'}`)
+      addDebugLog(`🌐 User Agent: ${navigator.userAgent}`)
+      addDebugLog(`🔒 Protocol: ${location.protocol}`)
+      addDebugLog(`🏠 Hostname: ${location.hostname}`)
 
       const recognition = new SpeechRecognition()
       
@@ -478,11 +482,11 @@ export default function TestPage() {
         // 모바일에서는 더 안정적인 설정 사용
         recognition.continuous = false
         recognition.interimResults = false
-        console.log('📱 Mobile Mode: continuous=false, interimResults=false')
+        addDebugLog('📱 Mobile Mode: continuous=false, interimResults=false')
       } else {
         recognition.continuous = true
         recognition.interimResults = true
-        console.log('💻 Desktop Mode: continuous=true, interimResults=true')
+        addDebugLog('💻 Desktop Mode: continuous=true, interimResults=true')
       }
       recognition.lang = 'en-US' // 영어 설정 (OPIc는 영어 시험)
       
@@ -515,10 +519,10 @@ export default function TestPage() {
         try {
           grammarList.addFromString(opic_phrases, 1)
           enhancedRecognition.grammars = grammarList
-          console.log('📝 Grammar hints applied successfully')
+          addDebugLog('📝 Grammar hints applied successfully')
         } catch (e) {
           // 문법 힌트 적용 실패는 정상적일 수 있음 (무시)
-          console.log('📝 Grammar hints not supported, continuing without them')
+          addDebugLog('📝 Grammar hints not supported, continuing without them')
         }
       }
 
@@ -552,7 +556,7 @@ export default function TestPage() {
 
         // 최종 텍스트 업데이트 (신뢰도 기반 필터링)
         if (finalTranscript && bestConfidence > 0.3) { // 30% 이상 신뢰도만 채택
-          console.log('🎤 STT Result:', finalTranscript, `(confidence: ${bestConfidence.toFixed(2)})`)
+          addDebugLog(`🎤 STT Result: ${finalTranscript} (confidence: ${bestConfidence.toFixed(2)})`)
           setRecognizedText(prev => prev + finalTranscript)
         }
         
@@ -564,7 +568,7 @@ export default function TestPage() {
 
       // 에러 처리
       recognition.onerror = (event: SpeechRecognitionErrorEvent) => {
-        console.error('🚨 STT 오류:', event.error, event.message)
+        addDebugLog(`🚨 STT 오류: ${event.error} ${event.message}`)
         
         // 상세한 에러 메시지
         let errorMessage = `음성 인식 오류: ${event.error}`
@@ -599,30 +603,30 @@ export default function TestPage() {
 
       // STT 시작/종료 이벤트
       recognition.onstart = () => {
-        console.log('🎤 STT Started successfully')
+        addDebugLog('🎤 STT Started successfully')
         setSTTError(null)
       }
 
       recognition.onend = () => {
-        console.log('🎤 STT Ended')
+        addDebugLog('🎤 STT Ended')
         // 모바일이 아니고 녹음이 계속 진행 중이면 STT도 다시 시작
         if (!isMobile && isRecording) {
           try {
             recognition.start()
           } catch (error) {
             // STT 재시작 실패는 무시 (정상적일 수 있음)
-            console.log('🔄 STT restart failed:', error)
+            addDebugLog(`🔄 STT restart failed: ${error}`)
           }
         }
       }
 
       setSpeechRecognition(recognition)
       setIsSTTSupported(true)
-      console.log('✅ SpeechRecognition initialized successfully', isMobile ? '(Mobile Mode)' : '(Desktop Mode)')
+      addDebugLog(`✅ SpeechRecognition initialized successfully ${isMobile ? '(Mobile Mode)' : '(Desktop Mode)'}`)
       return recognition
       
     } catch (error) {
-      console.error('❌ STT 초기화 실패:', error)
+      addDebugLog(`❌ STT 초기화 실패: ${error}`)
       setIsSTTSupported(false)
       setSTTError('음성 인식 초기화에 실패했습니다.')
       return null
@@ -636,12 +640,12 @@ export default function TestPage() {
         // 모바일에서 명시적 마이크 권한 요청
         const requestMicrophonePermission = async () => {
           try {
-            console.log('🎤 Requesting microphone permission...')
+            addDebugLog('🎤 Requesting microphone permission...')
             await navigator.mediaDevices.getUserMedia({ audio: true })
-            console.log('✅ Microphone permission granted')
+            addDebugLog('✅ Microphone permission granted')
             return true
           } catch (error) {
-            console.error('❌ Microphone permission denied:', error)
+            addDebugLog(`❌ Microphone permission denied: ${error}`)
             setSTTError('마이크 권한이 필요합니다. 브라우저 설정에서 마이크 권한을 허용해주세요.')
             return false
           }
@@ -654,17 +658,17 @@ export default function TestPage() {
 
           setRecognizedText('') // 기존 텍스트 초기화
           setInterimText('') // 임시 텍스트도 초기화
-          console.log('🚀 Starting Speech Recognition...')
+          addDebugLog('🚀 Starting Speech Recognition...')
           speechRecognition.start()
         }
 
         startSTT()
       } catch (error) {
-        console.error('❌ STT 시작 실패:', error)
+        addDebugLog(`❌ STT 시작 실패: ${error}`)
         setSTTError('음성 인식 시작에 실패했습니다.')
       }
     } else {
-      console.error('❌ STT not supported or not initialized')
+      addDebugLog('❌ STT not supported or not initialized')
       setSTTError('음성 인식이 지원되지 않거나 초기화되지 않았습니다.')
     }
   }
@@ -694,7 +698,7 @@ export default function TestPage() {
 
     const audioFileName = questions[currentQuestionIndex]?.listen
     if (!audioFileName) {
-      console.warn('No audio file specified for this question')
+      addDebugLog('No audio file specified for this question')
       return
     }
 
@@ -726,18 +730,16 @@ export default function TestPage() {
     })
 
     audio.addEventListener('error', (e) => {
-      console.error('Audio playback error:', e)
+      addDebugLog(`Audio playback error: ${e}`)
       setIsPlaying(false)
       setAudioElement(null)
-      alert(`오디오 파일을 재생할 수 없습니다.\n경로: ${audioPath}\n파일이 존재하는지 확인해주세요.`)
     })
 
     // 오디오 재생 시작
     audio.play().catch(error => {
-      console.error('Failed to play audio:', error)
+      addDebugLog(`Failed to play audio: ${error}`)
       setIsPlaying(false)
       setAudioElement(null)
-      alert('오디오 재생에 실패했습니다.')
     })
   }
 
@@ -817,6 +819,14 @@ export default function TestPage() {
     return question.Theme || question.theme || question.q_theme || ''
   }
 
+  // 디버그 로그 추가 함수
+  const addDebugLog = (message: string) => {
+    const timestamp = new Date().toLocaleTimeString()
+    const logMessage = `[${timestamp}] ${message}`
+    setDebugLogs(prev => [...prev.slice(-4), logMessage]) // 최근 5개만 유지
+    console.log(logMessage)
+  }
+
   // 모든 useEffect를 함수 선언 이후에 배치
   // Query parameters에서 타입과 카테고리 읽기
   useEffect(() => {
@@ -861,7 +871,7 @@ export default function TestPage() {
             sessionStorage.removeItem(sessionKey)
           }
         } catch (error) {
-          console.warn('세션 데이터 파싱 실패:', error)
+          addDebugLog(`세션 데이터 파싱 실패: ${error}`)
           sessionStorage.removeItem(sessionKey)
         }
       }
@@ -1054,6 +1064,38 @@ export default function TestPage() {
             <span className="mr-2">←</span>
             <span className="font-medium">뒤로가기</span>
           </button>
+
+          {/* 디버그 로그 토글 버튼 (모바일용) */}
+          <div className="mb-4">
+            <button
+              onClick={() => setShowDebugLogs(!showDebugLogs)}
+              className="bg-gray-500 hover:bg-gray-600 text-white px-3 py-1 rounded text-sm"
+            >
+              🔍 디버그 로그 {showDebugLogs ? '숨기기' : '보기'}
+            </button>
+          </div>
+
+          {/* 디버그 로그 표시 */}
+          {showDebugLogs && (
+            <div className="mb-6 p-4 bg-black text-green-400 rounded-lg text-xs font-mono max-h-40 overflow-y-auto">
+              <h4 className="text-white font-bold mb-2">🔍 실시간 디버그 로그:</h4>
+              {debugLogs.length === 0 ? (
+                <p className="text-gray-400">로그가 없습니다.</p>
+              ) : (
+                debugLogs.map((log, index) => (
+                  <div key={index} className="mb-1">
+                    {log}
+                  </div>
+                ))
+              )}
+              <button
+                onClick={() => setDebugLogs([])}
+                className="mt-2 bg-red-600 hover:bg-red-700 text-white px-2 py-1 rounded text-xs"
+              >
+                로그 지우기
+              </button>
+            </div>
+          )}
 
           {/* Breadcrumb */}
           <div className="flex items-center text-sm text-gray-600 mb-4">
@@ -1414,13 +1456,13 @@ export default function TestPage() {
                                 if (sessionData) {
                                   try {
                                     const parsed = JSON.parse(sessionData)
-                                    console.log('📦 현재 세션 데이터:', parsed)
+                                    addDebugLog('📦 현재 세션 데이터:')
                                     alert(`세션 데이터가 콘솔에 출력되었습니다.\n타임스탬프: ${parsed.timestamp ? new Date(parsed.timestamp).toLocaleString() : '없음'}`)
                                   } catch (e) {
-                                    console.log('📦 현재 세션 데이터 (파싱 실패):', sessionData)
+                                    addDebugLog('세션 데이터 (파싱 실패):')
                                   }
                                 } else {
-                                  alert('세션에 저장된 데이터가 없습니다.')
+                                  addDebugLog('세션에 저장된 데이터가 없습니다.')
                                 }
                               }}
                               className="mt-1 px-2 py-1 bg-purple-500 text-white rounded text-xs hover:bg-purple-600"
