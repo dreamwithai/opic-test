@@ -633,13 +633,39 @@ export default function TestPage() {
   const startSpeechRecognition = () => {
     if (speechRecognition && isSTTSupported) {
       try {
-        setRecognizedText('') // 기존 텍스트 초기화
-        setInterimText('') // 임시 텍스트도 초기화
-        speechRecognition.start()
+        // 모바일에서 명시적 마이크 권한 요청
+        const requestMicrophonePermission = async () => {
+          try {
+            console.log('🎤 Requesting microphone permission...')
+            await navigator.mediaDevices.getUserMedia({ audio: true })
+            console.log('✅ Microphone permission granted')
+            return true
+          } catch (error) {
+            console.error('❌ Microphone permission denied:', error)
+            setSTTError('마이크 권한이 필요합니다. 브라우저 설정에서 마이크 권한을 허용해주세요.')
+            return false
+          }
+        }
+
+        // 마이크 권한 확인 후 STT 시작
+        const startSTT = async () => {
+          const hasPermission = await requestMicrophonePermission()
+          if (!hasPermission) return
+
+          setRecognizedText('') // 기존 텍스트 초기화
+          setInterimText('') // 임시 텍스트도 초기화
+          console.log('🚀 Starting Speech Recognition...')
+          speechRecognition.start()
+        }
+
+        startSTT()
       } catch (error) {
-        console.error('STT 시작 실패:', error)
+        console.error('❌ STT 시작 실패:', error)
         setSTTError('음성 인식 시작에 실패했습니다.')
       }
+    } else {
+      console.error('❌ STT not supported or not initialized')
+      setSTTError('음성 인식이 지원되지 않거나 초기화되지 않았습니다.')
     }
   }
 
