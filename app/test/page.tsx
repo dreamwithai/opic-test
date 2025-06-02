@@ -526,11 +526,13 @@ export default function TestPage() {
         }
       }
 
-      // 음성 인식 결과 처리 (다중 대안 지원)
+      // 음성 인식 결과 처리
       recognition.onresult = (event: SpeechRecognitionEvent) => {
         let finalTranscript = ''
         let interimTranscript = ''
         let bestConfidence = 0
+
+        addDebugLog(`🎧 STT Result Event: ${event.results.length} results`)
 
         for (let i = event.resultIndex; i < event.results.length; i++) {
           const result = event.results[i]
@@ -547,6 +549,8 @@ export default function TestPage() {
           const confidence = bestAlternative.confidence
           bestConfidence = Math.max(bestConfidence, confidence)
           
+          addDebugLog(`🎧 Processing: "${transcript}" (isFinal: ${result.isFinal}, confidence: ${confidence.toFixed(2)})`)
+          
           if (result.isFinal) {
             finalTranscript += transcript
           } else {
@@ -554,10 +558,20 @@ export default function TestPage() {
           }
         }
 
-        // 최종 텍스트 업데이트 (신뢰도 기반 필터링)
-        if (finalTranscript && bestConfidence > 0.3) { // 30% 이상 신뢰도만 채택
-          addDebugLog(`🎤 STT Result: ${finalTranscript} (confidence: ${bestConfidence.toFixed(2)})`)
-          setRecognizedText(prev => prev + finalTranscript)
+        // 더 관대한 최종 텍스트 업데이트 (신뢰도 기준 대폭 완화)
+        if (finalTranscript) {
+          if (bestConfidence > 0.1) { // 10% 이상 신뢰도만 채택 (기존 30%에서 완화)
+            addDebugLog(`✅ Saving STT Result: "${finalTranscript}" (confidence: ${bestConfidence.toFixed(2)})`)
+            setRecognizedText(prev => {
+              const newText = prev + finalTranscript + ' '
+              addDebugLog(`📝 Updated recognized text length: ${newText.length} chars`)
+              return newText
+            })
+          } else {
+            addDebugLog(`⚠️ Low confidence result ignored: "${finalTranscript}" (confidence: ${bestConfidence.toFixed(2)})`)
+          }
+        } else if (interimTranscript) {
+          addDebugLog(`👂 Interim result: "${interimTranscript}"`)
         }
         
         // 임시 텍스트 업데이트 (실시간 표시용) - 모바일이 아닐 때만
