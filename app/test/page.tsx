@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { useRouter, useSearchParams } from 'next/navigation'
+import { getAudioUrl } from '@/lib/supabase'
 
 // Web Speech API 타입 정의
 interface SpeechRecognition extends EventTarget {
@@ -105,11 +106,11 @@ export default function TestPage() {
   
   // 모든 state 선언을 최상단에 배치
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0)
-  const [questions, setQuestions] = useState<Question[]>(defaultQuestions)
+  const [questions, setQuestions] = useState<Question[]>([])
   const [loading, setLoading] = useState(true)
-  const [selectedType, setSelectedType] = useState<string>('')
-  const [selectedCategory, setSelectedCategory] = useState<string>('')
-  const [selectedLevel, setSelectedLevel] = useState<string>('IM2')
+  const [selectedType, setSelectedType] = useState('선택주제')
+  const [selectedCategory, setSelectedCategory] = useState('')
+  const [selectedLevel, setSelectedLevel] = useState('IM2')
   const [isRecording, setIsRecording] = useState(false)
   const [recordingTime, setRecordingTime] = useState(0)
   const [listenCount, setListenCount] = useState(0)
@@ -134,10 +135,12 @@ export default function TestPage() {
   
   // STT (Speech-to-Text) 관련 상태 추가
   const [speechRecognition, setSpeechRecognition] = useState<SpeechRecognition | null>(null)
-  const [recognizedText, setRecognizedText] = useState<string>('')
-  const [interimText, setInterimText] = useState<string>('')
+  const [recognizedText, setRecognizedText] = useState('')
+  const [interimText, setInterimText] = useState('')
   const [isSTTSupported, setIsSTTSupported] = useState(false)
   const [sttError, setSTTError] = useState<string | null>(null)
+  const [isSTTRunning, setIsSTTRunning] = useState(false)
+  const [userWantsToRecord, setUserWantsToRecord] = useState(false) // 사용자 녹음 의도 추적
 
   // 디버그 로그 상태 추가 (모바일 디버깅용)
   const [debugLogs, setDebugLogs] = useState<string[]>([])
@@ -145,35 +148,34 @@ export default function TestPage() {
 
   // 모든 함수들을 useEffect보다 먼저 정의
   const loadQuestions = async (category: string) => {
-    // 이미 로딩 중이거나 로딩 완료된 경우 중복 실행 방지
-    if (isLoading || questionsLoaded) {
-      return
-    }
-    
-    setIsLoading(true)
     setLoading(true)
+    setIsLoading(true)
+    
     try {
-      let fileName = ''
+      // JSON 파일명 결정을 문제 타입으로 변경
+      let questionType = ''
       switch (category) {
         case 'S':
-          fileName = 'topic.json'
-          break
-        case 'RP':
-          fileName = 'roleplay.json'
+          questionType = '선택주제'
           break
         case 'C':
-          fileName = 'combination.json'
+          questionType = '돌발주제'
+          break
+        case 'RP':
+          questionType = '롤플레이'
           break
         case 'MOCK':
-          fileName = 'mock_test.json'
+          questionType = '모의고사'
           break
         default:
-          fileName = 'topic.json'
+          questionType = '선택주제'
       }
 
-      const response = await fetch(`/data/${fileName}`)
+      // API 호출로 변경 (/data/ 직접 접근 대신 /api/questions 사용)
+      const apiUrl = `/api/questions?type=${encodeURIComponent(questionType)}`
+      const response = await fetch(apiUrl)
       if (!response.ok) {
-        throw new Error(`Failed to load ${fileName}`)
+        throw new Error(`Failed to load ${questionType} data: ${response.status} ${response.statusText}`)
       }
       
       const data = await response.json()
@@ -195,6 +197,9 @@ export default function TestPage() {
         // questions 배열이 있는 구조
         extractedQuestions = data.questions
       }
+      
+      console.log(`🔍 DEBUG: Extracted ${extractedQuestions.length} questions`)
+      console.log(`🔍 DEBUG: First few questions:`, extractedQuestions.slice(0, 3))
 
       if (extractedQuestions.length > 0) {
         // 카테고리별 문제 선택 로직
@@ -220,41 +225,23 @@ export default function TestPage() {
             selectedQuestions = questionsForSelectedId
           }
         } else if (category === 'C') {
-          // 돌발주제: 랜덤하게 3개 문제 선택 (각기 다른 테마에서)
-          const groupedByTheme: { [key: string]: Question[] } = {}
-          extractedQuestions.forEach(q => {
-            const theme = q.theme || q.Theme || q.q_theme
-            if (theme && !groupedByTheme[theme]) {
-              groupedByTheme[theme] = []
-            }
-            if (theme) {
-              groupedByTheme[theme].push(q)
-            }
-          })
+          // 돌발주제: 선택주제와 동일하게 랜덤하게 q_id 1개 선택 후, 해당 q_id의 모든 문제를 q_seq 순서로
+          const uniqueQIds = Array.from(new Set(extractedQuestions.map(q => q.q_id)))
           
-          const themes = Object.keys(groupedByTheme).filter(theme => groupedByTheme[theme].length > 0)
-          
-          if (themes.length === 0) {
-            console.warn('No valid themes found for category C')
+          if (uniqueQIds.length === 0) {
+            console.warn('No valid q_ids found for category C')
             selectedQuestions = defaultQuestions
           } else {
-            // Fisher-Yates 셔플을 사용한 더 안전한 랜덤 선택
-            const shuffledThemes = [...themes]
-            for (let i = shuffledThemes.length - 1; i > 0; i--) {
-              const j = Math.floor(Math.random() * (i + 1))
-              ;[shuffledThemes[i], shuffledThemes[j]] = [shuffledThemes[j], shuffledThemes[i]]
-            }
+            // 더 안전한 랜덤 선택
+            const randomIndex = Math.floor(Math.random() * uniqueQIds.length)
+            const randomQId = uniqueQIds[randomIndex]
             
-            const selectedThemes = shuffledThemes.slice(0, Math.min(3, themes.length))
+            // 선택된 q_id의 모든 문제들을 q_seq 순서로 정렬
+            const questionsForSelectedId = extractedQuestions
+              .filter(q => q.q_id === randomQId)
+              .sort((a, b) => a.q_seq - b.q_seq)
             
-            selectedThemes.forEach(theme => {
-              const themeQuestions = groupedByTheme[theme]
-              if (themeQuestions && themeQuestions.length > 0) {
-                const randomIndex = Math.floor(Math.random() * themeQuestions.length)
-                const randomQuestion = themeQuestions[randomIndex]
-                selectedQuestions.push(randomQuestion)
-              }
-            })
+            selectedQuestions = questionsForSelectedId
           }
         } else {
           // 다른 카테고리들: 랜덤하게 3개 선택
@@ -281,15 +268,17 @@ export default function TestPage() {
             timestamp: Date.now(),
             selectedInfo: category === 'S' 
               ? { type: 'topic', qId: selectedQuestions[0]?.q_id, theme: selectedQuestions[0]?.q_theme }
-              : { type: 'combination', themes: selectedQuestions.map(q => q.q_theme || q.theme || q.Theme) }
+              : category === 'C'
+              ? { type: 'combination', qId: selectedQuestions[0]?.q_id, theme: selectedQuestions[0]?.q_theme }
+              : { type: 'other', themes: selectedQuestions.map(q => q.q_theme || q.theme || q.Theme) }
           }
           sessionStorage.setItem(sessionKey, JSON.stringify(sessionData))
         } else {
-          console.warn(`No questions selected from ${fileName}`)
+          console.warn(`No questions selected from ${questionType}`)
           setQuestions(defaultQuestions)
         }
       } else {
-        console.warn(`No questions found in ${fileName}`)
+        console.warn(`No questions found in ${questionType}`)
         setQuestions(defaultQuestions)
       }
     } catch (error) {
@@ -418,11 +407,9 @@ export default function TestPage() {
       setRecordedChunks([])
       
       mediaRecorder.start()
-      setIsRecording(true)
       setRecordingError(null)
       
-      // STT 시작
-      startSpeechRecognition()
+      // STT 시작 제거 (handleStartRecording에서만 호출하도록)
       
       if (!isCountdownMode) {
         setRecordingTime(0)
@@ -468,37 +455,73 @@ export default function TestPage() {
         return null
       }
 
-      // 모바일 환경 감지 추가
+      // 브라우저 감지 (정확성 향상)
+      const isEdge = /Edg/i.test(navigator.userAgent)
+      const isChrome = /Chrome/i.test(navigator.userAgent) && !/Edg/i.test(navigator.userAgent)
+      const isSafari = /Safari/i.test(navigator.userAgent) && !/Chrome/i.test(navigator.userAgent)
       const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)
+      
+      let browserName = 'Other'
+      if (isEdge) {
+        browserName = 'Edge'
+      } else if (isChrome) {
+        browserName = 'Chrome'
+      } else if (isSafari) {
+        browserName = 'Safari'
+      }
+      
       addDebugLog(`📱 Device Detection: ${isMobile ? 'Mobile' : 'Desktop'}`)
+      addDebugLog(`🌐 Browser Detected: ${browserName}`)
+      addDebugLog(`🔍 Browser Flags: Edge=${isEdge}, Chrome=${isChrome}, Safari=${isSafari}`)
       addDebugLog(`🌐 User Agent: ${navigator.userAgent}`)
       addDebugLog(`🔒 Protocol: ${location.protocol}`)
       addDebugLog(`🏠 Hostname: ${location.hostname}`)
 
       const recognition = new SpeechRecognition()
       
-      // 모바일 최적화 설정
-      if (isMobile) {
-        // 모바일에서도 continuous 모드 시도 (더 오래 지속되도록)
+      // 브라우저별 최적화 설정
+      let appliedSettings = {}
+      if (isEdge) {
+        // Edge 브라우저 최적화 - continuous 모드 활성화로 변경
         recognition.continuous = true
-        recognition.interimResults = false  // 모바일에서는 interim 결과만 비활성화
+        recognition.interimResults = false
+        appliedSettings = { continuous: true, interimResults: false, browser: 'Edge' }
+        addDebugLog('🌐 Edge Mode: continuous=true, interimResults=false (개선된 설정)')
+      } else if (isMobile) {
+        // 모바일 최적화
+        recognition.continuous = true
+        recognition.interimResults = false
+        appliedSettings = { continuous: true, interimResults: false, browser: 'Mobile' }
         addDebugLog('📱 Mobile Mode: continuous=true, interimResults=false')
       } else {
+        // 데스크톱 Chrome 등 - 최고 품질 설정
         recognition.continuous = true
         recognition.interimResults = true
+        appliedSettings = { continuous: true, interimResults: true, browser: 'Desktop' }
         addDebugLog('💻 Desktop Mode: continuous=true, interimResults=true')
       }
+      
       recognition.lang = 'en-US' // 영어 설정 (OPIc는 영어 시험)
+      appliedSettings = { ...appliedSettings, lang: 'en-US' }
       
       // 추가 정확도 향상 설정 (타입 안전성을 위해 any로 캐스팅)
       const enhancedRecognition = recognition as any
       
       // 여러 대안 결과 요청 (더 정확한 결과 선택 가능)
       if ('maxAlternatives' in enhancedRecognition) {
-        enhancedRecognition.maxAlternatives = 3
+        const maxAlternatives = isEdge ? 3 : 3 // Edge도 3개로 변경
+        enhancedRecognition.maxAlternatives = maxAlternatives
+        appliedSettings = { ...appliedSettings, maxAlternatives }
       }
       
-      // OPIc 특화 문법 힌트 (가능한 경우)
+      // 서비스 힌트 설정 (Chrome/Edge 최적화)
+      if ('serviceURI' in enhancedRecognition) {
+        enhancedRecognition.serviceURI = 'builtin://speech.googleapis.com'
+        appliedSettings = { ...appliedSettings, serviceURI: 'builtin://speech.googleapis.com' }
+      }
+      
+      // OPIc 특화 문법 힌트 (모든 브라우저에서 시도)
+      let grammarApplied = false
       if ('grammars' in enhancedRecognition && window.SpeechGrammarList) {
         const grammarList = new window.SpeechGrammarList()
         
@@ -519,12 +542,21 @@ export default function TestPage() {
         try {
           grammarList.addFromString(opic_phrases, 1)
           enhancedRecognition.grammars = grammarList
+          grammarApplied = true
           addDebugLog('📝 Grammar hints applied successfully')
         } catch (e) {
-          // 문법 힌트 적용 실패는 정상적일 수 있음 (무시)
           addDebugLog('📝 Grammar hints not supported, continuing without them')
         }
       }
+      
+      appliedSettings = { ...appliedSettings, grammarHints: grammarApplied }
+      
+      // 최종 적용된 설정 로그
+      addDebugLog(`⚙️ Applied Settings: ${JSON.stringify(appliedSettings)}`)
+
+      setSpeechRecognition(recognition)
+      setIsSTTSupported(true)
+      addDebugLog(`✅ SpeechRecognition initialized successfully ${isMobile ? '(Mobile Mode)' : isEdge ? '(Edge Mode)' : '(Desktop Mode)'}`)
 
       // 음성 인식 결과 처리
       recognition.onresult = (event: SpeechRecognitionEvent) => {
@@ -558,9 +590,11 @@ export default function TestPage() {
           }
         }
 
-        // 더 관대한 최종 텍스트 업데이트 (신뢰도 기준 대폭 완화)
+        // 브라우저별 신뢰도 기준 조정
+        const confidenceThreshold = isEdge ? 0.05 : 0.1 // Edge에서는 더 관대하게
+        
         if (finalTranscript) {
-          if (bestConfidence > 0.1) { // 10% 이상 신뢰도만 채택 (기존 30%에서 완화)
+          if (bestConfidence > confidenceThreshold) {
             addDebugLog(`✅ Saving STT Result: "${finalTranscript}" (confidence: ${bestConfidence.toFixed(2)})`)
             setRecognizedText(prev => {
               const newText = prev + finalTranscript + ' '
@@ -570,12 +604,12 @@ export default function TestPage() {
           } else {
             addDebugLog(`⚠️ Low confidence result ignored: "${finalTranscript}" (confidence: ${bestConfidence.toFixed(2)})`)
           }
-        } else if (interimTranscript) {
+        } else if (interimTranscript && !isEdge) {
           addDebugLog(`👂 Interim result: "${interimTranscript}"`)
         }
         
-        // 임시 텍스트 업데이트 (실시간 표시용) - 모바일이 아닐 때만
-        if (!isMobile) {
+        // 임시 텍스트 업데이트 (실시간 표시용) - Edge와 모바일 제외
+        if (!isMobile && !isEdge) {
           setInterimText(interimTranscript)
         }
       }
@@ -583,6 +617,7 @@ export default function TestPage() {
       // 에러 처리
       recognition.onerror = (event: SpeechRecognitionErrorEvent) => {
         addDebugLog(`🚨 STT 오류: ${event.error} ${event.message}`)
+        setIsSTTRunning(false) // 에러 발생 시 상태 리셋
         
         // 상세한 에러 메시지
         let errorMessage = `음성 인식 오류: ${event.error}`
@@ -619,65 +654,98 @@ export default function TestPage() {
       recognition.onstart = () => {
         addDebugLog('🎤 STT Started successfully')
         setSTTError(null)
+        setIsSTTRunning(true) // onstart에서 상태 설정
       }
 
       recognition.onend = () => {
         addDebugLog('🎤 STT Ended')
-        addDebugLog(`🔍 Debug: isRecording=${isRecording}, speechRecognition exists=${!!speechRecognition}`)
+        setIsSTTRunning(false) // onend에서 상태 리셋
+        addDebugLog(`🔍 Debug: isRecording=${isRecording}, userWantsToRecord=${userWantsToRecord}`)
         
         // 현재 녹음 상태를 별도 변수로 캐시 (상태 변경 전에)
         const wasRecording = isRecording
-        const recognitionExists = !!speechRecognition
+        const userStillWantsToRecord = userWantsToRecord
+        // 브라우저 감지 (onend 스코프 내에서)
+        const isEdgeBrowser = /Edg/i.test(navigator.userAgent)
         
-        addDebugLog(`🔍 Cached state: wasRecording=${wasRecording}, recognitionExists=${recognitionExists}`)
+        addDebugLog(`🔍 Cached state: wasRecording=${wasRecording}, userStillWantsToRecord=${userStillWantsToRecord}`)
         
-        // 녹음이 계속 진행 중이면 STT도 다시 시작 (더 적극적인 재시작)
-        if (wasRecording || isRecording) {
+        // 사용자가 여전히 녹음을 원하면 STT 재시작
+        if (wasRecording || userStillWantsToRecord) {
           addDebugLog('✅ Restart condition met - attempting restart...')
           try {
             addDebugLog('🔄 Auto-restarting STT...')
+            // Edge는 더 빠른 재시작, Chrome은 안정성을 위해 지연
+            const restartDelay = isEdgeBrowser ? 50 : 100
             setTimeout(() => {
-              addDebugLog(`🔍 Inside timeout: isRecording=${isRecording}, speechRecognition exists=${!!speechRecognition}`)
+              addDebugLog(`🔍 Inside timeout: isRecording=${isRecording}, userWantsToRecord=${userWantsToRecord}`)
+              
+              // STT가 이미 실행 중이면 재시작하지 않음
+              if (isSTTRunning) {
+                addDebugLog('⚠️ STT already running, skipping restart')
+                return
+              }
+              
+              // 사용자가 더 이상 녹음을 원하지 않으면 중단
+              if (!userWantsToRecord) {
+                addDebugLog('❌ User no longer wants to record, stopping restart')
+                return
+              }
               
               // STT 객체가 없으면 다시 초기화
               if (!speechRecognition) {
                 addDebugLog('🔧 Reinitializing Speech Recognition...')
                 const newRecognition = initializeSpeechRecognition()
-                if (newRecognition && (isRecording || wasRecording)) {
+                if (newRecognition && userWantsToRecord && !isSTTRunning) {
                   addDebugLog('🚀 Starting newly initialized STT...')
-                  newRecognition.start()
-                  addDebugLog('🔄 STT restarted with new instance')
+                  try {
+                    setIsSTTRunning(true)
+                    newRecognition.start()
+                    addDebugLog('🔄 STT restarted with new instance')
+                  } catch (startError) {
+                    addDebugLog(`❌ New STT start failed: ${startError}`)
+                    setIsSTTRunning(false)
+                  }
                 }
-              } else if (isRecording || wasRecording) {
+              } else if (userWantsToRecord && !isSTTRunning) {
                 addDebugLog('🚀 Calling speechRecognition.start()...')
                 try {
+                  setIsSTTRunning(true)
                   speechRecognition.start()
                   addDebugLog('🔄 STT restarted successfully')
                 } catch (startError) {
                   addDebugLog(`❌ STT start failed: ${startError}`)
-                  // STT 시작 실패 시 객체 재초기화 시도
-                  addDebugLog('🔧 Trying to reinitialize after start failure...')
-                  const newRecognition = initializeSpeechRecognition()
-                  if (newRecognition) {
-                    newRecognition.start()
-                    addDebugLog('🔄 STT restarted with new instance after error')
+                  setIsSTTRunning(false)
+                  
+                  // Edge에서는 실패 시 즉시 새 인스턴스 생성 시도
+                  if (isEdgeBrowser && userWantsToRecord) {
+                    addDebugLog('🔧 Edge: Trying immediate reinitialize after start failure...')
+                    const newRecognition = initializeSpeechRecognition()
+                    if (newRecognition && !isSTTRunning) {
+                      try {
+                        setIsSTTRunning(true)
+                        newRecognition.start()
+                        addDebugLog('🔄 Edge: STT restarted with new instance after error')
+                      } catch (newStartError) {
+                        addDebugLog(`❌ Edge: New instance start failed: ${newStartError}`)
+                        setIsSTTRunning(false)
+                      }
+                    }
                   }
                 }
               } else {
-                addDebugLog('❌ Restart condition failed inside timeout')
+                addDebugLog('❌ Restart condition failed inside timeout or STT already running')
               }
-            }, 100) // 짧은 지연 후 재시작
+            }, restartDelay)
           } catch (error) {
             addDebugLog(`🔄 STT restart failed: ${error}`)
+            setIsSTTRunning(false)
           }
         } else {
-          addDebugLog('❌ Not restarting - both current and cached recording state are false')
+          addDebugLog('❌ Not restarting - user does not want to record')
         }
       }
 
-      setSpeechRecognition(recognition)
-      setIsSTTSupported(true)
-      addDebugLog(`✅ SpeechRecognition initialized successfully ${isMobile ? '(Mobile Mode)' : '(Desktop Mode)'}`)
       return recognition
       
     } catch (error) {
@@ -690,7 +758,7 @@ export default function TestPage() {
 
   // STT 시작 함수
   const startSpeechRecognition = () => {
-    if (speechRecognition && isSTTSupported) {
+    if (speechRecognition && isSTTSupported && !isSTTRunning) {
       try {
         // 모바일에서 명시적 마이크 권한 요청
         const requestMicrophonePermission = async () => {
@@ -711,9 +779,16 @@ export default function TestPage() {
           const hasPermission = await requestMicrophonePermission()
           if (!hasPermission) return
 
+          // 이미 실행 중인지 다시 한번 확인
+          if (isSTTRunning) {
+            addDebugLog('⚠️ STT is already running, skipping start')
+            return
+          }
+
           setRecognizedText('') // 기존 텍스트 초기화
           setInterimText('') // 임시 텍스트도 초기화
           addDebugLog('🚀 Starting Speech Recognition...')
+          setIsSTTRunning(true) // 시작 전에 상태 설정
           speechRecognition.start()
         }
 
@@ -721,7 +796,10 @@ export default function TestPage() {
       } catch (error) {
         addDebugLog(`❌ STT 시작 실패: ${error}`)
         setSTTError('음성 인식 시작에 실패했습니다.')
+        setIsSTTRunning(false) // 실패 시 상태 리셋
       }
+    } else if (isSTTRunning) {
+      addDebugLog('⚠️ STT is already running')
     } else {
       addDebugLog('❌ STT not supported or not initialized')
       setSTTError('음성 인식이 지원되지 않거나 초기화되지 않았습니다.')
@@ -730,12 +808,15 @@ export default function TestPage() {
 
   // STT 중지 함수
   const stopSpeechRecognition = () => {
-    if (speechRecognition) {
+    if (speechRecognition && isSTTRunning) {
       try {
+        addDebugLog('🛑 Stopping Speech Recognition...')
         speechRecognition.stop()
         setInterimText('') // 임시 텍스트 초기화
+        setIsSTTRunning(false) // 중지 시 상태 리셋
       } catch (error) {
-        // STT 중지 실패는 무시 (정상적일 수 있음)
+        addDebugLog(`⚠️ STT 중지 실패: ${error}`)
+        setIsSTTRunning(false) // 실패해도 상태 리셋
       }
     }
   }
@@ -753,15 +834,16 @@ export default function TestPage() {
 
     const audioFileName = questions[currentQuestionIndex]?.listen
     if (!audioFileName) {
-      addDebugLog('No audio file specified for this question')
+      console.log('No audio file specified for this question')
       return
     }
 
     // 현재 문제의 카테고리 확인
     const questionCategory = questions[currentQuestionIndex]?.category || selectedCategory
     
-    // 카테고리별 오디오 파일 경로 생성
-    const audioPath = `/audio/${questionCategory}/${audioFileName}`
+    // Supabase Storage에서 오디오 URL 생성 (카테고리/파일명 형식)
+    const supabaseFileName = `${questionCategory}/${audioFileName}`
+    const audioPath = getAudioUrl(supabaseFileName)
 
     // 기존 오디오가 재생 중이면 정지
     if (audioElement) {
@@ -785,14 +867,14 @@ export default function TestPage() {
     })
 
     audio.addEventListener('error', (e) => {
-      addDebugLog(`Audio playback error: ${e}`)
+      console.error(`Audio playback error: ${e}`)
       setIsPlaying(false)
       setAudioElement(null)
     })
 
     // 오디오 재생 시작
     audio.play().catch(error => {
-      addDebugLog(`Failed to play audio: ${error}`)
+      console.error(`Failed to play audio: ${error}`)
       setIsPlaying(false)
       setAudioElement(null)
     })
@@ -801,6 +883,7 @@ export default function TestPage() {
   const handleStartRecording = () => {
     addDebugLog('🔴 Recording START button clicked')
     setIsRecording(true)
+    setUserWantsToRecord(true) // 사용자 녹음 의도 설정
     startActualRecording()
     startSpeechRecognition()
   }
@@ -808,12 +891,15 @@ export default function TestPage() {
   const handleStopRecording = () => {
     addDebugLog('🟥 Recording STOP button clicked')
     setIsRecording(false)
+    setUserWantsToRecord(false) // 사용자 녹음 의도 해제
     stopActualRecording()
     stopSpeechRecognition()
   }
 
   const handleResetRecording = () => {
     stopActualRecording()
+    stopSpeechRecognition() // STT도 중지
+    setUserWantsToRecord(false) // 사용자 녹음 의도 해제
     
     // 이전 녹음 데이터 정리
     if (recordedAudioUrl) {
@@ -826,6 +912,7 @@ export default function TestPage() {
     setRecognizedText('')
     setInterimText('')
     setSTTError(null)
+    setIsSTTRunning(false) // STT 실행 상태도 리셋
     
     if (isCountdownMode) {
       setCountdownTime(selectedTimeOption || 0)
@@ -848,16 +935,16 @@ export default function TestPage() {
 
   const handleSubmitAnswer = () => {
     // 현재 문제의 테마 정보와 STT 텍스트를 포함하여 피드백 페이지로 이동
-    const currentTheme = getTheme(currentQuestion)
+    const currentTheme = getTheme(questions[currentQuestionIndex])
     const userAnswer = recognizedText || "음성 인식된 답변이 없습니다. 녹음을 다시 시도해주세요."
-    const feedbackUrl = `/feedback?question=${currentQuestionIndex + 1}&type=${encodeURIComponent(selectedType)}&category=${encodeURIComponent(selectedCategory)}&level=${encodeURIComponent(selectedLevel)}&theme=${encodeURIComponent(currentTheme)}&qid=${currentQuestion?.q_id}&qseq=${currentQuestion?.q_seq}&answer=${encodeURIComponent(userAnswer)}`
+    const feedbackUrl = `/feedback?question=${currentQuestionIndex + 1}&type=${encodeURIComponent(selectedType)}&category=${encodeURIComponent(selectedCategory)}&level=${encodeURIComponent(selectedLevel)}&theme=${encodeURIComponent(currentTheme)}&qid=${questions[currentQuestionIndex]?.q_id}&qseq=${questions[currentQuestionIndex]?.q_seq}&answer=${encodeURIComponent(userAnswer)}`
     router.push(feedbackUrl)
   }
 
   // 새로운 함수: 다음 문제로 이동
   const handleNextQuestion = () => {
     const nextQuestionIndex = currentQuestionIndex + 1
-    if (nextQuestionIndex < totalQuestions) {
+    if (nextQuestionIndex < questions.length) {
       const nextQuestionNumber = nextQuestionIndex + 1
       router.push(`/test?type=${encodeURIComponent(selectedType)}&category=${selectedCategory}&question=${nextQuestionNumber}&level=${encodeURIComponent(selectedLevel)}`)
     }
@@ -894,6 +981,7 @@ export default function TestPage() {
     const type = searchParams.get('type') || '선택주제'
     const category = searchParams.get('category') || 'S'
     const level = searchParams.get('level') || 'IM2'
+    
     setSelectedType(type)
     setSelectedCategory(category)
     setSelectedLevel(level)
@@ -918,7 +1006,13 @@ export default function TestPage() {
             // 타임스탬프 체크 (10분 후 자동 만료)
             const isExpired = Date.now() - sessionData.timestamp > 10 * 60 * 1000
             
-            if (!isExpired) {
+            // 캐시된 데이터가 현재 요청한 카테고리와 일치하는지 확인
+            const cachedCategory = sessionData.questions[0]?.category
+            
+            if (cachedCategory !== selectedCategory) {
+              sessionStorage.removeItem(sessionKey)
+              // 새로 로딩하도록 계속 진행
+            } else if (!isExpired) {
               // 저장된 문제들이 있고 만료되지 않았으면 복원
               setQuestions(sessionData.questions)
               setQuestionsLoaded(true)
@@ -1035,6 +1129,9 @@ export default function TestPage() {
     if (isRecording) {
       stopActualRecording()
     }
+    
+    // 사용자 녹음 의도 해제
+    setUserWantsToRecord(false)
     
     // 이전 녹음 데이터 정리
     if (recordedAudioUrl) {
@@ -1187,7 +1284,7 @@ export default function TestPage() {
                 </div>
               ) : selectedCategory === 'C' ? (
                 <div>
-                  <span className="font-medium">돌발주제:</span> {questions.map(q => getTheme(q)).join(', ')}
+                  <span className="font-medium">돌발주제:</span> {getTheme(questions[0])} 
                   <span className="text-gray-500 ml-2">(총 {totalQuestions}개 문제)</span>
                 </div>
               ) : (

@@ -48,8 +48,8 @@ export default function QuestionTypePage() {
         category = 'S'
     }
     
-    // 선택한 유형과 레벨을 query parameter로 전달
-    router.push(`/test?type=${encodeURIComponent(selectedType)}&category=${category}&level=${selectedLevel}`)
+    // 선택한 유형과 레벨을 query parameter로 전달 (refresh=true 추가로 항상 새로운 랜덤 테마 선택)
+    router.push(`/test?type=${encodeURIComponent(selectedType)}&category=${category}&level=${selectedLevel}&refresh=true`)
   }
 
   return (

@@ -47,7 +47,7 @@ export const allQuestions: Question[] = [
   }
 ];
 
-// 테스트 설정 - JSON 파일명 포함
+// 테스트 설정 - API 엔드포인트 정보 포함
 export const testConfig: TestConfig = {
   questionTypes: [
     { 
@@ -193,7 +193,7 @@ export const sampleTopicData: QuestionTypeData = {
 export class QuestionManager {
   private static questionCache: Map<string, QuestionTypeData> = new Map();
 
-  // JSON 파일에서 문제 데이터 로드
+  // API에서 문제 데이터 로드 (JSON 파일 직접 접근 대신 API 사용)
   static async loadQuestionData(questionType: string): Promise<QuestionTypeData | null> {
     try {
       // 캐시 확인
@@ -206,10 +206,10 @@ export class QuestionManager {
         throw new Error(`Question type ${questionType} not found`);
       }
 
-      // JSON 파일 로드
-      const response = await fetch(`/data/${config.filename}`);
+      // API 호출로 변경 (/data/ 직접 접근 대신 /api/questions 사용)
+      const response = await fetch(`/api/questions?type=${encodeURIComponent(questionType)}`);
       if (!response.ok) {
-        throw new Error(`Failed to load ${config.filename}`);
+        throw new Error(`Failed to load ${questionType} data: ${response.status} ${response.statusText}`);
       }
 
       const data: QuestionTypeData = await response.json();
