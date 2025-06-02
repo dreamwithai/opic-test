@@ -1295,11 +1295,11 @@ export default function TestPage() {
                 
                 {/* 음성 파형 표시 */}
                 <div className="flex justify-center items-center h-20 mb-8">
-                  <div className="flex items-end space-x-1">
-                    {Array.from({ length: 50 }, (_, i) => (
+                  <div className="flex items-end space-x-1 max-w-md">
+                    {Array.from({ length: 25 }, (_, i) => (
                       <div 
                         key={i}
-                        className={`w-1 bg-gradient-to-t from-cyan-400 to-blue-400 rounded-t ${
+                        className={`w-1.5 bg-gradient-to-t from-cyan-400 to-blue-400 rounded-t ${
                           isRecording ? 'animate-pulse' : ''
                         }`}
                         style={{ 
