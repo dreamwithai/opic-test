@@ -1,181 +1,40 @@
 {
   "questionType": "돌발주제",
-  "description": "별다른 준비 시간 없이 주어지는 돌발 문제입니다.",
+  "description": "돌발주제 문제입니다.",
   "themes": {
-    "Shopping": [
-      {
-        "category": "C",
-        "theme": "Shopping",
-        "q_theme": "Shopping",
-        "q_id": 1,
-        "q_seq": 1,
-        "listen": "Shopping_001_001.mp3",
-        "type": "(Role Play)",
-        "question": "I'd like you to act out a situation that could happen when you are shopping for clothes. You are looking for specific clothes for a special occasion. Ask three or four questions to the store clerk to get information you need.",
-        "question_kr": "(롤플레이>옷 쇼핑) 옷을 사러 갔을 때 일어날 수 있는 상황을 연기해 주세요. 특별한 행사를 위한 특정한 옷을 찾고 있습니다. 매장 직원에게 필요한 정보를 얻기 위해 3~4개의 질문을 해 주세요.",
-        "difficulty": 4,
-        "estimated_time": 60,
-        "tags": ["role-play", "shopping"]
-      },
-      {
-        "category": "C",
-        "theme": "Shopping",
-        "q_theme": "Shopping",
-        "q_id": 1,
-        "q_seq": 2,
-        "listen": "Shopping_001_002.mp3",
-        "type": "(Role Play)",
-        "question": "I want you to act out a situation. You are at a department store and you want to return an item that you bought last week. However, you lost your receipt. Talk to the customer service representative and try to return your item.",
-        "question_kr": "(롤플레이>반품) 상황을 연기해 주세요. 백화점에서 지난주에 산 물건을 반품하고 싶은데 영수증을 분실했습니다. 고객 서비스 직원과 이야기하며 물건을 반품해 보세요.",
-        "difficulty": 5,
-        "estimated_time": 60,
-        "tags": ["role-play", "shopping"]
-      },
-      {
-        "category": "C",
-        "theme": "Shopping",
-        "q_theme": "Shopping",
-        "q_id": 1,
-        "q_seq": 3,
-        "listen": "Shopping_001_003.mp3",
-        "type": "(Role Play)",
-        "question": "You are shopping at a grocery store. You need to buy ingredients for dinner tonight, but you have a limited budget. Talk to yourself and think out loud about what you should buy within your budget.",
-        "question_kr": "(롤플레이>식료품 쇼핑) 마트에서 쇼핑을 하고 있습니다. 오늘 저녁 식사 재료를 사야 하는데 예산이 제한되어 있습니다. 혼잣말로 예산 내에서 무엇을 사야 할지 생각해 보며 이야기해 주세요.",
-        "difficulty": 4,
-        "estimated_time": 60,
-        "tags": ["role-play", "shopping"]
-      }
-    ],
-    "Bank": [
-      {
-        "category": "C",
-        "theme": "Bank",
-        "q_theme": "Bank",
-        "q_id": 2,
-        "q_seq": 1,
-        "listen": "Bank_002_001.mp3",
-        "type": "(Role Play)",
-        "question": "I'd like you to act out a situation. You are at a bank and you want to open a new account. Talk to the bank employee and ask for the information you need to open an account.",
-        "question_kr": "(롤플레이>계좌 개설) 은행에서 새로운 계좌를 개설하려고 합니다. 은행 직원과 이야기하며 계좌 개설에 필요한 정보를 물어보세요.",
-        "difficulty": 4,
-        "estimated_time": 60,
-        "tags": ["role-play", "bank"]
-      },
-      {
-        "category": "C",
-        "theme": "Bank",
-        "q_theme": "Bank",
-        "q_id": 2,
-        "q_seq": 2,
-        "listen": "Bank_002_002.mp3",
-        "type": "(Role Play)",
-        "question": "You are at a bank and you want to apply for a loan to buy a car. Talk to the loan officer about your situation and ask what you need to do to get approved for the loan.",
-        "question_kr": "(롤플레이>대출 신청) 은행에서 자동차 구입을 위한 대출을 신청하려고 합니다. 대출 담당자와 당신의 상황에 대해 이야기하고 대출 승인을 받기 위해 필요한 것들을 물어보세요.",
-        "difficulty": 5,
-        "estimated_time": 60,
-        "tags": ["role-play", "bank"]
-      },
-      {
-        "category": "C",
-        "theme": "Bank",
-        "q_theme": "Bank",
-        "q_id": 2,
-        "q_seq": 3,
-        "listen": "Bank_002_003.mp3",
-        "type": "(Role Play)",
-        "question": "You discovered that there are some charges on your bank statement that you don't recognize. Call the bank and talk to a customer service representative about this problem.",
-        "question_kr": "(롤플레이>계좌 문의) 은행 명세서에서 모르는 거래 내역을 발견했습니다. 은행에 전화해서 고객 서비스 담당자와 이 문제에 대해 이야기해 보세요.",
-        "difficulty": 5,
-        "estimated_time": 60,
-        "tags": ["role-play", "bank"]
-      }
-    ],
     "Responsibilities": [
       {
         "category": "C",
         "theme": "Responsibilities",
         "q_theme": "Responsibilities",
-        "q_id": 3,
+        "q_id": 1,
         "q_seq": 1,
-        "listen": "Responsibilities_003_001.mp3",
-        "type": "(Role Play)",
-        "question": "I want you to act out a situation. You are responsible for organizing a surprise birthday party for your friend. Call another friend and ask for help with the preparations.",
-        "question_kr": "(롤플레이>생일 파티 준비) 친구의 깜짝 생일 파티를 준비하는 책임을 맡게 되었습니다. 다른 친구에게 전화해서 준비를 도와달라고 부탁해 보세요.",
-        "difficulty": 4,
-        "estimated_time": 60,
-        "tags": ["role-play", "responsibilities"]
+        "listen": "Responsibilities_001_001.mp3",
+        "type": "(Description)",
+        "question": "How are the responsibilities divided among family members in your household? What tasks do you usually do? Which ones do the others do? Is this system fair, or do you think it should be changed?",
+        "question_kr": "여러분의 가정에서 가족 구성원들 사이에 책임이 어떻게 분담되어 있습니까? 주로 어떤 일을 하시나요? 다른 사람들은 어떤 일을 합니까? 이 제도는 공정한가, 아니면 바뀌어야 한다고 생각하는가?"
       },
       {
         "category": "C",
         "theme": "Responsibilities",
         "q_theme": "Responsibilities",
-        "q_id": 3,
+        "q_id": 1,
         "q_seq": 2,
-        "listen": "Responsibilities_003_002.mp3",
-        "type": "(Role Play)",
-        "question": "You are in charge of a group project at school or work. One of your team members is not doing their part. Talk to this person and try to resolve the situation.",
-        "question_kr": "(롤플레이>그룹 프로젝트 관리) 학교나 직장에서 그룹 프로젝트를 담당하고 있습니다. 팀원 중 한 명이 자신의 역할을 하지 않고 있습니다. 이 사람과 이야기해서 상황을 해결해 보세요.",
-        "difficulty": 5,
-        "estimated_time": 60,
-        "tags": ["role-play", "responsibilities"]
+        "listen": "Responsibilities_001_002.mp3",
+        "type": "(Past)",
+        "question": "Did you ever get in trouble for not fulfilling your household responsibilities as a child? When did it happen? What were you supposed to do? Please tell me about what happened and how you handled it in as much detail as possible.",
+        "question_kr": "어렸을 때 집안일을 다하지 않아서 곤경에 처한 적이 있습니까? 언제 그런 일이 있었습니까? 당신은 무엇을 해야합니까? 무슨 일이 있었는지, 어떻게 처리했는지 가능한 한 자세히 알려주세요."
       },
       {
         "category": "C",
         "theme": "Responsibilities",
         "q_theme": "Responsibilities",
-        "q_id": 3,
+        "q_id": 1,
         "q_seq": 3,
-        "listen": "Responsibilities_003_003.mp3",
-        "type": "(Role Play)",
-        "question": "You are responsible for taking care of your neighbor's pet while they are on vacation. However, the pet has become sick. Call your neighbor and explain the situation.",
-        "question_kr": "(롤플레이>애완동물 돌봄) 이웃이 휴가를 간 동안 애완동물을 돌보는 책임을 맡았습니다. 그런데 애완동물이 아프게 되었습니다. 이웃에게 전화해서 상황을 설명해 보세요.",
-        "difficulty": 5,
-        "estimated_time": 60,
-        "tags": ["role-play", "responsibilities"]
-      }
-    ],
-    "Problems": [
-      {
-        "category": "C",
-        "theme": "Problems",
-        "q_theme": "Problems",
-        "q_id": 4,
-        "q_seq": 1,
-        "listen": "Problems_004_001.mp3",
-        "type": "(Role Play)",
-        "question": "I want you to act out a situation. You are having problems with your internet connection at home. Call the internet service provider and explain your problem to get help.",
-        "question_kr": "(롤플레이>인터넷 문제) 집 인터넷 연결에 문제가 생겼습니다. 인터넷 서비스 업체에 전화해서 문제를 설명하고 도움을 요청해 보세요.",
-        "difficulty": 4,
-        "estimated_time": 60,
-        "tags": ["role-play", "problems"]
-      },
-      {
-        "category": "C",
-        "theme": "Problems",
-        "q_theme": "Problems",
-        "q_id": 4,
-        "q_seq": 2,
-        "listen": "Problems_004_002.mp3",
-        "type": "(Role Play)",
-        "question": "You are having a problem with your car and it won't start. You need to get to work, but you don't have another way to get there. Call your boss and explain your situation.",
-        "question_kr": "(롤플레이>차 고장) 자동차에 문제가 생겨서 시동이 걸리지 않습니다. 출근해야 하는데 다른 교통수단이 없습니다. 상사에게 전화해서 상황을 설명해 보세요.",
-        "difficulty": 4,
-        "estimated_time": 60,
-        "tags": ["role-play", "problems"]
-      },
-      {
-        "category": "C",
-        "theme": "Problems",
-        "q_theme": "Problems",
-        "q_id": 4,
-        "q_seq": 3,
-        "listen": "Problems_004_003.mp3",
-        "type": "(Role Play)",
-        "question": "You ordered food for delivery, but the wrong order arrived. Call the restaurant and try to resolve this problem.",
-        "question_kr": "(롤플레이>배달 음식 문제) 배달 음식을 주문했는데 잘못된 음식이 왔습니다. 음식점에 전화해서 이 문제를 해결해 보세요.",
-        "difficulty": 4,
-        "estimated_time": 60,
-        "tags": ["role-play", "problems"]
+        "listen": "Responsibilities_001_003.mp3",
+        "type": "(Experience)",
+        "question": "Please talk about something interesting or special that has happened while doing housework. When did it happen? What sort of housework were you doing? Give me as many details as possible.",
+        "question_kr": "집안일을 하는 동안 일어난 흥미롭거나 특별한 일에 대해 이야기해 주세요. 언제 그런 일이 있었습니까? 어떤 집안일을 하고 있었나요? 가능한 한 많은 세부 정보를 제공하십시오."
       }
     ],
     "Restaurant": [
@@ -183,131 +42,699 @@
         "category": "C",
         "theme": "Restaurant",
         "q_theme": "Restaurant",
-        "q_id": 5,
+        "q_id": 2,
         "q_seq": 1,
-        "listen": "Restaurant_005_001.mp3",
-        "type": "(Role Play)",
-        "question": "I want you to act out a situation at a restaurant. You are dining with friends, and you want to order food. Talk to the waiter and place your order for the group.",
-        "question_kr": "(롤플레이>음식점 주문) 음식점에서의 상황을 연기해 주세요. 친구들과 함께 식사하고 있으며 음식을 주문하려고 합니다. 웨이터와 이야기하며 그룹 주문을 해 보세요.",
-        "difficulty": 4,
-        "estimated_time": 60,
-        "tags": ["role-play", "restaurant"]
+        "listen": "Restaurant_002_001.mp3",
+        "type": "(Description)",
+        "question": "I would like to know about a restaurant you often visit. What kind of dishes does it serve? What do you like about the restaurant? What does it look like?",
+        "question_kr": "자주 가는 식당에 대해 알려 주세요. 어떤 음식을 파나요? 그곳의 어떤 점이 마음에 드시나요? 외관은 어떤가요?"
       },
       {
         "category": "C",
         "theme": "Restaurant",
         "q_theme": "Restaurant",
-        "q_id": 5,
+        "q_id": 2,
         "q_seq": 2,
-        "listen": "Restaurant_005_002.mp3",
-        "type": "(Role Play)",
-        "question": "You are at a restaurant and you want to make a complaint about your food. The food is cold and doesn't taste good. Talk to the manager and explain your dissatisfaction.",
-        "question_kr": "(롤플레이>음식 불만) 음식점에서 음식에 대해 불만을 제기하려고 합니다. 음식이 차갑고 맛이 없습니다. 매니저와 이야기하며 불만을 설명해 보세요.",
-        "difficulty": 5,
-        "estimated_time": 60,
-        "tags": ["role-play", "restaurant"]
+        "listen": "Restaurant_002_002.mp3",
+        "type": "(Description)",
+        "question": "Tell me about the most famous dish of your country. What are the main ingredients it it? Do you know how to make it? What is special about the dish?",
+        "question_kr": "당신 나라에서 가장 유명한 요리에 대해 말씀해 주세요. 주요 성분은 무엇입니까? 만드는 방법을 아십니까? 이 요리의 특별한 점은 무엇입니까?"
       },
       {
         "category": "C",
         "theme": "Restaurant",
         "q_theme": "Restaurant",
+        "q_id": 2,
+        "q_seq": 3,
+        "listen": "Restaurant_002_003.mp3",
+        "type": "(Experience)",
+        "question": "Have you ever had a special experience at a restaurant? Who were you with? What happened? Tell me about the experience in detail, and explain what made it memorable.",
+        "question_kr": "레스토랑에서 특별한 경험을 한 적이 있습니까? 누구와 함께 있었나요? 무슨 일이 있었나요? 그 경험에 대해 자세히 말씀해 주시고, 기억에 남는 이유를 설명해 주세요."
+      }
+    ],
+    "Internet": [
+      {
+        "category": "C",
+        "theme": "Internet",
+        "q_theme": "Internet",
+        "q_id": 3,
+        "q_seq": 1,
+        "listen": "Internet_003_001.mp3",
+        "type": "(Description)",
+        "question": "Tell me about a website that you usually visit. What services does this website offer, and what things can you do on it? What got you interested in the website? Explain in detail.",
+        "question_kr": "평소 방문하시는 웹 사이트에 대해 알려주세요. 이 웹 사이트는 어떤 서비스를 제공하며 어떤 작업을 수행 할 수 있습니까? 이 웹사이트에 관심을 갖게 된 계기는 무엇인가요? 자세히 설명하십시오."
+      },
+      {
+        "category": "C",
+        "theme": "Internet",
+        "q_theme": "Internet",
+        "q_id": 3,
+        "q_seq": 2,
+        "listen": "Internet_003_002.mp3",
+        "type": "(Routine)",
+        "question": "Everyone uses the Internet these days. Where and when do you use it? What do you mainly use the Internet for?",
+        "question_kr": "요즘은 누구나 인터넷을 사용합니다. 언제 어디서 사용합니까? 인터넷은 주로 무엇에 사용하십니까?"
+      },
+      {
+        "category": "C",
+        "theme": "Internet",
+        "q_theme": "Internet",
+        "q_id": 3,
+        "q_seq": 3,
+        "listen": "Internet_003_003.mp3",
+        "type": "(Experience)",
+        "question": "Please tell me about a project that you completed that involved research on the Internet. Begin by providing me with some background details about the assignment, when and what it was exactly, and then tell me how you used the Internet to help you get the project done.",
+        "question_kr": "인터넷 검색과 관련된 프로젝트를 완료하신 것에 대해 말씀해 주십시오. 먼저 과제에 대한 몇 가지 배경 정보, 정확히 언제, 무엇이었는지 제공한 다음 프로젝트를 완료하는 데 도움이 되도록 인터넷을 어떻게 사용했는지 알려주십시오."
+      }
+    ],
+    "Holidays": [
+      {
+        "category": "C",
+        "theme": "Holidays",
+        "q_theme": "Holidays",
+        "q_id": 4,
+        "q_seq": 1,
+        "listen": "Holidays_004_001.mp3",
+        "type": "(Description)",
+        "question": "I would like to know about the holidays celebrated in your country. What do the holidays commemorate? How do people celebrate them?",
+        "question_kr": "당신의 나라에서 기념하는 공휴일에 대해 알고 싶습니다. 명절은 무엇을 기념합니까? 사람들은 어떻게 기념할까요?"
+      },
+      {
+        "category": "C",
+        "theme": "Holidays",
+        "q_theme": "Holidays",
+        "q_id": 4,
+        "q_seq": 2,
+        "listen": "Holidays_004_002.mp3",
+        "type": "(Routine)",
+        "question": "Tell me about one of the biggest holidays in your country. What do people do and what kind of special food do people prepare on that day? Describe it in detail.",
+        "question_kr": "한국에서 가장 큰 휴일 중 하나에 대해 말씀해 주세요. 그날 사람들은 무엇을 하고 어떤 특별한 음식을 준비합니까? 자세히 설명하십시오."
+      },
+      {
+        "category": "C",
+        "theme": "Holidays",
+        "q_theme": "Holidays",
+        "q_id": 4,
+        "q_seq": 3,
+        "listen": "Holidays_004_003.mp3",
+        "type": "(Experience)",
+        "question": "Tell me about a memorable holiday experience you had as a child. What exactly happened on that holiday? What made it so memorable? Provide as many details as possible.",
+        "question_kr": "어렸을 때 기억에 남는 휴가 경험에 대해 말씀해 주세요. 그 휴일에 정확히 무슨 일이 있었습니까? 무엇이 그렇게 기억에 남는 일이었나요? 가능한 한 많은 세부 정보를 제공합니다."
+      }
+    ],
+    "Public transport": [
+      {
+        "category": "C",
+        "theme": "Public transport",
+        "q_theme": "Transport",
+        "q_id": 5,
+        "q_seq": 1,
+        "listen": "Transport_005_001.mp3",
+        "type": "(Description)",
+        "question": "Discuss how people in your country get around every day. What forms of transportation do they use? Do they drive their own cars or use public transportation?",
+        "question_kr": "당신의 나라에 있는 사람들이 매일 어떻게 지내는지 토론하십시오. 주로 어떤 형태의 교통 수단을 사용합니까?  자가용을 운전합니까, 아니면 대중 교통을 이용합니까?"
+      },
+      {
+        "category": "C",
+        "theme": "Public transport",
+        "q_theme": "Transport",
+        "q_id": 5,
+        "q_seq": 2,
+        "listen": "Transport_005_002.mp3",
+        "type": "(Routine)",
+        "question": "What forms of transportation are available where you live? What types of transportation do you usually use during the week? What types of transportation do you use on the weekend?",
+        "question_kr": "당신이 사는 곳에서 어떤 형태의 교통 수단을 이용할 수 있나요? 주중에는 주로 어떤 종류의 교통 수단을 이용하십니까? 주말에는 어떤 종류의 교통 수단을 이용합니까?"
+      },
+      {
+        "category": "C",
+        "theme": "Public transport",
+        "q_theme": "Transport",
         "q_id": 5,
         "q_seq": 3,
-        "listen": "Restaurant_005_003.mp3",
-        "type": "(Role Play)",
-        "question": "You want to make a reservation at a popular restaurant for a special dinner. Call the restaurant and try to book a table for next weekend.",
-        "question_kr": "(롤플레이>음식점 예약) 특별한 저녁 식사를 위해 인기 있는 음식점에 예약을 하려고 합니다. 음식점에 전화해서 다음 주말 테이블을 예약해 보세요.",
-        "difficulty": 4,
-        "estimated_time": 60,
-        "tags": ["role-play", "restaurant"]
+        "listen": "Transport_005_003.mp3",
+        "type": "(Experience)",
+        "question": "What kinds of difficulties or problems have you faced related to transportation? What exactly was the problem? How did it affect your day? What did you do to resolve the problem? Tell this story in detail from start to finish.",
+        "question_kr": "교통과 관련하여 어떤 어려움이나 문제에 직면했습니까? 정확히 무엇이 문제였습니까? 그것은 당신의 하루에 어떤 영향을 미쳤습니까? 문제를 해결하기 위해 무엇을 했습니까? 이 이야기를 처음부터 끝까지 자세히 들려주세요."
       }
     ],
-    "Hotel": [
+    "Weather": [
       {
         "category": "C",
-        "theme": "Hotel",
-        "q_theme": "Hotel",
+        "theme": "Weather",
+        "q_theme": "Weather",
         "q_id": 6,
         "q_seq": 1,
-        "listen": "Hotel_006_001.mp3",
-        "type": "(Role Play)",
-        "question": "I want you to act out a situation at a hotel. You have just arrived and want to check in. Talk to the front desk clerk and get your room key.",
-        "question_kr": "(롤플레이>호텔 체크인) 호텔에서의 상황을 연기해 주세요. 방금 도착해서 체크인을 하려고 합니다. 프런트 데스크 직원과 이야기하며 방 열쇠를 받아보세요.",
-        "difficulty": 4,
-        "estimated_time": 60,
-        "tags": ["role-play", "hotel"]
+        "listen": "Weather_006_001.mp3",
+        "type": "(Description)",
+        "question": "What is the weather like in your country? Are there distinct changes in the seasons? Describe what the weather is like in the summer. What is the weather like in the winter? Provide a detailed description of each of the four seasons.",
+        "question_kr": "당신의 나라에 있는 날씨는 어떤가요? 계절에 뚜렷한 변화가 있습니까? 여름 날씨가 어떤지 설명하십시오. 겨울 날씨는 어떤가요? 각 사계절에 대한 자세한 설명을 제공합니다."
       },
       {
         "category": "C",
-        "theme": "Hotel",
-        "q_theme": "Hotel",
+        "theme": "Weather",
+        "q_theme": "Weather",
         "q_id": 6,
         "q_seq": 2,
-        "listen": "Hotel_006_002.mp3",
-        "type": "(Role Play)",
-        "question": "You are staying at a hotel and there are some problems with your room. The air conditioning is not working and it's very noisy. Call the front desk and ask for help.",
-        "question_kr": "(롤플레이>호텔 방 문제) 호텔에 투숙 중인데 방에 문제가 있습니다. 에어컨이 작동하지 않고 매우 시끄럽습니다. 프런트 데스크에 전화해서 도움을 요청해 보세요.",
-        "difficulty": 5,
-        "estimated_time": 60,
-        "tags": ["role-play", "hotel"]
+        "listen": "Weather_006_002.mp3",
+        "type": "(Description)",
+        "question": "Tell me about your favorite season and describe some of the activities that you do during this time of year. What types of activities do people in your country participate in during the summer? What types of things do these people do during the winter?",
+        "question_kr": "가장 좋아하는 계절에 대해 말씀해 주시고 이 시기에 하시는 활동에 대해 설명해 주세요. 당신의 나라에 있는 사람들은 여름 동안 어떤 종류의 활동들에 참여하나요? 이 사람들은 겨울에 어떤 일을 할까요?"
       },
       {
         "category": "C",
-        "theme": "Hotel",
-        "q_theme": "Hotel",
+        "theme": "Weather",
+        "q_theme": "Weather",
         "q_id": 6,
         "q_seq": 3,
-        "listen": "Hotel_006_003.mp3",
-        "type": "(Role Play)",
-        "question": "You want to extend your stay at the hotel for two more nights. Talk to the front desk clerk and ask if it's possible to extend your reservation.",
-        "question_kr": "(롤플레이>숙박 연장) 호텔 숙박을 이틀 더 연장하고 싶습니다. 프런트 데스크 직원과 이야기하며 예약 연장이 가능한지 물어보세요.",
-        "difficulty": 4,
-        "estimated_time": 60,
-        "tags": ["role-play", "hotel"]
+        "listen": "Weather_006_003.mp3",
+        "type": "(Change)",
+        "question": "Do you think that the weather has changed over the past few years? What was it like in the past? How has it changed? Please describe the differences in detail.",
+        "question_kr": "당신은 지난 몇 년 동안 날씨가 변했다고 생각하나요? 과거에는 어땠나요? 어떻게 바뀌었습니까? 차이점을 자세히 설명해 주십시오."
       }
     ],
-    "Airport": [
+    "Library": [
       {
         "category": "C",
-        "theme": "Airport",
-        "q_theme": "Airport",
+        "theme": "Library",
+        "q_theme": "Library",
         "q_id": 7,
         "q_seq": 1,
-        "listen": "Airport_007_001.mp3",
-        "type": "(Role Play)",
-        "question": "I want you to act out a situation at an airport. You are trying to check in for your flight, but you can't find your passport. Talk to the airline staff and explain your situation.",
-        "question_kr": "(롤플레이>공항 체크인 문제) 공항에서의 상황을 연기해 주세요. 항공편 체크인을 하려고 하는데 여권을 찾을 수 없습니다. 항공사 직원과 이야기하며 상황을 설명해 보세요.",
-        "difficulty": 5,
-        "estimated_time": 60,
-        "tags": ["role-play", "airport"]
+        "listen": "Library_007_001.mp3",
+        "type": "(Description)",
+        "question": "Describe the library you often go to. Where is it? What does it look like from the outside? What is the inside like? Provide as many details as possible.",
+        "question_kr": "자주 가는 도서관에 대해 설명해 주세요. 어디에 있어요? 밖에서 보면 어떻게 보입니까? 내부는 어떤가요? 가능한 한 많은 세부 정보를 제공합니다."
       },
       {
         "category": "C",
-        "theme": "Airport",
-        "q_theme": "Airport",
+        "theme": "Library",
+        "q_theme": "Library",
         "q_id": 7,
         "q_seq": 2,
-        "listen": "Airport_007_002.mp3",
-        "type": "(Role Play)",
-        "question": "Your flight has been canceled due to bad weather. You need to get to your destination urgently. Talk to the airline representative and try to find an alternative solution.",
-        "question_kr": "(롤플레이>항공편 취소) 악천후로 인해 항공편이 취소되었습니다. 목적지에 급히 가야 합니다. 항공사 담당자와 이야기하며 대안을 찾아보세요.",
-        "difficulty": 5,
-        "estimated_time": 60,
-        "tags": ["role-play", "airport"]
+        "listen": "Library_007_002.mp3",
+        "type": "(Comparison)",
+        "question": "What did the library you visited in your childhood look like? Are there any differences between it and the library you go to these days? Explain in detail.",
+        "question_kr": "당신이 어렸을 때 방문했던 도서관은 어떤 모습이었나요? 요즘 다니는 도서관과 다른 점이 있습니까? 자세히 설명하십시오."
       },
       {
         "category": "C",
-        "theme": "Airport",
-        "q_theme": "Airport",
+        "theme": "Library",
+        "q_theme": "Library",
         "q_id": 7,
         "q_seq": 3,
-        "listen": "Airport_007_003.mp3",
-        "type": "(Role Play)",
-        "question": "You have arrived at your destination, but your luggage didn't arrive with you. Talk to the baggage claim staff and report your missing luggage.",
-        "question_kr": "(롤플레이>수하물 분실) 목적지에 도착했는데 수하물이 도착하지 않았습니다. 수하물 담당 직원과 이야기하며 분실된 수하물을 신고해 보세요.",
-        "difficulty": 5,
-        "estimated_time": 60,
-        "tags": ["role-play", "airport"]
+        "listen": "Library_007_003.mp3",
+        "type": "(Experience)",
+        "question": "Tell me about a memorable experience you had in a library. When was it, and what happened? Why was it so memorable?",
+        "question_kr": "도서관에서 기억에 남는 경험을 들려주세요. 언제였으며, 무슨 일이 있었습니까? 왜 그렇게 기억에 남는 것일까?"
+      }
+    ],
+    "Industry": [
+      {
+        "category": "C",
+        "theme": "Industry",
+        "q_theme": "Industry",
+        "q_id": 8,
+        "q_seq": 1,
+        "listen": "Industry_008_001.mp3",
+        "type": "(Description)",
+        "question": "Tell me about one of the major industries or companies in your country. What is special about the industry or the company? How has this industry or company achieved such a high level of success?",
+        "question_kr": "해당 국가의 주요 산업 또는 회사 중 하나에 대해 알려주십시오. 업계 또는 회사의 특별한 점은 무엇입니까? 이 산업 또는 회사는 어떻게 그렇게 높은 수준의 성공을 거두었습니까?"
+      },
+      {
+        "category": "C",
+        "theme": "Industry",
+        "q_theme": "Industry",
+        "q_id": 8,
+        "q_seq": 2,
+        "listen": "Industry_008_002.mp3",
+        "type": "(Past)",
+        "question": "Describe one of the services or products that you have used in the industry you mentioned in the previous question. What was it? Tell me everything in detail.",
+        "question_kr": "이전 질문에서 언급한 업계에서 사용한 서비스 또는 제품 중 하나를 설명하십시오. 그것은 무엇이었습니까? 모든 것을 자세히 알려주세요."
+      },
+      {
+        "category": "C",
+        "theme": "Industry",
+        "q_theme": "Industry",
+        "q_id": 8,
+        "q_seq": 3,
+        "listen": "Industry_008_003.mp3",
+        "type": "(Experience)",
+        "question": "Think about some of the challenges you have seen in a specific industry or company. What were the problems and how did people in the company work together to overcome those challenges? Explain how the company changed over the years.",
+        "question_kr": "특정 산업이나 회사에서 본 몇 가지 문제에 대해 생각해 보십시오. 어떤 문제가 있었고 회사 직원들이 이러한 문제를 극복하기 위해 어떻게 협력했습니까? 지난 몇 년 동안 회사가 어떻게 변했는지 설명해 주십시오."
+      }
+    ],
+    "Furniture": [
+      {
+        "category": "C",
+        "theme": "Furniture",
+        "q_theme": "Furniture",
+        "q_id": 9,
+        "q_seq": 1,
+        "listen": "Furniture_009_001.mp3",
+        "type": "(Description)",
+        "question": "What is your favorite piece of furniture in the house? How do you use it? What makes is special? Give me as many details as possible.",
+        "question_kr": "집에서 가장 좋아하는 가구는 무엇입니까? 어떻게 사용합니까? 무엇이 특별한가요? 가능한 한 많은 세부 정보를 제공하십시오."
+      },
+      {
+        "category": "C",
+        "theme": "Furniture",
+        "q_theme": "Furniture",
+        "q_id": 9,
+        "q_seq": 2,
+        "listen": "Furniture_009_002.mp3",
+        "type": "(Change)",
+        "question": "The furniture in people’s homes has changed over the years. Is the furniture in your current house different from the furniture you had when you were young? Provide as many details as possible.",
+        "question_kr": "사람들의 집에 있는 가구는 수년에 걸쳐 변화해 왔습니다. 지금의 집에 있는 가구는 어렸을 때 가지고 있던 가구와 다른가요? 가능한 한 많은 세부 정보를 제공합니다."
+      },
+      {
+        "category": "C",
+        "theme": "Furniture",
+        "q_theme": "Furniture",
+        "q_id": 9,
+        "q_seq": 3,
+        "listen": "Furniture_009_003.mp3",
+        "type": "(Experience)",
+        "question": "Have you ever been alarmed to discover that your furniture at home was broken or damaged for some reason? What was it that you found, how did it get broken, and what steps did you follow in order to solve the problem?",
+        "question_kr": "집에 있는 가구가 어떤 이유로 파손되거나 손상된 것을 발견하고 놀란 적이 있습니까? 당신이 발견한 것은 무엇이고, 어떻게 고장 났으며, 문제를 해결하기 위해 어떤 단계를 따랐습니까?"
+      }
+    ],
+    "Appliances": [
+      {
+        "category": "C",
+        "theme": "Appliances",
+        "q_theme": "Appliances",
+        "q_id": 10,
+        "q_seq": 1,
+        "listen": "Appliances_010_001.mp3",
+        "type": "(Description)",
+        "question": "What types of appliances are commonly used in people’s homes and where are they normally located in the homes?",
+        "question_kr": "사람들의 가정에서 일반적으로 사용되는 가전 제품의 종류는 무엇이며 일반적으로 가정에서 어디에 있습니까?"
+      },
+      {
+        "category": "C",
+        "theme": "Appliances",
+        "q_theme": "Appliances",
+        "q_id": 10,
+        "q_seq": 2,
+        "listen": "Appliances_010_002.mp3",
+        "type": "(Description)",
+        "question": "What do you think is the most important appliance in your home? Why is it so important to you? How does it affect your daily life?",
+        "question_kr": "가정에서 가장 중요한 가전제품은 무엇이라고 생각하십니까? 그것이 당신에게 왜 그렇게 중요한가요? 그것은 당신의 일상 생활에 어떤 영향을 미칩니까?"
+      },
+      {
+        "category": "C",
+        "theme": "Appliances",
+        "q_theme": "Appliances",
+        "q_id": 10,
+        "q_seq": 3,
+        "listen": "Appliances_010_003.mp3",
+        "type": "(Experience)",
+        "question": "Think back to the last time you purchased or experienced a new electronic product. Discuss all the things that happened on that particular day, during, and after the event. Share your experiences and any memorable moments related to the electronic device.",
+        "question_kr": "마지막으로 새 전자 제품을 구입하거나 경험한 때를 생각해 보십시오. 그날 행사가 진행되는 동안, 그리고 그 사건 이후에 일어난 모든 일에 대해 토론한다. 전자 장치와 관련된 경험과 기억에 남는 순간을 공유하십시오."
+      }
+    ],
+    "Appointments": [
+      {
+        "category": "C",
+        "theme": "Appointments",
+        "q_theme": "Appointments",
+        "q_id": 11,
+        "q_seq": 1,
+        "listen": "Appointments_011_001.mp3",
+        "type": "(Description)",
+        "question": "People set up appointments for various reasons. What sort of appointments do you usually make, social or otherwise? Who do you usually meet with? Where do you usually meet them? Tell me about it in detail.",
+        "question_kr": "사람들은 다양한 이유로 약속을 잡습니다. 사교적이든 아니든 보통 어떤 종류의 약속을 잡습니까? 당신은 보통 누구를 만나나요? 당신은 보통 어디에서 그들을 만나나요? 그것에 대해 자세히 알려주세요."
+      },
+      {
+        "category": "C",
+        "theme": "Appointments",
+        "q_theme": "Appointments",
+        "q_id": 11,
+        "q_seq": 2,
+        "listen": "Appointments_011_002.mp3",
+        "type": "(Past)",
+        "question": "Tell me about one of the appointments you had in your childhood. What was the appointment about, and how did it go? What happened? Tell me everything in detail.",
+        "question_kr": "어린 시절에 가졌던 약속 중 하나에 대해 말씀해 주십시오. 약속은 무엇에 관한 것이었고 어떻게 진행되었습니까? 무슨 일이 있었나요? 모든 것을 자세히 알려주세요."
+      },
+      {
+        "category": "C",
+        "theme": "Appointments",
+        "q_theme": "Appointments",
+        "q_id": 11,
+        "q_seq": 3,
+        "listen": "Appointments_011_003.mp3",
+        "type": "(Experience)",
+        "question": "Tell me about the most memorable appointment you have ever had. What kind of appointment was it? Who did you meet? What did you do? Did anything unexpected or interesting occur? Why was it so memorable?",
+        "question_kr": "지금까지 있었던 가장 기억에 남는 약속에 대해 말씀해 주세요. 어떤 종류의 약속이었습니까? 누구를 만났나요? 당신은 무엇을 했나요? 예상치 못하거나 흥미로운 일이 발생했습니까? 왜 그렇게 기억에 남는 일인가요?"
+      }
+    ],
+    "Banks": [
+      {
+        "category": "C",
+        "theme": "Banks",
+        "q_theme": "Banks",
+        "q_id": 12,
+        "q_seq": 1,
+        "listen": "Banks_012_001.mp3",
+        "type": "(Description)",
+        "question": "Describe the banks in your country. Where are they usually located, and what are they like? What hours are banks typically open there? Give as many details as possible.",
+        "question_kr": "해당 국가의 은행에 대해 설명해 주십시오. 그들은 일반적으로 어디에 있으며 어떤 모습입니까? 은행은 일반적으로 몇 시에 영업합니까? 가능한 한 많은 세부 정보를 제공하십시오."
+      },
+      {
+        "category": "C",
+        "theme": "Banks",
+        "q_theme": "Banks",
+        "q_id": 12,
+        "q_seq": 2,
+        "listen": "Banks_012_002.mp3",
+        "type": "(Routine)",
+        "question": "What do people in your country usually do by visiting banks? Why do they visit banks? And what do you usually do when you visit banks? Please answer in as much detail as possible.",
+        "question_kr": "당신의 나라에 있는 사람들은 은행들을 방문함으로써 보통 무엇을 하나요? 그들은 왜 은행을 방문합니까? 그리고 은행을 방문할 때 주로 무엇을 합니까? 가능한 한 자세히 답변해 주십시오."
+      },
+      {
+        "category": "C",
+        "theme": "Banks",
+        "q_theme": "Banks",
+        "q_id": 12,
+        "q_seq": 3,
+        "listen": "Banks_012_003.mp3",
+        "type": "(Experience)",
+        "question": "Have you ever experienced any problems at a bank? For instance, sometimes ATMs malfunction. What sort of problem did you face, and how did you deal with it?",
+        "question_kr": "당신은 한 번이라도 은행에서 어떤 문제들을 경험한 적이 있나요? 예를 들어, 때때로 ATM이 오작동합니다. 어떤 종류의 문제에 직면했으며, 어떻게 대처했습니까?"
+      }
+    ],
+    "Community Festivails": [
+      {
+        "category": "C",
+        "theme": "Community Festivails",
+        "q_theme": "Community",
+        "q_id": 13,
+        "q_seq": 1,
+        "listen": "Community_013_001.mp3",
+        "type": "(Description)",
+        "question": "Can you tell me about special events in your community? What kind of festivals or events are held? Give me as many details as possible.",
+        "question_kr": "커뮤니티의 특별 이벤트에 대해 알려주실 수 있나요? 어떤 종류의 축제나 이벤트가 열리나요? 가능한 한 많은 세부 정보를 제공하십시오."
+      },
+      {
+        "category": "C",
+        "theme": "Community Festivails",
+        "q_theme": "Community",
+        "q_id": 13,
+        "q_seq": 2,
+        "listen": "Community_013_002.mp3",
+        "type": "(Routine)",
+        "question": "When do you go to your community festival? How often do you go and who do you go with? Please give me all the details?",
+        "question_kr": "지역 축제는 언제 가십니까? 얼마나 자주 가고 누구와 함께 가십니까? 모든 세부 사항을 알려주세요?"
+      },
+      {
+        "category": "C",
+        "theme": "Community Festivails",
+        "q_theme": "Community",
+        "q_id": 13,
+        "q_seq": 3,
+        "listen": "Community_013_003.mp3",
+        "type": "(Experience)",
+        "question": "Tell me about your most memorable experience related to the community festival. What happened? What made the experience memorable? Please describe it in as much detail as possible.",
+        "question_kr": "커뮤니티 페스티벌과 관련하여 가장 기억에 남는 경험을 말씀해 주세요. 무슨 일이 있었나요? 기억에 남는 경험은 무엇이었나요? 가능한 한 자세히 설명해 주십시오."
+      }
+    ],
+    "Geography": [
+      {
+        "category": "C",
+        "theme": "Geography",
+        "q_theme": "Geography",
+        "q_id": 14,
+        "q_seq": 1,
+        "listen": "Geography_014_001.mp3",
+        "type": "(Description)",
+        "question": "Tell me about the geography of your country. Are there a lot of lakes, rivers, beaches or mountains? Please describe it in as much detail as possible.",
+        "question_kr": "당신 나라의 지리에 대해 말씀해 주십시오. 호수, 강, 해변 또는 산이 많습니까? 가능한 한 자세히 설명해 주십시오."
+      },
+      {
+        "category": "C",
+        "theme": "Geography",
+        "q_theme": "Geography",
+        "q_id": 14,
+        "q_seq": 2,
+        "listen": "Geography_014_002.mp3",
+        "type": "(Routine)",
+        "question": "What types of outdoor activities do the people in your country do according to the geographical features? Are they interested in different types of things than people from other countries? Provide a detailed description of the things that people enjoy doing outdoors.",
+        "question_kr": "당신의 나라에 있는 사람들은 지리적 특징에 따라 어떤 종류의 야외 활동들을 하나요? 그들은 다른 나라 사람들과 다른 종류의 것들에 관심이 있습니까? 사람들이 야외에서 즐기는 활동에 대한 자세한 설명을 제공합니다."
+      },
+      {
+        "category": "C",
+        "theme": "Geography",
+        "q_theme": "Geography",
+        "q_id": 14,
+        "q_seq": 3,
+        "listen": "Geography_014_003.mp3",
+        "type": "(Experience)",
+        "question": "Have you ever been to a geographically unique area in your country? Where was it and what did the place look like? What did you see there? What did you do there? What was special about that place? Please tell me in as much detail as possible.",
+        "question_kr": "당신은 당신의 나라에서 지리적으로 독특한 지역에 한 번이라도 가본 적이 있나요? 그곳은 어디에 있었고 어떤 모습이었습니까? 거기서 무엇을 보았습니까? 거기서 뭘 하셨나요? 그곳의 어떤 점이 특별했나요? 자세히 설명해 주세요."
+      }
+    ],
+    "Outdoor activities": [
+      {
+        "category": "C",
+        "theme": "Outdoor activities",
+        "q_theme": "Outdoor",
+        "q_id": 15,
+        "q_seq": 1,
+        "listen": "Outdoor_015_001.mp3",
+        "type": "(Description)",
+        "question": "What types of outdoor activities do the people in your country do? Are they interested in different types of things than people from other countries? Provide a detailed description of the things that people enjoy doing outdoors.",
+        "question_kr": "당신의 나라에 있는 사람들은 어떤 종류의 야외 활동들을 하나요? 그들은 다른 나라 사람들과 다른 종류의 것들에 관심이 있습니까? 사람들이 야외에서 즐기는 활동에 대한 자세한 설명을 제공합니다."
+      },
+      {
+        "category": "C",
+        "theme": "Outdoor activities",
+        "q_theme": "Outdoor",
+        "q_id": 15,
+        "q_seq": 2,
+        "listen": "Outdoor_015_002.mp3",
+        "type": "(Description)",
+        "question": "What kinds of outdoor activities do you usually enjoy doing? How often do you engage in these activities, and what do you like most about them? Can you describe one or two of these activities in detail?",
+        "question_kr": "당신은 보통 어떤 종류의 야외 활동들을 즐기나요? 이러한 활동에 얼마나 자주 참여하며 그 활동에서 가장 좋아하는 점은 무엇입니까? 이러한 활동 중 한두 가지를 자세히 설명해 주시겠습니까?"
+      },
+      {
+        "category": "C",
+        "theme": "Outdoor activities",
+        "q_theme": "Outdoor",
+        "q_id": 15,
+        "q_seq": 3,
+        "listen": "Outdoor_015_003.mp3",
+        "type": "(Experience)",
+        "question": "Describe the most memorable experience you have had outdoors. What is a beautiful place you have been to? Please provide as many details as possible.",
+        "question_kr": "야외에서 경험한 것 중 가장 기억에 남는 경험을 설명해 주세요. 당신이 가본 아름다운 장소는 어디인가요? 가능한 한 많은 세부 정보를 제공하십시오."
+      }
+    ],
+    "Free time": [
+      {
+        "category": "C",
+        "theme": "Free time",
+        "q_theme": "Freetime",
+        "q_id": 16,
+        "q_seq": 1,
+        "listen": "Freetime_016_001.mp3",
+        "type": "(Description)",
+        "question": "Do you have much free time in Korea? When you need to take personal days from work, what do you have to do?",
+        "question_kr": "한국에서 여가 시간이 많으신가요? 직장에서 개인 휴가를 내야 할 때 무엇을 해야 합니까?"
+      },
+      {
+        "category": "C",
+        "theme": "Free time",
+        "q_theme": "Freetime",
+        "q_id": 16,
+        "q_seq": 2,
+        "listen": "Freetime_016_002.mp3",
+        "type": "(Past)",
+        "question": "What did you do when you had some free time recently? Was it something you did over the weekend or during a vacation? Please tell me as many details as possible about what you did the last time you had free time.",
+        "question_kr": "최근에 여가 시간이 났을 때 무엇을 하셨나요? 주말에 했거나 휴가 중에 한 일인가요? 지난번에 자유시간이 있었을 때 무엇을 하셨는지에 대해 가능한 한 자세히 알려주세요."
+      },
+      {
+        "category": "C",
+        "theme": "Free time",
+        "q_theme": "Freetime",
+        "q_id": 16,
+        "q_seq": 3,
+        "listen": "Freetime_016_003.mp3",
+        "type": "(Experience)",
+        "question": "Can you tell me about a memorable experience you had during your free time? What did you do, who were you with, and why does this experience stand out to you? Please describe everything in detail.",
+        "question_kr": "여가 시간에 기억에 남는 경험에 대해 말씀해 주시겠습니까? 당신은 무엇을 했고, 누구와 함께 있었으며, 이 경험이 당신에게 인상 깊었던 이유는 무엇입니까? 모든 것을 자세히 설명하십시오."
+      }
+    ],
+    "Fashion": [
+      {
+        "category": "C",
+        "theme": "Fashion",
+        "q_theme": "Fashion",
+        "q_id": 17,
+        "q_seq": 1,
+        "listen": "Fashion_017_001.mp3",
+        "type": "(Description)",
+        "question": "Describe the clothes normally worn by people in your country. Do people wear different types of clothes for work and relaxing?",
+        "question_kr": "당신의 나라 사람들이 일반적으로 입는 옷에 대해 설명하십시오. 사람들은 일과 휴식을 위해 다양한 종류의 옷을 입습니까?"
+      },
+      {
+        "category": "C",
+        "theme": "Fashion",
+        "q_theme": "Fashion",
+        "q_id": 17,
+        "q_seq": 2,
+        "listen": "Fashion_017_002.mp3",
+        "type": "(Routine)",
+        "question": "Where do you usually go shopping for clothes? What kinds of clothes do you like to buy? What are some important qualities you consider when shopping for attire?",
+        "question_kr": "당신은 옷을 사러 보통 어디로 가나요? 어떤 종류의 옷을 사는 것을 좋아합니까? 옷을 쇼핑할 때 고려하는 중요한 자질은 무엇입니까?"
+      },
+      {
+        "category": "C",
+        "theme": "Fashion",
+        "q_theme": "Fashion",
+        "q_id": 17,
+        "q_seq": 3,
+        "listen": "Fashion_017_003.mp3",
+        "type": "(Change)",
+        "question": "Describe how fashion trends have changed over time in your country. What did people wear in the past? What types of clothes are popular now?",
+        "question_kr": "귀하의 국가에서 시간이 지남에 따라 패션 트렌드가 어떻게 변했는지 설명하십시오. 과거에 사람들은 무엇을 입었습니까? 지금 유행하는 옷은 어떤 종류입니까?"
+      }
+    ],
+    "Phone Conversation": [
+      {
+        "category": "C",
+        "theme": "Phone Conversation",
+        "q_theme": "Phone",
+        "q_id": 18,
+        "q_seq": 1,
+        "listen": "Phone_018_001.mp3",
+        "type": "(Routine)",
+        "question": "Where do you usually talk on the phone? Is there a particular place that you use the phone a lot? Please describe your habits in detail.",
+        "question_kr": "주로 어디에서 전화 통화를 합니까? 당신이 전화기를 많이 사용하는 특별한 장소가 있나요? 당신의 습관을 자세히 설명해 주세요."
+      },
+      {
+        "category": "C",
+        "theme": "Phone Conversation",
+        "q_theme": "Phone",
+        "q_id": 18,
+        "q_seq": 2,
+        "listen": "Phone_018_002.mp3",
+        "type": "(Past)",
+        "question": "Think about a recent phone conversation you had. Who did you talk to, what was the conversation about, and how did it go? Please describe the entire conversation in as much detail as possible.",
+        "question_kr": "최근에 나눈 전화 통화에 대해 생각해 보십시오. 누구와 이야기를 나눴고, 무엇에 대해 대화를 나눴으며, 어떻게 진행되었나요? 전체 대화를 가능한 한 자세히 설명해 주세요."
+      },
+      {
+        "category": "C",
+        "theme": "Phone Conversation",
+        "q_theme": "Phone",
+        "q_id": 18,
+        "q_seq": 3,
+        "listen": "Phone_018_003.mp3",
+        "type": "(Experience)",
+        "question": "Can you describe a memorable experience you have had while talking on the phone? Who were you talking with? What happened? What was so special about it?",
+        "question_kr": "전화 통화를 하면서 기억에 남는 경험을 설명해 주시겠습니까? 누구와 이야기하고 있었습니까? 무슨 일이 있었나요? 무엇이 그렇게 특별했나요?"
+      }
+    ],
+    "Hair Salons": [
+      {
+        "category": "C",
+        "theme": "Hair Salons",
+        "q_theme": "Hair",
+        "q_id": 19,
+        "q_seq": 1,
+        "listen": "Hair_019_001.mp3",
+        "type": "(Description)",
+        "question": "Tell me about your favorite hair shop that you like to go to. What does your favorite hair shop look like? Why do you like that place?",
+        "question_kr": "가장 좋아하는 헤어샵 중 가고 싶은 헤어샵에 대해 알려주세요. 가장 좋아하는 헤어샵은 어떤 모습인가요? 왜 그곳을 좋아합니까?"
+      },
+      {
+        "category": "C",
+        "theme": "Hair Salons",
+        "q_theme": "Hair",
+        "q_id": 19,
+        "q_seq": 2,
+        "listen": "Hair_019_002.mp3",
+        "type": "(Past)",
+        "question": "When was the last time you got a haircut, and how did you find your hair designer? Tell me everything in detail",
+        "question_kr": "마지막으로 이발을 한 것이 언제였고, 헤어 디자이너는 어떻게 찾았나요? 모든 것을 자세히 알려주세요"
+      },
+      {
+        "category": "C",
+        "theme": "Hair Salons",
+        "q_theme": "Hair",
+        "q_id": 19,
+        "q_seq": 3,
+        "listen": "Hair_019_003.mp3",
+        "type": "(Experience)",
+        "question": "Tell me about a memorable experience you had when you went to get a haircut. What happened? Did anything go wrong? Please provide your answer in as much detail as possible.",
+        "question_kr": "이발을 하러 갔을 때 기억에 남는 경험을 들려주세요. 무슨 일이 있었나요? 뭔가 잘못되었나요? 가능한 한 자세하게 답변을 제공하십시오."
+      }
+    ],
+    "Hotels": [
+      {
+        "category": "C",
+        "theme": "Hotels",
+        "q_theme": "Hotels",
+        "q_id": 20,
+        "q_seq": 1,
+        "listen": "Hotels_020_001.mp3",
+        "type": "(Description)",
+        "question": "Tell me about the hotels in your country. What are those places like? Where are they normally located? Provide several details to describe hotels in your country.",
+        "question_kr": "한국의 호텔에 대해 알려주세요. 그런 장소들은 어떤 곳일까요? 그들은 일반적으로 어디에 있습니까? 해당 국가의 호텔을 설명할 수 있는 몇 가지 세부 정보를 제공하십시오."
+      },
+      {
+        "category": "C",
+        "theme": "Hotels",
+        "q_theme": "Hotels",
+        "q_id": 20,
+        "q_seq": 2,
+        "listen": "Hotels_020_002.mp3",
+        "type": "(Past)",
+        "question": "Think about the last time you stayed at a hotel. When was it, where did you go, and what was the reason for your stay? How was the overall experience? Please describe everything in detail.",
+        "question_kr": "마지막으로 호텔에 머물렀던 때를 생각해 보십시오. 언제였고, 어디로 갔으며, 이곳에 머문 이유는 무엇이었습니까? 전반적인 경험은 어땠나요? 모든 것을 자세히 설명하십시오."
+      },
+      {
+        "category": "C",
+        "theme": "Hotels",
+        "q_theme": "Hotels",
+        "q_id": 20,
+        "q_seq": 3,
+        "listen": "Hotels_020_003.mp3",
+        "type": "(Experience)",
+        "question": "People often have memories of especially beautiful and interesting hotels. Tell me about a hotel that you remember for some reason. Where was it? What did it look like? Describe it for me in as much detail as possible.",
+        "question_kr": "사람들은 종종 특히 아름답고 흥미로운 호텔에 대한 추억을 가지고 있습니다. 왠지 기억나는 호텔에 대해 가르쳐 주세요. 그곳은 어디에 있었는가? 어떤 모습이었나요? 가능한 한 자세히 설명해 주십시오."
+      }
+    ],
+    "Technology": [
+      {
+        "category": "C",
+        "theme": "Technology",
+        "q_theme": "Technology",
+        "q_id": 21,
+        "q_seq": 1,
+        "listen": "Technology_021_001.mp3",
+        "type": "(Description)",
+        "question": "Tell me about the technologies that are popular in your country. Which technology do people use the most there? What is it used for? Can you tell me why they like to use it?",
+        "question_kr": "귀하의 국가에서 널리 사용되는 기술에 대해 말씀해 주십시오. 사람들은 어떤 기술을 가장 많이 사용합니까? 그것은 무엇에 사용됩니까? 그들이 왜 그것을 사용하는 것을 좋아하는지 말해 줄 수 있습니까?"
+      },
+      {
+        "category": "C",
+        "theme": "Technology",
+        "q_theme": "Technology",
+        "q_id": 21,
+        "q_seq": 2,
+        "listen": "Technology_021_002.mp3",
+        "type": "(Routine)",
+        "question": "Tell me about a piece of technology you use every day. What is it, and why is it useful? When and how do you use it? Please provide your answer in as much detail as possible.",
+        "question_kr": "매일 사용하는 기술에 대해 말씀해 주세요. 그것은 무엇이며 왜 유용합니까? 언제 어떻게 사용합니까? 가능한 한 자세하게 답변을 제공하십시오."
+      },
+      {
+        "category": "C",
+        "theme": "Technology",
+        "q_theme": "Technology",
+        "q_id": 21,
+        "q_seq": 3,
+        "listen": "Technology_021_003.mp3",
+        "type": "(Experience)",
+        "question": "Have you ever experienced a problem related to technology? For instance, sometimes a device does not work properly or is difficult to use. Describe your technological problem in detail. How did you handle it?",
+        "question_kr": "기술과 관련된 문제를 경험한 적이 있습니까? 예를 들어, 장치가 제대로 작동하지 않거나 사용하기 어려운 경우가 있습니다. 기술적 문제를 자세히 설명하십시오. 어떻게 처리하셨나요?"
       }
     ],
     "Health": [
@@ -315,131 +742,338 @@
         "category": "C",
         "theme": "Health",
         "q_theme": "Health",
-        "q_id": 8,
+        "q_id": 22,
         "q_seq": 1,
-        "listen": "Health_008_001.mp3",
-        "type": "(Role Play)",
-        "question": "I want you to act out a situation at a doctor's office. You are not feeling well and want to make an appointment. Call the doctor's office and schedule a visit.",
-        "question_kr": "(롤플레이>병원 예약) 병원에서의 상황을 연기해 주세요. 몸이 좋지 않아서 진료 예약을 하려고 합니다. 병원에 전화해서 진료 예약을 해 보세요.",
-        "difficulty": 4,
-        "estimated_time": 60,
-        "tags": ["role-play", "health"]
+        "listen": "Health_022_001.mp3",
+        "type": "(Description)",
+        "question": "Tell me about a healthy person you know. What does he or she look like? What kind of food does he or she like to eat? How did you meet him or her? Provide as many details as possible.",
+        "question_kr": "당신이 아는 건강한 사람에 대해 말해 주세요. 그 또는 그녀는 어떻게 생겼습니까? 어떤 음식을 좋아합니까? 그 사람을 어떻게 만났는가? 가능한 한 자세하게 이야기해주세요."
       },
       {
         "category": "C",
         "theme": "Health",
         "q_theme": "Health",
-        "q_id": 8,
+        "q_id": 22,
         "q_seq": 2,
-        "listen": "Health_008_002.mp3",
-        "type": "(Role Play)",
-        "question": "You are at a pharmacy and you need to pick up a prescription. However, your prescription is not ready yet. Talk to the pharmacist and ask when it will be available.",
-        "question_kr": "(롤플레이>약국 처방전) 약국에서 처방전을 받으러 왔는데 아직 준비되지 않았습니다. 약사와 이야기하며 언제 준비될지 물어보세요.",
-        "difficulty": 4,
-        "estimated_time": 60,
-        "tags": ["role-play", "health"]
+        "listen": "Health_022_002.mp3",
+        "type": "(Routine)",
+        "question": "Many people put a lot of effort into staying fit. Is there anything special you do to stay healthy? Tell me what you do and explain why you do it.",
+        "question_kr": "많은 사람들이 건강을 유지하기 위해 많은 노력을 기울입니다. 건강을 유지하기 위해 특별히 하시는 일이 있나요? 당신이 하는 일과 그 일을 하는 이유를 설명해 주십시오."
       },
       {
         "category": "C",
         "theme": "Health",
         "q_theme": "Health",
-        "q_id": 8,
+        "q_id": 22,
         "q_seq": 3,
-        "listen": "Health_008_003.mp3",
-        "type": "(Role Play)",
-        "question": "You need to cancel your doctor's appointment because you're feeling better. Call the doctor's office and cancel your appointment.",
-        "question_kr": "(롤플레이>진료 예약 취소) 몸이 좋아져서 병원 예약을 취소해야 합니다. 병원에 전화해서 예약을 취소해 보세요.",
-        "difficulty": 3,
-        "estimated_time": 60,
-        "tags": ["role-play", "health"]
+        "listen": "Health_022_003.mp3",
+        "type": "(Experience)",
+        "question": "Tell me about a health problem that you or a person close to you had. What were the symptoms? What did you or the other person do to get over it?",
+        "question_kr": "당신 또는 당신과 가까운 사람이 가지고 있던 건강 문제에 대해 이야기해 주십시오. 어떤 증상이 있었습니까? 여러분 또는 다른 사람은 그것을 극복하기 위해 무엇을 했나요?"
       }
     ],
-    "School": [
+    "Recycling": [
       {
         "category": "C",
-        "theme": "School",
-        "q_theme": "School",
-        "q_id": 9,
+        "theme": "Recycling",
+        "q_theme": "Recycling",
+        "q_id": 23,
         "q_seq": 1,
-        "listen": "School_009_001.mp3",
-        "type": "(Role Play)",
-        "question": "I want you to act out a situation at school. You missed an important exam because you were sick. Talk to your teacher and ask if you can take a make-up exam.",
-        "question_kr": "(롤플레이>보충 시험) 학교에서의 상황을 연기해 주세요. 아파서 중요한 시험을 놓쳤습니다. 선생님과 이야기하며 보충 시험을 볼 수 있는지 물어보세요.",
-        "difficulty": 4,
-        "estimated_time": 60,
-        "tags": ["role-play", "school"]
+        "listen": "Recycling_023_001.mp3",
+        "type": "(Description)",
+        "question": "Tell me about recycling in your country. What kind of items do people usually recycle? Please describe the recycling system in your country in detail.",
+        "question_kr": "해당 국가에서의 재활용에 대해 말씀해 주십시오. 사람들은 보통 어떤 종류의 물건을 재활용합니까? 해당 국가의 재활용 시스템에 대해 자세히 설명해 주십시오."
       },
       {
         "category": "C",
-        "theme": "School",
-        "q_theme": "School",
-        "q_id": 9,
+        "theme": "Recycling",
+        "q_theme": "Recycling",
+        "q_id": 23,
         "q_seq": 2,
-        "listen": "School_009_002.mp3",
-        "type": "(Role Play)",
-        "question": "You want to join a club or activity at school. Talk to the club advisor and ask about the requirements and activities of the club.",
-        "question_kr": "(롤플레이>동아리 가입) 학교에서 동아리나 활동에 참여하고 싶습니다. 동아리 지도교사와 이야기하며 가입 조건과 활동 내용을 물어보세요.",
-        "difficulty": 4,
-        "estimated_time": 60,
-        "tags": ["role-play", "school"]
+        "listen": "Recycling_023_002.mp3",
+        "type": "(Routine)",
+        "question": "How do you recycle at home? When and how often do you recycle? Describe each step of the process from beginning to end.",
+        "question_kr": "집에서 어떻게 재활용합니까? 언제, 얼마나 자주 재활용합니까? 프로세스의 각 단계를 처음부터 끝까지 설명합니다."
       },
       {
         "category": "C",
-        "theme": "School",
-        "q_theme": "School",
-        "q_id": 9,
+        "theme": "Recycling",
+        "q_theme": "Recycling",
+        "q_id": 23,
         "q_seq": 3,
-        "listen": "School_009_003.mp3",
-        "type": "(Role Play)",
-        "question": "You are having difficulty understanding a subject in school. Talk to your teacher and ask for extra help or tutoring.",
-        "question_kr": "(롤플레이>학습 도움 요청) 학교에서 어려운 과목이 있습니다. 선생님과 이야기하며 추가 도움이나 과외를 요청해 보세요.",
-        "difficulty": 4,
-        "estimated_time": 60,
-        "tags": ["role-play", "school"]
+        "listen": "Recycling_023_003.mp3",
+        "type": "(Experience)",
+        "question": "Tell me about a memorable experience you had while recycling. What happened? What made it so unique or memorable? Tell me about it in as much detail as possible.",
+        "question_kr": "재활용하는 동안 기억에 남는 경험에 대해 말씀해 주세요. 무슨 일이 있었나요? 무엇이 그렇게 독특하거나 기억에 남게 만들었나요? 가능한 한 자세히 설명해 주세요."
       }
     ],
-    "Work": [
+    "Identification Card": [
       {
         "category": "C",
-        "theme": "Work",
-        "q_theme": "Work",
-        "q_id": 10,
+        "theme": "Identification Card",
+        "q_theme": "IDCard",
+        "q_id": 24,
         "q_seq": 1,
-        "listen": "Work_010_001.mp3",
-        "type": "(Role Play)",
-        "question": "I want you to act out a workplace situation. You need to ask your boss for time off for a family emergency. Talk to your supervisor and explain your situation.",
-        "question_kr": "(롤플레이>휴가 요청) 직장에서의 상황을 연기해 주세요. 가족 응급상황으로 휴가를 내야 합니다. 상사와 이야기하며 상황을 설명해 보세요.",
-        "difficulty": 4,
-        "estimated_time": 60,
-        "tags": ["role-play", "work"]
+        "listen": "IDCard_024_001.mp3",
+        "type": "(Description)",
+        "question": "What types of identification cards do people use in your country? In what situations do people need to use them?",
+        "question_kr": "당신의 나라에서 사람들은 어떤 종류의 신분증들을 사용하나요? 사람들은 어떤 상황에서 그것을 사용해야 합니까?"
       },
       {
         "category": "C",
-        "theme": "Work",
-        "q_theme": "Work",
-        "q_id": 10,
+        "theme": "Identification Card",
+        "q_theme": "IDCard",
+        "q_id": 24,
         "q_seq": 2,
-        "listen": "Work_010_002.mp3",
-        "type": "(Role Play)",
-        "question": "You have a disagreement with a coworker about a work project. Talk to your coworker and try to resolve the conflict professionally.",
-        "question_kr": "(롤플레이>동료와의 갈등 해결) 동료와 업무 프로젝트에 대해 의견 차이가 있습니다. 동료와 이야기하며 전문적으로 갈등을 해결해 보세요.",
-        "difficulty": 5,
-        "estimated_time": 60,
-        "tags": ["role-play", "work"]
+        "listen": "IDCard_024_002.mp3",
+        "type": "(Past)",
+        "question": "When did you get your first ID card? How did you feel about it?",
+        "question_kr": "첫 번째 ID 카드는 언제 받았습니까? 그 일에 대해 어떻게 느꼈는가?"
       },
       {
         "category": "C",
-        "theme": "Work",
-        "q_theme": "Work",
-        "q_id": 10,
+        "theme": "Identification Card",
+        "q_theme": "IDCard",
+        "q_id": 24,
         "q_seq": 3,
-        "listen": "Work_010_003.mp3",
-        "type": "(Role Play)",
-        "question": "You want to propose a new idea to improve efficiency at your workplace. Talk to your manager and present your suggestion.",
-        "question_kr": "(롤플레이>업무 개선 제안) 직장에서 효율성을 높이는 새로운 아이디어를 제안하고 싶습니다. 매니저와 이야기하며 제안을 발표해 보세요.",
-        "difficulty": 5,
-        "estimated_time": 60,
-        "tags": ["role-play", "work"]
+        "listen": "IDCard_024_003.mp3",
+        "type": "(Experience)",
+        "question": "Have you ever lost your ID card or had an issue with it? What happened, and how did you handle the situation?",
+        "question_kr": "신분증을 분실했거나 문제가 발생한 적이 있습니까? 무슨 일이 있었으며, 그 상황에 어떻게 대처했습니까?"
+      }
+    ],
+    "Neighborhood": [
+      {
+        "category": "C",
+        "theme": "Neighborhood",
+        "q_theme": "Neighborhood",
+        "q_id": 25,
+        "q_seq": 1,
+        "listen": "Neighborhood_025_001.mp3",
+        "type": "(Description)",
+        "question": "Can you describe your neighborhood? What facilities and places are there?",
+        "question_kr": "당신의 동네를 설명할 수 있습니까? 어떤 시설과 장소가 있습니까?"
+      },
+      {
+        "category": "C",
+        "theme": "Neighborhood",
+        "q_theme": "Neighborhood",
+        "q_id": 25,
+        "q_seq": 2,
+        "listen": "Neighborhood_025_002.mp3",
+        "type": "(Past)",
+        "question": "What was your neighborhood like when you were a child? How was it different from now? How has your neighborhood changed over the past 10 years? What new developments have taken place?",
+        "question_kr": "당신이 어렸을 때 당신의 동네는 어땠나요? 지금과 어떻게 달랐나요? 지난 10년 동안 당신의 동네는 어떻게 변했나요? 어떤 새로운 발전이 있었습니까?"
+      },
+      {
+        "category": "C",
+        "theme": "Neighborhood",
+        "q_theme": "Neighborhood",
+        "q_id": 25,
+        "q_seq": 3,
+        "listen": "Neighborhood_025_003.mp3",
+        "type": "(Experience)",
+        "question": "Have you ever experienced an interesting or unexpected event in your neighborhood?",
+        "question_kr": "이웃에서 흥미롭거나 예상치 못한 사건을 경험한 적이 있습니까?"
+      }
+    ],
+    "Career/Job": [
+      {
+        "category": "C",
+        "theme": "Career/Job",
+        "q_theme": "Career",
+        "q_id": 26,
+        "q_seq": 1,
+        "listen": "Career_026_001.mp3",
+        "type": "(Description)",
+        "question": "What are some popular jobs in your country? What kind of skills are required for them?",
+        "question_kr": "당신의 나라에서 인기 있는 직업들 몇 가지들은 무엇인가요? 그들에게 어떤 종류의 기술이 필요합니까?"
+      },
+      {
+        "category": "C",
+        "theme": "Career/Job",
+        "q_theme": "Career",
+        "q_id": 26,
+        "q_seq": 2,
+        "listen": "Career_026_002.mp3",
+        "type": "(Experience)",
+        "question": "Have you ever had an interesting job experience? What happened?",
+        "question_kr": "당신은 한 번이라도 흥미로운 직업 경험을 가졌나요? 무슨 일이 있었나요?"
+      },
+      {
+        "category": "C",
+        "theme": "Career/Job",
+        "q_theme": "Career",
+        "q_id": 26,
+        "q_seq": 3,
+        "listen": "Career_026_003.mp3",
+        "type": "(Change)",
+        "question": "How is the job market changing in your country? How has the job market in your country changed in recent years? Are new types of jobs becoming popular?",
+        "question_kr": "당신의 나라에서 취업 시장은 어떻게 변화하고 있나요? 최근 몇 년 동안 당신의 나라에 있는 취업 시장은 어떻게 바뀌었나요? 새로운 유형의 직업이 인기를 얻고 있습니까?"
+      }
+    ],
+    "Global Warming": [
+      {
+        "category": "C",
+        "theme": "Global Warming",
+        "q_theme": "Warming",
+        "q_id": 27,
+        "q_seq": 1,
+        "listen": "Warming_027_001.mp3",
+        "type": "(Description)",
+        "question": "How is global warming currently affecting the environment in Your country? Can you provide specific examples of its impacts on nature or society?",
+        "question_kr": "지구 온난화가 현재 한국의 환경에 어떤 영향을 미치고 있습니까? 자연이나 사회에 미치는 영향에 대한 구체적인 예를 제공할 수 있습니까?"
+      },
+      {
+        "category": "C",
+        "theme": "Global Warming",
+        "q_theme": "Warming",
+        "q_id": 27,
+        "q_seq": 2,
+        "listen": "Warming_027_002.mp3",
+        "type": "(Routine)",
+        "question": "How do you personally contribute to reducing global warming in your daily life? What steps do you take to make a difference?",
+        "question_kr": "일상 생활에서 지구 온난화를 줄이는 데 개인적으로 어떻게 기여하고 있습니까? 변화를 만들기 위해 어떤 조치를 취하고 있습니까?"
+      },
+      {
+        "category": "C",
+        "theme": "Global Warming",
+        "q_theme": "Warming",
+        "q_id": 27,
+        "q_seq": 3,
+        "listen": "Warming_027_003.mp3",
+        "type": "(Change)",
+        "question": "What impact does global warming have on people's daily lives, particularly in terms of lifestyle or health?",
+        "question_kr": "지구 온난화는 사람들의 일상 생활, 특히 생활 방식이나 건강 측면에서 어떤 영향을 미칩니까?"
+      }
+    ],
+    "Police": [
+      {
+        "category": "C",
+        "theme": "Police",
+        "q_theme": "Police",
+        "q_id": 28,
+        "q_seq": 1,
+        "listen": "Police_028_001.mp3",
+        "type": "(Description)",
+        "question": "Tell me about the police officers in your country. What are their responsibilities, what do they wear, and what do they do?",
+        "question_kr": "당신 나라의 경찰관에 대해 말씀해 주십시오. 그들의 책임은 무엇이고, 무엇을 입고, 무슨 일을 합니까?"
+      },
+      {
+        "category": "C",
+        "theme": "Police",
+        "q_theme": "Police",
+        "q_id": 28,
+        "q_seq": 2,
+        "listen": "Police_028_002.mp3",
+        "type": "(Past)",
+        "question": "Did you ever have an interesting or funny experience with the police when you were younger?",
+        "question_kr": "당신은 어렸을 때 경찰과 함께 흥미롭거나 재미있는 경험을 한 번이라도 했나요?"
+      },
+      {
+        "category": "C",
+        "theme": "Police",
+        "q_theme": "Police",
+        "q_id": 28,
+        "q_seq": 3,
+        "listen": "Police_028_003.mp3",
+        "type": "(Experience)",
+        "question": "Have you ever had any memorable experience with the police? What was it, and what happened? Please provide your answer in as much detail as possible.",
+        "question_kr": "경찰과 관련하여 기억에 남는 경험을 한 적이 있습니까? 그것은 무엇이었으며, 무슨 일이 일어났는가? 가능한 한 자세하게 답변을 제공하십시오."
+      }
+    ],
+    "City": [
+      {
+        "category": "C",
+        "theme": "City",
+        "q_theme": "City",
+        "q_id": 29,
+        "q_seq": 1,
+        "listen": "City_029_001.mp3",
+        "type": "(Description)",
+        "question": "Describe big cities in your country. Where are they located? What are they like, and what do people usually do there? Talk about their features in detail.",
+        "question_kr": "한국의 대도시에 대해 설명해 주십시오. 그들은 어디에 있습니까? 그들은 어떠하며 사람들은 보통 그곳에서 무엇을 합니까? 그들의 기능에 대해 자세히 이야기하십시오."
+      },
+      {
+        "category": "C",
+        "theme": "City",
+        "q_theme": "City",
+        "q_id": 29,
+        "q_seq": 2,
+        "listen": "City_029_002.mp3",
+        "type": "(Change)",
+        "question": "What are the differences between the past and now when it comes to cities in your country?",
+        "question_kr": "당신의 나라에 있는 도시들에 관해 과거와 현재의 차이점들은 무엇인가요?"
+      },
+      {
+        "category": "C",
+        "theme": "City",
+        "q_theme": "City",
+        "q_id": 29,
+        "q_seq": 3,
+        "listen": "City_029_003.mp3",
+        "type": "(Experience)",
+        "question": "Have you ever had a memorable experience in a city? What happened? What was it about? Please tell me everything from beginning to end, in as much detail as possible.",
+        "question_kr": "도시에서 기억에 남는 경험을 한 적이 있습니까? 무슨 일이 있었나요? 무엇에 관한 것이었습니까? 처음부터 끝까지 가능한 한 자세하게 말씀해 주세요."
+      }
+    ],
+    "Countryside": [
+      {
+        "category": "C",
+        "theme": "Countryside",
+        "q_theme": "Countryside",
+        "q_id": 30,
+        "q_seq": 1,
+        "listen": "Countryside_030_001.mp3",
+        "type": "(Description)",
+        "question": "What is the countryside like in your country? How is it different from the city?",
+        "question_kr": "당신의 나라에 있는 시골은 어떤가요? 도시와 어떻게 다른가요?"
+      },
+      {
+        "category": "C",
+        "theme": "Countryside",
+        "q_theme": "Countryside",
+        "q_id": 30,
+        "q_seq": 2,
+        "listen": "Countryside_030_002.mp3",
+        "type": "(Past)",
+        "question": "Did you ever live in or visit the countryside when you were a child? What do you remember about it?",
+        "question_kr": "당신은 어렸을 때 한 번이라도 시골에서 살았거나 시골을 방문해본 적이 있나요? 그것에 대해 무엇을 기억하십니까?"
+      },
+      {
+        "category": "C",
+        "theme": "Countryside",
+        "q_theme": "Countryside",
+        "q_id": 30,
+        "q_seq": 3,
+        "listen": "Countryside_030_003.mp3",
+        "type": "(Experience)",
+        "question": "Have you ever visited or lived in the countryside? What was your experience like? Have you ever had any memorable experience?",
+        "question_kr": "시골을 방문하거나 살았던 적이 있습니까? 당신의 경험은 어땠습니까? 기억에 남는 경험을 한 적이 있습니까?"
+      }
+    ],
+    "Unknown": [
+      {
+        "category": "C",
+        "theme": "",
+        "q_theme": "",
+        "q_id": 0,
+        "q_seq": 0,
+        "listen": "",
+        "type": "",
+        "question": "",
+        "question_kr": ""
+      },
+      {
+        "category": "C",
+        "theme": "",
+        "q_theme": "",
+        "q_id": 0,
+        "q_seq": 0,
+        "listen": "",
+        "type": "",
+        "question": "",
+        "question_kr": ""
       }
     ]
   }
