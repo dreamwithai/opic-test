@@ -841,19 +841,9 @@ export default function TestPage() {
     // 현재 문제의 카테고리 확인
     const questionCategory = questions[currentQuestionIndex]?.category || selectedCategory
     
-    // 디버깅 로그 추가
-    console.log('🎵 Audio Debug Info:')
-    console.log('  - audioFileName:', audioFileName)
-    console.log('  - questionCategory:', questionCategory)
-    console.log('  - selectedCategory:', selectedCategory)
-    console.log('  - currentQuestion:', questions[currentQuestionIndex])
-    
     // Supabase Storage에서 오디오 URL 생성 (카테고리/파일명 형식)
     const supabaseFileName = `${questionCategory}/${audioFileName}`
     const audioPath = getAudioUrl(supabaseFileName)
-    
-    console.log('  - supabaseFileName:', supabaseFileName)
-    console.log('  - final audioPath:', audioPath)
 
     // 기존 오디오가 재생 중이면 정지
     if (audioElement) {
@@ -877,16 +867,14 @@ export default function TestPage() {
     })
 
     audio.addEventListener('error', (e) => {
-      console.error(`🚨 Audio playback error:`, e)
-      console.error(`🚨 Failed audio path:`, audioPath)
+      console.error(`Audio playback error: ${e}`)
       setIsPlaying(false)
       setAudioElement(null)
     })
 
     // 오디오 재생 시작
     audio.play().catch(error => {
-      console.error(`🚨 Failed to play audio:`, error)
-      console.error(`🚨 Failed audio path:`, audioPath)
+      console.error(`Failed to play audio: ${error}`)
       setIsPlaying(false)
       setAudioElement(null)
     })
