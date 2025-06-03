@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { useRouter, useSearchParams } from 'next/navigation'
+import { getAudioUrl } from '@/lib/supabase'
 
 // Speech Recognition type declaration
 declare global {
@@ -255,8 +256,8 @@ export default function TestPage() {
     setAudioError('')
     
     try {
-      // 오디오 파일 경로 (public/audio/카테고리/ 폴더에서 찾기)
-      const audioPath = `/audio/${selectedCategory}/${audioFileName}`
+      // 오디오 파일 경로 (Supabase Storage에서 가져오기)
+      const audioPath = getAudioUrl(audioFileName, selectedCategory)
       
       // 새 Audio 객체 생성
       const audio = new Audio(audioPath)
