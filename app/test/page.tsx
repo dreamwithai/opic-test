@@ -3,25 +3,35 @@
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { useRouter, useSearchParams } from 'next/navigation'
-import { getAudioUrl } from '@/lib/supabase'
 
-// Web Speech API 타입 정의
+// Speech Recognition type declaration
+declare global {
+  interface Window {
+    SpeechRecognition: typeof SpeechRecognition
+    webkitSpeechRecognition: typeof SpeechRecognition
+  }
+}
+
 interface SpeechRecognition extends EventTarget {
   continuous: boolean
   interimResults: boolean
   lang: string
-  onresult: ((event: SpeechRecognitionEvent) => void) | null
-  onerror: ((event: SpeechRecognitionErrorEvent) => void) | null
-  onstart: ((event: Event) => void) | null
-  onend: ((event: Event) => void) | null
+  onresult: (event: SpeechRecognitionEvent) => void
+  onerror: (event: SpeechRecognitionErrorEvent) => void
+  onstart: () => void
+  onend: () => void
   start(): void
   stop(): void
-  abort(): void
 }
 
-interface SpeechRecognitionEvent extends Event {
+interface SpeechRecognitionEvent {
   results: SpeechRecognitionResultList
   resultIndex: number
+}
+
+interface SpeechRecognitionErrorEvent {
+  error: string
+  message: string
 }
 
 interface SpeechRecognitionResultList {
@@ -42,34 +52,17 @@ interface SpeechRecognitionAlternative {
   confidence: number
 }
 
-interface SpeechRecognitionErrorEvent extends Event {
-  error: string
-  message: string
+declare var SpeechRecognition: {
+  prototype: SpeechRecognition
+  new(): SpeechRecognition
 }
 
-declare global {
-  interface Window {
-    SpeechRecognition: new () => SpeechRecognition
-    webkitSpeechRecognition: new () => SpeechRecognition
-    SpeechGrammarList: new () => SpeechGrammarList
-    webkitSpeechGrammarList: new () => SpeechGrammarList
-  }
+declare var webkitSpeechRecognition: {
+  prototype: SpeechRecognition
+  new(): SpeechRecognition
 }
 
-interface SpeechGrammarList {
-  length: number
-  item(index: number): SpeechGrammar
-  [index: number]: SpeechGrammar
-  addFromURI(src: string, weight?: number): void
-  addFromString(string: string, weight?: number): void
-}
-
-interface SpeechGrammar {
-  src: string
-  weight: number
-}
-
-// 타입 정의
+// Question type interface
 interface Question {
   category: string
   theme?: string
@@ -85,7 +78,7 @@ interface Question {
   question_kr: string
 }
 
-// 기본 샘플 데이터 (fallback용)
+// Default fallback questions
 const defaultQuestions: Question[] = [
   {
     category: "S",
@@ -104,55 +97,66 @@ export default function TestPage() {
   const router = useRouter()
   const searchParams = useSearchParams()
   
-  // 모든 state 선언을 최상단에 배치
+  // State management
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0)
   const [questions, setQuestions] = useState<Question[]>([])
   const [loading, setLoading] = useState(true)
   const [selectedType, setSelectedType] = useState('선택주제')
   const [selectedCategory, setSelectedCategory] = useState('')
   const [selectedLevel, setSelectedLevel] = useState('IM2')
-  const [isRecording, setIsRecording] = useState(false)
-  const [recordingTime, setRecordingTime] = useState(0)
   const [listenCount, setListenCount] = useState(0)
   const [showQuestionDetails, setShowQuestionDetails] = useState(false)
   const [showAnswerPreview, setShowAnswerPreview] = useState(false)
-  const [showTimerModal, setShowTimerModal] = useState(false)
-  const [isCountdownMode, setIsCountdownMode] = useState(false)
-  const [countdownTime, setCountdownTime] = useState(0)
-  const [selectedTimeOption, setSelectedTimeOption] = useState<number | null>(null)
-  const [questionsLoaded, setQuestionsLoaded] = useState(false)
-  const [isLoading, setIsLoading] = useState(false)
-  const [isPlaying, setIsPlaying] = useState(false)
-  const [audioElement, setAudioElement] = useState<HTMLAudioElement | null>(null)
+  const [audioLoading, setAudioLoading] = useState(false)
+  const [audioError, setAudioError] = useState('')
   
-  // 실제 녹음 관련 상태 추가
+  // Recording states
+  const [isRecording, setIsRecording] = useState(false)
+  const [recordingTime, setRecordingTime] = useState(0)
   const [mediaRecorder, setMediaRecorder] = useState<MediaRecorder | null>(null)
-  const [audioStream, setAudioStream] = useState<MediaStream | null>(null)
-  const [recordedChunks, setRecordedChunks] = useState<Blob[]>([])
-  const [recordedAudioUrl, setRecordedAudioUrl] = useState<string | null>(null)
-  const [isRecordingReady, setIsRecordingReady] = useState(false)
-  const [recordingError, setRecordingError] = useState<string | null>(null)
+  const [recordedBlob, setRecordedBlob] = useState<Blob | null>(null)
+  const [recordingError, setRecordingError] = useState('')
+  const [waveformAnimation, setWaveformAnimation] = useState(0)
   
-  // STT (Speech-to-Text) 관련 상태 추가
-  const [speechRecognition, setSpeechRecognition] = useState<SpeechRecognition | null>(null)
-  const [recognizedText, setRecognizedText] = useState('')
-  const [interimText, setInterimText] = useState('')
-  const [isSTTSupported, setIsSTTSupported] = useState(false)
-  const [sttError, setSTTError] = useState<string | null>(null)
-  const [isSTTRunning, setIsSTTRunning] = useState(false)
-  const [userWantsToRecord, setUserWantsToRecord] = useState(false) // 사용자 녹음 의도 추적
+  // Timer modal states
+  const [showTimerModal, setShowTimerModal] = useState(false)
+  const [selectedTime, setSelectedTime] = useState(90) // 기본 1.5분
+  const [isTimerMode, setIsTimerMode] = useState(false) // 타이머 모드 여부
+  const [remainingTime, setRemainingTime] = useState(0) // 타이머 모드일 때 사용
 
-  // 디버그 로그 상태 추가 (모바일 디버깅용)
-  const [debugLogs, setDebugLogs] = useState<string[]>([])
-  const [showDebugLogs, setShowDebugLogs] = useState(false)
+  // STT states
+  const [sttText, setSttText] = useState('') // 음성 인식 결과
+  const [isSTTActive, setIsSTTActive] = useState(false) // STT 활성화 상태
+  const [sttError, setSttError] = useState('') // STT 에러 메시지
+  const [recognition, setRecognition] = useState<SpeechRecognition | null>(null) // 음성 인식 객체
 
-  // 모든 함수들을 useEffect보다 먼저 정의
+  // Load questions from API
   const loadQuestions = async (category: string) => {
     setLoading(true)
-    setIsLoading(true)
     
     try {
-      // JSON 파일명 결정을 문제 타입으로 변경
+      // URL에 refresh=true가 있으면 세션 스토리지 클리어
+      const refreshParam = searchParams.get('refresh')
+      const sessionKey = `questions_${category}_${selectedType}`
+      
+      if (refreshParam === 'true') {
+        sessionStorage.removeItem(sessionKey)
+      }
+      
+      // 세션 스토리지에서 기존 문제 확인 (피드백에서 돌아온 경우)
+      const storedQuestions = sessionStorage.getItem(sessionKey)
+      
+      if (storedQuestions && refreshParam !== 'true') {
+        try {
+          const parsedQuestions = JSON.parse(storedQuestions)
+          setQuestions(parsedQuestions)
+          setLoading(false)
+          return
+        } catch (error) {
+          // 파싱 실패 시 새로운 문제 로딩
+        }
+      }
+
       let questionType = ''
       switch (category) {
         case 'S':
@@ -170,202 +174,148 @@ export default function TestPage() {
         default:
           questionType = '선택주제'
       }
-
-      // API 호출로 변경 (/data/ 직접 접근 대신 /api/questions 사용)
-      const apiUrl = `/api/questions?type=${encodeURIComponent(questionType)}`
-      const response = await fetch(apiUrl)
+      
+      const response = await fetch(`/api/questions?type=${encodeURIComponent(questionType)}`)
+      
       if (!response.ok) {
-        throw new Error(`Failed to load ${questionType} data: ${response.status} ${response.statusText}`)
+        throw new Error(`Failed to load ${questionType} data`)
       }
       
       const data = await response.json()
       
-      // JSON 구조에 따라 질문 추출
       let extractedQuestions: Question[] = []
       
       if (data.themes && typeof data.themes === 'object') {
-        // combination.json, topic.json 등의 구조
         Object.values(data.themes).forEach((themeQuestions: any) => {
           if (Array.isArray(themeQuestions)) {
             extractedQuestions = extractedQuestions.concat(themeQuestions)
           }
         })
       } else if (Array.isArray(data)) {
-        // 배열 형태의 JSON
         extractedQuestions = data
-      } else if (data.questions && Array.isArray(data.questions)) {
-        // questions 배열이 있는 구조
-        extractedQuestions = data.questions
       }
-      
-      console.log(`🔍 DEBUG: Extracted ${extractedQuestions.length} questions`)
-      console.log(`🔍 DEBUG: First few questions:`, extractedQuestions.slice(0, 3))
 
       if (extractedQuestions.length > 0) {
-        // 카테고리별 문제 선택 로직
         let selectedQuestions: Question[] = []
         
-        if (category === 'S') {
-          // 선택주제: 랜덤하게 q_id 1개 선택 후, 해당 q_id의 모든 문제를 q_seq 순서로
+        if (category === 'S' || category === 'C') {
+          // Select random q_id and get all questions for that id
           const uniqueQIds = Array.from(new Set(extractedQuestions.map(q => q.q_id)))
           
-          if (uniqueQIds.length === 0) {
-            console.warn('No valid q_ids found for category S')
-            selectedQuestions = defaultQuestions
-          } else {
-            // 더 안전한 랜덤 선택
+          if (uniqueQIds.length > 0) {
             const randomIndex = Math.floor(Math.random() * uniqueQIds.length)
             const randomQId = uniqueQIds[randomIndex]
             
-            // 선택된 q_id의 모든 문제들을 q_seq 순서로 정렬
-            const questionsForSelectedId = extractedQuestions
+            selectedQuestions = extractedQuestions
               .filter(q => q.q_id === randomQId)
               .sort((a, b) => a.q_seq - b.q_seq)
-            
-            selectedQuestions = questionsForSelectedId
-          }
-        } else if (category === 'C') {
-          // 돌발주제: 선택주제와 동일하게 랜덤하게 q_id 1개 선택 후, 해당 q_id의 모든 문제를 q_seq 순서로
-          const uniqueQIds = Array.from(new Set(extractedQuestions.map(q => q.q_id)))
-          
-          if (uniqueQIds.length === 0) {
-            console.warn('No valid q_ids found for category C')
-            selectedQuestions = defaultQuestions
           } else {
-            // 더 안전한 랜덤 선택
-            const randomIndex = Math.floor(Math.random() * uniqueQIds.length)
-            const randomQId = uniqueQIds[randomIndex]
-            
-            // 선택된 q_id의 모든 문제들을 q_seq 순서로 정렬
-            const questionsForSelectedId = extractedQuestions
-              .filter(q => q.q_id === randomQId)
-              .sort((a, b) => a.q_seq - b.q_seq)
-            
-            selectedQuestions = questionsForSelectedId
+            selectedQuestions = defaultQuestions
           }
         } else {
-          // 다른 카테고리들: 랜덤하게 3개 선택
-          if (extractedQuestions.length === 0) {
-            selectedQuestions = defaultQuestions
-          } else {
-            const shuffled = [...extractedQuestions]
-            // Fisher-Yates 셔플
-            for (let i = shuffled.length - 1; i > 0; i--) {
-              const j = Math.floor(Math.random() * (i + 1))
-              ;[shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]]
-            }
-            selectedQuestions = shuffled.slice(0, Math.min(3, shuffled.length))
+          // Random 3 questions for other categories
+          const shuffled = [...extractedQuestions]
+          for (let i = shuffled.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1))
+            ;[shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]]
           }
+          selectedQuestions = shuffled.slice(0, Math.min(3, shuffled.length))
         }
         
-        if (selectedQuestions.length > 0) {
-          setQuestions(selectedQuestions)
-          
-          // 세션 스토리지에 문제들 저장 (타임스탬프 포함으로 캐시 만료 체크)
-          const sessionKey = `questions_${category}`
-          const sessionData = {
-            questions: selectedQuestions,
-            timestamp: Date.now(),
-            selectedInfo: category === 'S' 
-              ? { type: 'topic', qId: selectedQuestions[0]?.q_id, theme: selectedQuestions[0]?.q_theme }
-              : category === 'C'
-              ? { type: 'combination', qId: selectedQuestions[0]?.q_id, theme: selectedQuestions[0]?.q_theme }
-              : { type: 'other', themes: selectedQuestions.map(q => q.q_theme || q.theme || q.Theme) }
-          }
-          sessionStorage.setItem(sessionKey, JSON.stringify(sessionData))
-        } else {
-          console.warn(`No questions selected from ${questionType}`)
-          setQuestions(defaultQuestions)
+        // 세션 스토리지에 선택된 문제들 저장
+        try {
+          sessionStorage.setItem(sessionKey, JSON.stringify(selectedQuestions))
+        } catch (error) {
+          // 세션 스토리지 저장 실패 시 무시
         }
+        
+        setQuestions(selectedQuestions)
       } else {
-        console.warn(`No questions found in ${questionType}`)
         setQuestions(defaultQuestions)
       }
     } catch (error) {
       console.error('Error loading questions:', error)
-      
-      // 파일이 없는 경우의 fallback 처리
-      if (error instanceof Error && error.message.includes('Failed to load')) {
-        let fallbackMessage = ''
-        switch (category) {
-          case 'RP':
-            fallbackMessage = '롤플레이 문제는 아직 준비 중입니다.'
-            break
-          case 'MOCK':
-            fallbackMessage = '모의고사 문제는 아직 준비 중입니다.'
-            break
-          default:
-            fallbackMessage = '문제를 불러올 수 없습니다.'
-        }
-        
-        // 임시로 기본 문제를 보여주되, 메시지를 표시
-        const tempQuestion: Question = {
-          category: category,
-          theme: "임시",
-          q_theme: "임시",
-          q_id: 0,
-          q_seq: 1,
-          listen: "temp.mp3",
-          type: "(알림)",
-          question: fallbackMessage,
-          question_kr: fallbackMessage
-        }
-        setQuestions([tempQuestion])
-      } else {
-        setQuestions(defaultQuestions)
-      }
+      setQuestions(defaultQuestions)
     } finally {
       setLoading(false)
-      setQuestionsLoaded(true)
-      setIsLoading(false)
     }
   }
 
-  // 마이크 초기화 함수
-  const initializeMicrophone = async () => {
+  // Handle audio playback
+  const handleListen = async () => {
+    if (listenCount >= 2) return
+
+    const audioFileName = questions[currentQuestionIndex]?.listen
+    if (!audioFileName) {
+      setAudioError('오디오 파일 정보가 없습니다.')
+      return
+    }
+    
+    setAudioLoading(true)
+    setAudioError('')
+    
     try {
-      setRecordingError(null)
+      // 오디오 파일 경로 (public/audio/카테고리/ 폴더에서 찾기)
+      const audioPath = `/audio/${selectedCategory}/${audioFileName}`
       
-      // STT 정확도 향상을 위한 고품질 오디오 설정
-      const audioConstraints = {
-        audio: {
-          echoCancellation: true,        // 에코 제거
-          noiseSuppression: true,        // 노이즈 억제
-          autoGainControl: true,         // 자동 음량 조절
-          sampleRate: 44100,             // 고품질 샘플레이트
-          sampleSize: 16,                // 16비트 샘플
-          channelCount: 1,               // 모노 채널 (음성 인식에 최적)
-          // 추가 음성 인식 최적화 설정
-          googEchoCancellation: true,
-          googAutoGainControl: true,
-          googNoiseSuppression: true,
-          googHighpassFilter: true,
-          googTypingNoiseDetection: true,
-          googAudioMirroring: false
-        }
-      }
+      // 새 Audio 객체 생성
+      const audio = new Audio(audioPath)
       
-      const stream = await navigator.mediaDevices.getUserMedia(audioConstraints)
-      setAudioStream(stream)
-      
-      // MediaRecorder 설정 (최고 품질)
-      let mimeType = 'audio/webm;codecs=opus'
-      
-      // 브라우저별 최적 코덱 선택
-      if (MediaRecorder.isTypeSupported('audio/webm;codecs=opus')) {
-        mimeType = 'audio/webm;codecs=opus'
-      } else if (MediaRecorder.isTypeSupported('audio/mp4;codecs=mp4a.40.2')) {
-        mimeType = 'audio/mp4;codecs=mp4a.40.2'
-      } else if (MediaRecorder.isTypeSupported('audio/ogg;codecs=opus')) {
-        mimeType = 'audio/ogg;codecs=opus'
-      }
-      
-      const recorder = new MediaRecorder(stream, {
-        mimeType: mimeType,
-        audioBitsPerSecond: 128000 // 고품질 비트레이트
+      // 오디오 로드 완료 대기
+      await new Promise((resolve, reject) => {
+        audio.addEventListener('loadeddata', resolve)
+        audio.addEventListener('error', reject)
+        audio.load()
       })
       
-      const chunks: Blob[] = []
+      // 오디오 재생
+      await audio.play()
+      
+      // 재생 횟수 증가
+      setListenCount(prev => prev + 1)
+      
+      // 재생 완료 또는 에러 시 로딩 상태 해제
+      audio.addEventListener('ended', () => {
+        setAudioLoading(false)
+      })
+      
+      audio.addEventListener('error', () => {
+        setAudioLoading(false)
+        setAudioError('오디오 재생 중 오류가 발생했습니다.')
+      })
+      
+    } catch (error) {
+      setAudioLoading(false)
+      setAudioError('오디오 파일을 찾을 수 없습니다. 관리자에게 문의하세요.')
+      console.error('Audio playback error:', error)
+    }
+  }
+
+  // Utility functions
+  const getQuestionText = (question: Question) => {
+    return question.Question || question.question || ''
+  }
+
+  const getTheme = (question: Question) => {
+    return question.Theme || question.theme || question.q_theme || ''
+  }
+
+  const handleBack = () => {
+    router.back()
+  }
+
+  // Recording functions
+  const startRecording = async () => {
+    try {
+      setRecordingError('')
+      setSttError('')
+      
+      // 마이크 권한 요청
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: true })
+      
+      // MediaRecorder 생성
+      const recorder = new MediaRecorder(stream)
+      const chunks: BlobPart[] = []
       
       recorder.ondataavailable = (event) => {
         if (event.data.size > 0) {
@@ -374,797 +324,222 @@ export default function TestPage() {
       }
       
       recorder.onstop = () => {
-        const blob = new Blob(chunks, { type: mimeType })
-        const url = URL.createObjectURL(blob)
-        setRecordedAudioUrl(url)
-        setRecordedChunks([...chunks])
-        chunks.length = 0 // 배열 초기화
+        const blob = new Blob(chunks, { type: 'audio/wav' })
+        setRecordedBlob(blob)
+        stream.getTracks().forEach(track => track.stop()) // 마이크 스트림 정리
       }
       
+      recorder.start()
       setMediaRecorder(recorder)
-      setIsRecordingReady(true)
+      setIsRecording(true)
+      setRecordingTime(0)
+      
+      // STT 시작
+      startSTT()
       
     } catch (error) {
-      console.error('마이크 접근 실패:', error)
-      setRecordingError('마이크 접근 권한이 필요합니다. 브라우저에서 마이크 권한을 허용해주세요.')
-      setIsRecordingReady(false)
+      setRecordingError('마이크 접근 권한이 필요합니다. 브라우저 설정을 확인해주세요.')
+      console.error('Recording start error:', error)
     }
   }
 
-  // 실제 녹음 시작 함수
-  const startActualRecording = async () => {
-    if (!mediaRecorder || !isRecordingReady) {
-      await initializeMicrophone()
-      return
-    }
-    
-    try {
-      // 이전 녹음 데이터 초기화
-      if (recordedAudioUrl) {
-        URL.revokeObjectURL(recordedAudioUrl)
-        setRecordedAudioUrl(null)
-      }
-      setRecordedChunks([])
-      
-      mediaRecorder.start()
-      setRecordingError(null)
-      
-      // STT 시작 제거 (handleStartRecording에서만 호출하도록)
-      
-      if (!isCountdownMode) {
-        setRecordingTime(0)
-      }
-    } catch (error) {
-      console.error('녹음 시작 실패:', error)
-      setRecordingError('녹음 시작에 실패했습니다.')
-    }
-  }
-
-  // 실제 녹음 정지 함수  
-  const stopActualRecording = () => {
+  const stopRecording = () => {
     if (mediaRecorder && mediaRecorder.state === 'recording') {
       mediaRecorder.stop()
       setIsRecording(false)
     }
     
     // STT 중지
-    stopSpeechRecognition()
+    stopSTT()
   }
 
-  // 녹음된 오디오 재생 함수
-  const playRecordedAudio = () => {
-    if (recordedAudioUrl) {
-      const audio = new Audio(recordedAudioUrl)
-      audio.play().catch(error => {
-        console.error('재생 실패:', error)
-        alert('녹음된 오디오 재생에 실패했습니다.')
-      })
+  const resetRecording = () => {
+    if (mediaRecorder && mediaRecorder.state === 'recording') {
+      mediaRecorder.stop()
+    }
+    setIsRecording(false)
+    setRecordedBlob(null)
+    setRecordingTime(0)
+    if (isTimerMode) {
+      setRemainingTime(selectedTime) // 타이머 모드에서만 리셋
+    }
+    setRecordingError('')
+    
+    // STT 리셋
+    resetSTT()
+  }
+
+  const playRecording = () => {
+    if (recordedBlob) {
+      const audioUrl = URL.createObjectURL(recordedBlob)
+      const audio = new Audio(audioUrl)
+      audio.play()
     }
   }
 
-  // STT 초기화 함수
+  // STT functions
   const initializeSpeechRecognition = () => {
-    try {
-      // 브라우저 호환성 확인
-      const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition
-      
-      if (!SpeechRecognition) {
-        setIsSTTSupported(false)
-        setSTTError('이 브라우저는 음성 인식을 지원하지 않습니다.')
-        addDebugLog('🔍 SpeechRecognition: Not Available - 브라우저가 지원하지 않음')
-        return null
-      }
+    if (typeof window === 'undefined') return null
 
-      // 브라우저 감지 (정확성 향상)
-      const isEdge = /Edg/i.test(navigator.userAgent)
-      const isChrome = /Chrome/i.test(navigator.userAgent) && !/Edg/i.test(navigator.userAgent)
-      const isSafari = /Safari/i.test(navigator.userAgent) && !/Chrome/i.test(navigator.userAgent)
-      const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)
-      
-      let browserName = 'Other'
-      if (isEdge) {
-        browserName = 'Edge'
-      } else if (isChrome) {
-        browserName = 'Chrome'
-      } else if (isSafari) {
-        browserName = 'Safari'
-      }
-      
-      addDebugLog(`📱 Device Detection: ${isMobile ? 'Mobile' : 'Desktop'}`)
-      addDebugLog(`🌐 Browser Detected: ${browserName}`)
-      addDebugLog(`🔍 Browser Flags: Edge=${isEdge}, Chrome=${isChrome}, Safari=${isSafari}`)
-      addDebugLog(`🌐 User Agent: ${navigator.userAgent}`)
-      addDebugLog(`🔒 Protocol: ${location.protocol}`)
-      addDebugLog(`🏠 Hostname: ${location.hostname}`)
-
-      const recognition = new SpeechRecognition()
-      
-      // 브라우저별 최적화 설정
-      let appliedSettings = {}
-      if (isEdge) {
-        // Edge 브라우저 최적화 - continuous 모드 활성화로 변경
-        recognition.continuous = true
-        recognition.interimResults = false
-        appliedSettings = { continuous: true, interimResults: false, browser: 'Edge' }
-        addDebugLog('🌐 Edge Mode: continuous=true, interimResults=false (개선된 설정)')
-      } else if (isMobile) {
-        // 모바일 최적화
-        recognition.continuous = true
-        recognition.interimResults = false
-        appliedSettings = { continuous: true, interimResults: false, browser: 'Mobile' }
-        addDebugLog('📱 Mobile Mode: continuous=true, interimResults=false')
-      } else {
-        // 데스크톱 Chrome 등 - 최고 품질 설정
-        recognition.continuous = true
-        recognition.interimResults = true
-        appliedSettings = { continuous: true, interimResults: true, browser: 'Desktop' }
-        addDebugLog('💻 Desktop Mode: continuous=true, interimResults=true')
-      }
-      
-      recognition.lang = 'en-US' // 영어 설정 (OPIc는 영어 시험)
-      appliedSettings = { ...appliedSettings, lang: 'en-US' }
-      
-      // 추가 정확도 향상 설정 (타입 안전성을 위해 any로 캐스팅)
-      const enhancedRecognition = recognition as any
-      
-      // 여러 대안 결과 요청 (더 정확한 결과 선택 가능)
-      if ('maxAlternatives' in enhancedRecognition) {
-        const maxAlternatives = isEdge ? 3 : 3 // Edge도 3개로 변경
-        enhancedRecognition.maxAlternatives = maxAlternatives
-        appliedSettings = { ...appliedSettings, maxAlternatives }
-      }
-      
-      // 서비스 힌트 설정 (Chrome/Edge 최적화)
-      if ('serviceURI' in enhancedRecognition) {
-        enhancedRecognition.serviceURI = 'builtin://speech.googleapis.com'
-        appliedSettings = { ...appliedSettings, serviceURI: 'builtin://speech.googleapis.com' }
-      }
-      
-      // OPIc 특화 문법 힌트 (모든 브라우저에서 시도)
-      let grammarApplied = false
-      if ('grammars' in enhancedRecognition && window.SpeechGrammarList) {
-        const grammarList = new window.SpeechGrammarList()
-        
-        // OPIc 일반적인 표현들
-        const opic_phrases = `
-          #JSGF V1.0;
-          grammar opic;
-          public <opic> = 
-            (I think | I believe | In my opinion | From my perspective |
-             My hobby is | I like to | I enjoy | I prefer |
-             Let me tell you about | Speaking of | Regarding |
-             First of all | Secondly | Finally | In conclusion |
-             For example | For instance | Such as | Like |
-             Actually | Basically | Generally | Obviously |
-             That reminds me | Come to think of it | By the way);
-        `
-        
-        try {
-          grammarList.addFromString(opic_phrases, 1)
-          enhancedRecognition.grammars = grammarList
-          grammarApplied = true
-          addDebugLog('📝 Grammar hints applied successfully')
-        } catch (e) {
-          addDebugLog('📝 Grammar hints not supported, continuing without them')
-        }
-      }
-      
-      appliedSettings = { ...appliedSettings, grammarHints: grammarApplied }
-      
-      // 최종 적용된 설정 로그
-      addDebugLog(`⚙️ Applied Settings: ${JSON.stringify(appliedSettings)}`)
-
-      setSpeechRecognition(recognition)
-      setIsSTTSupported(true)
-      addDebugLog(`✅ SpeechRecognition initialized successfully ${isMobile ? '(Mobile Mode)' : isEdge ? '(Edge Mode)' : '(Desktop Mode)'}`)
-
-      // 음성 인식 결과 처리
-      recognition.onresult = (event: SpeechRecognitionEvent) => {
-        let finalTranscript = ''
-        let interimTranscript = ''
-        let bestConfidence = 0
-
-        addDebugLog(`🎧 STT Result Event: ${event.results.length} results`)
-
-        for (let i = event.resultIndex; i < event.results.length; i++) {
-          const result = event.results[i]
-          
-          // 가장 신뢰도가 높은 대안 선택
-          let bestAlternative = result[0]
-          for (let j = 0; j < result.length; j++) {
-            if (result[j].confidence > bestAlternative.confidence) {
-              bestAlternative = result[j]
-            }
-          }
-          
-          const transcript = bestAlternative.transcript
-          const confidence = bestAlternative.confidence
-          bestConfidence = Math.max(bestConfidence, confidence)
-          
-          addDebugLog(`🎧 Processing: "${transcript}" (isFinal: ${result.isFinal}, confidence: ${confidence.toFixed(2)})`)
-          
-          if (result.isFinal) {
-            finalTranscript += transcript
-          } else {
-            interimTranscript += transcript
-          }
-        }
-
-        // 브라우저별 신뢰도 기준 조정
-        const confidenceThreshold = isEdge ? 0.05 : 0.1 // Edge에서는 더 관대하게
-        
-        if (finalTranscript) {
-          if (bestConfidence > confidenceThreshold) {
-            addDebugLog(`✅ Saving STT Result: "${finalTranscript}" (confidence: ${bestConfidence.toFixed(2)})`)
-            setRecognizedText(prev => {
-              const newText = prev + finalTranscript + ' '
-              addDebugLog(`📝 Updated recognized text length: ${newText.length} chars`)
-              return newText
-            })
-          } else {
-            addDebugLog(`⚠️ Low confidence result ignored: "${finalTranscript}" (confidence: ${bestConfidence.toFixed(2)})`)
-          }
-        } else if (interimTranscript && !isEdge) {
-          addDebugLog(`👂 Interim result: "${interimTranscript}"`)
-        }
-        
-        // 임시 텍스트 업데이트 (실시간 표시용) - Edge와 모바일 제외
-        if (!isMobile && !isEdge) {
-          setInterimText(interimTranscript)
-        }
-      }
-
-      // 에러 처리
-      recognition.onerror = (event: SpeechRecognitionErrorEvent) => {
-        addDebugLog(`🚨 STT 오류: ${event.error} ${event.message}`)
-        setIsSTTRunning(false) // 에러 발생 시 상태 리셋
-        
-        // 상세한 에러 메시지
-        let errorMessage = `음성 인식 오류: ${event.error}`
-        switch (event.error) {
-          case 'no-speech':
-            errorMessage = '음성이 감지되지 않았습니다. 마이크에 대고 말씀해 주세요.'
-            break
-          case 'audio-capture':
-            errorMessage = '마이크에 접근할 수 없습니다. 마이크 권한을 확인해주세요.'
-            break
-          case 'not-allowed':
-            errorMessage = isMobile 
-              ? '마이크 사용이 차단되었습니다. 브라우저 주소창 옆 설정에서 마이크 권한을 허용해주세요.'
-              : '마이크 사용이 차단되었습니다. 브라우저 설정에서 마이크 권한을 허용해주세요.'
-            break
-          case 'network':
-            errorMessage = '네트워크 오류가 발생했습니다. 인터넷 연결을 확인해주세요.'
-            break
-          case 'bad-grammar':
-            errorMessage = '음성 인식 문법 오류입니다.'
-            break
-          case 'service-not-allowed':
-            errorMessage = '음성 인식 서비스가 차단되었습니다. 브라우저 설정을 확인해주세요.'
-            break
-          case 'language-not-supported':
-            errorMessage = '지원되지 않는 언어입니다.'
-            break
-        }
-        
-        setSTTError(errorMessage)
-      }
-
-      // STT 시작/종료 이벤트
-      recognition.onstart = () => {
-        addDebugLog('🎤 STT Started successfully')
-        setSTTError(null)
-        setIsSTTRunning(true) // onstart에서 상태 설정
-      }
-
-      recognition.onend = () => {
-        addDebugLog('🎤 STT Ended')
-        setIsSTTRunning(false) // onend에서 상태 리셋
-        addDebugLog(`🔍 Debug: isRecording=${isRecording}, userWantsToRecord=${userWantsToRecord}`)
-        
-        // 현재 녹음 상태를 별도 변수로 캐시 (상태 변경 전에)
-        const wasRecording = isRecording
-        const userStillWantsToRecord = userWantsToRecord
-        // 브라우저 감지 (onend 스코프 내에서)
-        const isEdgeBrowser = /Edg/i.test(navigator.userAgent)
-        
-        addDebugLog(`🔍 Cached state: wasRecording=${wasRecording}, userStillWantsToRecord=${userStillWantsToRecord}`)
-        
-        // 사용자가 여전히 녹음을 원하면 STT 재시작
-        if (wasRecording || userStillWantsToRecord) {
-          addDebugLog('✅ Restart condition met - attempting restart...')
-          try {
-            addDebugLog('🔄 Auto-restarting STT...')
-            // Edge는 더 빠른 재시작, Chrome은 안정성을 위해 지연
-            const restartDelay = isEdgeBrowser ? 50 : 100
-            setTimeout(() => {
-              addDebugLog(`🔍 Inside timeout: isRecording=${isRecording}, userWantsToRecord=${userWantsToRecord}`)
-              
-              // STT가 이미 실행 중이면 재시작하지 않음
-              if (isSTTRunning) {
-                addDebugLog('⚠️ STT already running, skipping restart')
-                return
-              }
-              
-              // 사용자가 더 이상 녹음을 원하지 않으면 중단
-              if (!userWantsToRecord) {
-                addDebugLog('❌ User no longer wants to record, stopping restart')
-                return
-              }
-              
-              // STT 객체가 없으면 다시 초기화
-              if (!speechRecognition) {
-                addDebugLog('🔧 Reinitializing Speech Recognition...')
-                const newRecognition = initializeSpeechRecognition()
-                if (newRecognition && userWantsToRecord && !isSTTRunning) {
-                  addDebugLog('🚀 Starting newly initialized STT...')
-                  try {
-                    setIsSTTRunning(true)
-                    newRecognition.start()
-                    addDebugLog('🔄 STT restarted with new instance')
-                  } catch (startError) {
-                    addDebugLog(`❌ New STT start failed: ${startError}`)
-                    setIsSTTRunning(false)
-                  }
-                }
-              } else if (userWantsToRecord && !isSTTRunning) {
-                addDebugLog('🚀 Calling speechRecognition.start()...')
-                try {
-                  setIsSTTRunning(true)
-                  speechRecognition.start()
-                  addDebugLog('🔄 STT restarted successfully')
-                } catch (startError) {
-                  addDebugLog(`❌ STT start failed: ${startError}`)
-                  setIsSTTRunning(false)
-                  
-                  // Edge에서는 실패 시 즉시 새 인스턴스 생성 시도
-                  if (isEdgeBrowser && userWantsToRecord) {
-                    addDebugLog('🔧 Edge: Trying immediate reinitialize after start failure...')
-                    const newRecognition = initializeSpeechRecognition()
-                    if (newRecognition && !isSTTRunning) {
-                      try {
-                        setIsSTTRunning(true)
-                        newRecognition.start()
-                        addDebugLog('🔄 Edge: STT restarted with new instance after error')
-                      } catch (newStartError) {
-                        addDebugLog(`❌ Edge: New instance start failed: ${newStartError}`)
-                        setIsSTTRunning(false)
-                      }
-                    }
-                  }
-                }
-              } else {
-                addDebugLog('❌ Restart condition failed inside timeout or STT already running')
-              }
-            }, restartDelay)
-          } catch (error) {
-            addDebugLog(`🔄 STT restart failed: ${error}`)
-            setIsSTTRunning(false)
-          }
-        } else {
-          addDebugLog('❌ Not restarting - user does not want to record')
-        }
-      }
-
-      return recognition
-      
-    } catch (error) {
-      addDebugLog(`❌ STT 초기화 실패: ${error}`)
-      setIsSTTSupported(false)
-      setSTTError('음성 인식 초기화에 실패했습니다.')
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition
+    if (!SpeechRecognition) {
+      setSttError('이 브라우저는 음성 인식을 지원하지 않습니다.')
       return null
     }
+
+    const recognition = new SpeechRecognition()
+    recognition.continuous = true
+    recognition.interimResults = true
+    recognition.lang = 'en-US' // 영어로 설정
+
+    recognition.onstart = () => {
+      setIsSTTActive(true)
+      setSttError('')
+    }
+
+    recognition.onresult = (event) => {
+      let finalTranscript = ''
+      let interimTranscript = ''
+
+      for (let i = event.resultIndex; i < event.results.length; i++) {
+        const transcript = event.results[i][0].transcript
+        if (event.results[i].isFinal) {
+          finalTranscript += transcript
+        } else {
+          interimTranscript += transcript
+        }
+      }
+
+      // 최종 결과와 임시 결과를 결합하여 표시
+      setSttText(prev => {
+        const existingFinal = prev.split('...')[0] // 기존 최종 텍스트
+        return existingFinal + finalTranscript + (interimTranscript ? '...' + interimTranscript : '')
+      })
+    }
+
+    recognition.onerror = (event) => {
+      setSttError(`음성 인식 오류: ${event.error}`)
+      setIsSTTActive(false)
+    }
+
+    recognition.onend = () => {
+      setIsSTTActive(false)
+    }
+
+    return recognition
   }
 
-  // STT 시작 함수
-  const startSpeechRecognition = () => {
-    if (speechRecognition && isSTTSupported && !isSTTRunning) {
-      try {
-        // 모바일에서 명시적 마이크 권한 요청
-        const requestMicrophonePermission = async () => {
-          try {
-            addDebugLog('🎤 Requesting microphone permission...')
-            await navigator.mediaDevices.getUserMedia({ audio: true })
-            addDebugLog('✅ Microphone permission granted')
-            return true
-          } catch (error) {
-            addDebugLog(`❌ Microphone permission denied: ${error}`)
-            setSTTError('마이크 권한이 필요합니다. 브라우저 설정에서 마이크 권한을 허용해주세요.')
-            return false
-          }
-        }
-
-        // 마이크 권한 확인 후 STT 시작
-        const startSTT = async () => {
-          const hasPermission = await requestMicrophonePermission()
-          if (!hasPermission) return
-
-          // 이미 실행 중인지 다시 한번 확인
-          if (isSTTRunning) {
-            addDebugLog('⚠️ STT is already running, skipping start')
-            return
-          }
-
-          setRecognizedText('') // 기존 텍스트 초기화
-          setInterimText('') // 임시 텍스트도 초기화
-          addDebugLog('🚀 Starting Speech Recognition...')
-          setIsSTTRunning(true) // 시작 전에 상태 설정
-          speechRecognition.start()
-        }
-
-        startSTT()
-      } catch (error) {
-        addDebugLog(`❌ STT 시작 실패: ${error}`)
-        setSTTError('음성 인식 시작에 실패했습니다.')
-        setIsSTTRunning(false) // 실패 시 상태 리셋
+  const startSTT = () => {
+    if (!recognition) {
+      const newRecognition = initializeSpeechRecognition()
+      if (newRecognition) {
+        setRecognition(newRecognition)
+        newRecognition.start()
       }
-    } else if (isSTTRunning) {
-      addDebugLog('⚠️ STT is already running')
     } else {
-      addDebugLog('❌ STT not supported or not initialized')
-      setSTTError('음성 인식이 지원되지 않거나 초기화되지 않았습니다.')
+      recognition.start()
     }
   }
 
-  // STT 중지 함수
-  const stopSpeechRecognition = () => {
-    if (speechRecognition && isSTTRunning) {
-      try {
-        addDebugLog('🛑 Stopping Speech Recognition...')
-        speechRecognition.stop()
-        setInterimText('') // 임시 텍스트 초기화
-        setIsSTTRunning(false) // 중지 시 상태 리셋
-      } catch (error) {
-        addDebugLog(`⚠️ STT 중지 실패: ${error}`)
-        setIsSTTRunning(false) // 실패해도 상태 리셋
+  const stopSTT = () => {
+    if (recognition && isSTTActive) {
+      recognition.stop()
+    }
+  }
+
+  const resetSTT = () => {
+    setSttText('')
+    setSttError('')
+    if (recognition && isSTTActive) {
+      recognition.stop()
+    }
+  }
+
+  // Initialize from URL params
+  useEffect(() => {
+    const type = searchParams.get('type') || '선택주제'
+    const category = searchParams.get('category') || 'S'
+    const level = searchParams.get('level') || 'IM2'
+    const questionParam = searchParams.get('question')
+    
+    setSelectedType(type)
+    setSelectedCategory(category)
+    setSelectedLevel(level)
+    
+    // URL에서 문제 번호가 전달된 경우 (피드백 페이지에서 온 경우)
+    if (questionParam) {
+      const questionIndex = parseInt(questionParam) - 1 // 1-based를 0-based로 변환
+      if (questionIndex >= 0) {
+        setCurrentQuestionIndex(questionIndex)
+        setListenCount(0) // 새 문제이므로 듣기 횟수 초기화
       }
     }
-  }
+  }, [searchParams])
 
+  // Load questions when category is set
+  useEffect(() => {
+    if (selectedCategory) {
+      loadQuestions(selectedCategory)
+    }
+  }, [selectedCategory])
+
+  // Recording timer
+  useEffect(() => {
+    let interval: NodeJS.Timeout
+    
+    if (isRecording) {
+      interval = setInterval(() => {
+        setRecordingTime(prev => prev + 1)
+        
+        // 타이머 모드일 때만 카운트다운 실행
+        if (isTimerMode) {
+          setRemainingTime(prev => {
+            const newTime = prev - 1
+            
+            // 시간이 0에 도달하면 녹음 자동 중지
+            if (newTime <= 0) {
+              stopRecording()
+              return 0
+            }
+            
+            return newTime
+          })
+        }
+        
+        setWaveformAnimation(prev => prev + 1) // 웨이브폼 애니메이션 업데이트
+      }, 1000)
+    }
+    
+    return () => {
+      if (interval) {
+        clearInterval(interval)
+      }
+    }
+  }, [isRecording, isTimerMode])
+
+  // 타이머 모드 설정 시 remainingTime 초기화
+  useEffect(() => {
+    if (isTimerMode && !isRecording) {
+      setRemainingTime(selectedTime)
+    }
+  }, [selectedTime, isTimerMode, isRecording])
+
+  // Format recording time as mm:ss
   const formatTime = (seconds: number) => {
     const mins = Math.floor(seconds / 60)
     const secs = seconds % 60
     return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`
   }
 
-  const handleListen = () => {
-    if (listenCount >= 2) {
-      return
-    }
-
-    const audioFileName = questions[currentQuestionIndex]?.listen
-    if (!audioFileName) {
-      console.log('No audio file specified for this question')
-      return
-    }
-
-    // 현재 문제의 카테고리 확인
-    const questionCategory = questions[currentQuestionIndex]?.category || selectedCategory
-    
-    // Supabase Storage에서 오디오 URL 생성 (카테고리/파일명 형식)
-    const supabaseFileName = `${questionCategory}/${audioFileName}`
-    const audioPath = getAudioUrl(supabaseFileName)
-
-    // 기존 오디오가 재생 중이면 정지
-    if (audioElement) {
-      audioElement.pause()
-      audioElement.currentTime = 0
-    }
-
-    // 새 오디오 요소 생성
-    const audio = new Audio(audioPath)
-    setAudioElement(audio)
-    setIsPlaying(true)
-
-    // 오디오 이벤트 리스너
-    audio.addEventListener('play', () => {
-      setListenCount(prev => prev + 1)
-    })
-
-    audio.addEventListener('ended', () => {
-      setIsPlaying(false)
-      setAudioElement(null)
-    })
-
-    audio.addEventListener('error', (e) => {
-      console.error(`Audio playback error: ${e}`)
-      setIsPlaying(false)
-      setAudioElement(null)
-    })
-
-    // 오디오 재생 시작
-    audio.play().catch(error => {
-      console.error(`Failed to play audio: ${error}`)
-      setIsPlaying(false)
-      setAudioElement(null)
-    })
+  // Format selected time for display
+  const formatSelectedTime = (seconds: number) => {
+    if (seconds < 60) return `${seconds}초`
+    if (seconds === 60) return '1분'
+    if (seconds === 90) return '1.5분'
+    return `${Math.floor(seconds / 60)}분`
   }
 
-  const handleStartRecording = () => {
-    addDebugLog('🔴 Recording START button clicked')
-    setIsRecording(true)
-    setUserWantsToRecord(true) // 사용자 녹음 의도 설정
-    startActualRecording()
-    startSpeechRecognition()
-  }
-
-  const handleStopRecording = () => {
-    addDebugLog('🟥 Recording STOP button clicked')
-    setIsRecording(false)
-    setUserWantsToRecord(false) // 사용자 녹음 의도 해제
-    stopActualRecording()
-    stopSpeechRecognition()
-  }
-
-  const handleResetRecording = () => {
-    stopActualRecording()
-    stopSpeechRecognition() // STT도 중지
-    setUserWantsToRecord(false) // 사용자 녹음 의도 해제
-    
-    // 이전 녹음 데이터 정리
-    if (recordedAudioUrl) {
-      URL.revokeObjectURL(recordedAudioUrl)
-      setRecordedAudioUrl(null)
-    }
-    setRecordedChunks([])
-    
-    // STT 텍스트 초기화
-    setRecognizedText('')
-    setInterimText('')
-    setSTTError(null)
-    setIsSTTRunning(false) // STT 실행 상태도 리셋
-    
-    if (isCountdownMode) {
-      setCountdownTime(selectedTimeOption || 0)
-    } else {
-      setRecordingTime(0)
-    }
-  }
-
-  const handleTimerClick = () => {
-    setShowTimerModal(true)
-  }
-
-  const handleTimeSelection = (seconds: number) => {
-    setSelectedTimeOption(seconds)
-    setCountdownTime(seconds)
-    setIsCountdownMode(true)
-    setRecordingTime(0)
-    setShowTimerModal(false)
-  }
-
-  const handleSubmitAnswer = () => {
-    // 현재 문제의 테마 정보와 STT 텍스트를 포함하여 피드백 페이지로 이동
-    const currentTheme = getTheme(questions[currentQuestionIndex])
-    const userAnswer = recognizedText || "음성 인식된 답변이 없습니다. 녹음을 다시 시도해주세요."
-    const feedbackUrl = `/feedback?question=${currentQuestionIndex + 1}&type=${encodeURIComponent(selectedType)}&category=${encodeURIComponent(selectedCategory)}&level=${encodeURIComponent(selectedLevel)}&theme=${encodeURIComponent(currentTheme)}&qid=${questions[currentQuestionIndex]?.q_id}&qseq=${questions[currentQuestionIndex]?.q_seq}&answer=${encodeURIComponent(userAnswer)}`
-    router.push(feedbackUrl)
-  }
-
-  // 새로운 함수: 다음 문제로 이동
-  const handleNextQuestion = () => {
-    const nextQuestionIndex = currentQuestionIndex + 1
-    if (nextQuestionIndex < questions.length) {
-      const nextQuestionNumber = nextQuestionIndex + 1
-      router.push(`/test?type=${encodeURIComponent(selectedType)}&category=${selectedCategory}&question=${nextQuestionNumber}&level=${encodeURIComponent(selectedLevel)}`)
-    }
-  }
-
-  const handleBack = () => {
-    router.back()
-  }
-
-  // 질문 텍스트 추출 (다양한 JSON 구조 지원)
-  const getQuestionText = (question: Question) => {
-    return question.Question || question.question || ''
-  }
-
-  const getQuestionType = (question: Question) => {
-    return question.Type || question.type || ''
-  }
-
-  const getTheme = (question: Question) => {
-    return question.Theme || question.theme || question.q_theme || ''
-  }
-
-  // 디버그 로그 추가 함수
-  const addDebugLog = (message: string) => {
-    const timestamp = new Date().toLocaleTimeString()
-    const logMessage = `[${timestamp}] ${message}`
-    setDebugLogs(prev => [...prev.slice(-4), logMessage]) // 최근 5개만 유지
-    console.log(logMessage)
-  }
-
-  // 모든 useEffect를 함수 선언 이후에 배치
-  // Query parameters에서 타입과 카테고리 읽기
-  useEffect(() => {
-    const type = searchParams.get('type') || '선택주제'
-    const category = searchParams.get('category') || 'S'
-    const level = searchParams.get('level') || 'IM2'
-    
-    setSelectedType(type)
-    setSelectedCategory(category)
-    setSelectedLevel(level)
-  }, [searchParams])
-  
-  // 최초 문제 로딩 (한 번만)
-  useEffect(() => {
-    if (!questionsLoaded && !isLoading && selectedCategory) {
-      // 세션 스토리지에서 기존 문제들 확인
-      const sessionKey = `questions_${selectedCategory}`
-      const storedData = sessionStorage.getItem(sessionKey)
-      
-      // URL에서 새로고침 파라미터 확인
-      const forceRefresh = searchParams.get('refresh') === 'true'
-      
-      if (storedData && !forceRefresh) {
-        try {
-          const sessionData = JSON.parse(storedData)
-          
-          // 새로운 형식 (타임스탬프 포함) 체크
-          if (sessionData.questions && sessionData.timestamp) {
-            // 타임스탬프 체크 (10분 후 자동 만료)
-            const isExpired = Date.now() - sessionData.timestamp > 10 * 60 * 1000
-            
-            // 캐시된 데이터가 현재 요청한 카테고리와 일치하는지 확인
-            const cachedCategory = sessionData.questions[0]?.category
-            
-            if (cachedCategory !== selectedCategory) {
-              sessionStorage.removeItem(sessionKey)
-              // 새로 로딩하도록 계속 진행
-            } else if (!isExpired) {
-              // 저장된 문제들이 있고 만료되지 않았으면 복원
-              setQuestions(sessionData.questions)
-              setQuestionsLoaded(true)
-              setLoading(false)
-              return
-            } else {
-              sessionStorage.removeItem(sessionKey)
-            }
-          } else if (Array.isArray(sessionData)) {
-            // 기존 형식 (배열만) - 바로 새로 로딩
-            sessionStorage.removeItem(sessionKey)
-          }
-        } catch (error) {
-          addDebugLog(`세션 데이터 파싱 실패: ${error}`)
-          sessionStorage.removeItem(sessionKey)
-        }
-      }
-      
-      // 저장된 문제가 없거나 만료되었거나 강제 새로고침인 경우 새로 로딩
-      loadQuestions(selectedCategory)
-    }
-  }, [selectedCategory, questionsLoaded, isLoading, searchParams])
-
-  useEffect(() => {
-    const questionIndex = searchParams.get('question')
-    if (questionIndex) {
-      const index = parseInt(questionIndex) - 1
-      setCurrentQuestionIndex(index)
-      // 새 문제로 넘어갈 때 상태 초기화
-      setListenCount(0)
-      setRecordingTime(0)
-      setIsRecording(false)
-      setShowQuestionDetails(false)
-      setShowAnswerPreview(false)
-      setIsCountdownMode(false)
-      setCountdownTime(0)
-      setSelectedTimeOption(null)
-    }
-  }, [searchParams])
-
-  useEffect(() => {
-    let interval: NodeJS.Timeout
-    if (isRecording) {
-      interval = setInterval(() => {
-        if (isCountdownMode) {
-          setCountdownTime(prev => {
-            if (prev <= 1) {
-              // 카운트다운이 0이 되면 자동으로 녹음 정지
-              stopActualRecording()
-              return 0
-            }
-            return prev - 1
-          })
-        } else {
-          setRecordingTime(prev => prev + 1)
-        }
-      }, 1000)
-    }
-    return () => {
-      if (interval) clearInterval(interval)
-    }
-  }, [isRecording, isCountdownMode])
-
-  // 오디오 정리를 위한 useEffect
-  useEffect(() => {
-    return () => {
-      // 컴포넌트 언마운트 시 오디오 정지
-      if (audioElement) {
-        audioElement.pause()
-        audioElement.currentTime = 0
-      }
-    }
-  }, [audioElement])
-
-  // 문제가 바뀔 때 오디오 정지 및 상태 초기화
-  useEffect(() => {
-    if (audioElement) {
-      audioElement.pause()
-      audioElement.currentTime = 0
-      setAudioElement(null)
-    }
-    setIsPlaying(false)
-  }, [currentQuestionIndex])
-
-  // 컴포넌트 마운트 시 마이크 초기화
-  useEffect(() => {
-    const initializeAll = async () => {
-      await initializeMicrophone()
-      // 마이크 초기화 후 약간의 지연을 두고 STT 초기화
-      setTimeout(() => {
-        initializeSpeechRecognition()
-      }, 500)
-    }
-    
-    initializeAll()
-    
-    return () => {
-      // 컴포넌트 언마운트 시 리소스 정리
-      if (audioStream) {
-        audioStream.getTracks().forEach(track => track.stop())
-      }
-      if (recordedAudioUrl) {
-        URL.revokeObjectURL(recordedAudioUrl)
-      }
-      if (speechRecognition) {
-        speechRecognition.stop()
-      }
-    }
-  }, []) // 빈 의존성 배열로 한 번만 실행
-
-  // 문제가 바뀔 때 녹음 상태 초기화
-  useEffect(() => {
-    // 녹음 중이면 정지
-    if (isRecording) {
-      stopActualRecording()
-    }
-    
-    // 사용자 녹음 의도 해제
-    setUserWantsToRecord(false)
-    
-    // 이전 녹음 데이터 정리
-    if (recordedAudioUrl) {
-      URL.revokeObjectURL(recordedAudioUrl)
-      setRecordedAudioUrl(null)
-    }
-    setRecordedChunks([])
-    setRecordingTime(0)
-    setIsCountdownMode(false)
-    setCountdownTime(0)
-    setSelectedTimeOption(null)
-    
-    // STT 상태 초기화
-    setRecognizedText('')
-    setInterimText('')
-    setSTTError(null)
-  }, [currentQuestionIndex])
-
-  // 변수들 선언
-  const currentQuestion = questions[currentQuestionIndex]
-  const totalQuestions = questions.length
-  const displayTime = isCountdownMode ? countdownTime : recordingTime
-  const timeOptions = [
-    { label: '45s', value: 45 },
-    { label: '1m', value: 60 },
-    { label: '1.5m', value: 90 },
-    { label: '2m', value: 120 },
-    { label: '3m', value: 180 },
-    { label: '5m', value: 300 }
-  ]
-
-  // 조건부 렌더링은 모든 hooks 이후에
-  // 로딩 상태
+  // Loading state
   if (loading) {
     return (
       <div className="min-h-screen bg-white flex items-center justify-center">
@@ -1176,7 +551,10 @@ export default function TestPage() {
     )
   }
 
-  // 문제가 없는 경우
+  const currentQuestion = questions[currentQuestionIndex]
+  const totalQuestions = questions.length
+
+  // No questions available
   if (!currentQuestion) {
     return (
       <div className="min-h-screen bg-white flex items-center justify-center">
@@ -1223,38 +601,6 @@ export default function TestPage() {
             <span className="font-medium">뒤로가기</span>
           </button>
 
-          {/* 디버그 로그 토글 버튼 (모바일용) */}
-          <div className="mb-4">
-            <button
-              onClick={() => setShowDebugLogs(!showDebugLogs)}
-              className="bg-gray-500 hover:bg-gray-600 text-white px-3 py-1 rounded text-sm"
-            >
-              🔍 디버그 로그 {showDebugLogs ? '숨기기' : '보기'}
-            </button>
-          </div>
-
-          {/* 디버그 로그 표시 */}
-          {showDebugLogs && (
-            <div className="mb-6 p-4 bg-black text-green-400 rounded-lg text-xs font-mono max-h-40 overflow-y-auto">
-              <h4 className="text-white font-bold mb-2">🔍 실시간 디버그 로그:</h4>
-              {debugLogs.length === 0 ? (
-                <p className="text-gray-400">로그가 없습니다.</p>
-              ) : (
-                debugLogs.map((log, index) => (
-                  <div key={index} className="mb-1">
-                    {log}
-                  </div>
-                ))
-              )}
-              <button
-                onClick={() => setDebugLogs([])}
-                className="mt-2 bg-red-600 hover:bg-red-700 text-white px-2 py-1 rounded text-xs"
-              >
-                로그 지우기
-              </button>
-            </div>
-          )}
-
           {/* Breadcrumb */}
           <div className="flex items-center text-sm text-gray-600 mb-4">
             <Link href="/" className="hover:text-gray-800">홈</Link>
@@ -1271,31 +617,58 @@ export default function TestPage() {
           </div>
           <p className="text-gray-600 font-medium mb-8">문제를 듣고 답변을 녹음하세요</p>
 
-          {/* 현재 선택된 문제 정보 */}
+          {/* Question info */}
           <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6">
             <div className="flex items-center gap-2 mb-2">
               <span className="text-blue-600 font-semibold">📋 선택된 문제 정보</span>
             </div>
-            <div className="text-sm text-gray-700">
+            <div className="text-sm text-gray-700 space-y-1">
               {selectedCategory === 'S' ? (
                 <div>
-                  <span className="font-medium">선택주제:</span> {getTheme(questions[0])} 
-                  <span className="text-gray-500 ml-2">(총 {totalQuestions}개 문제)</span>
+                  <div>
+                    <span className="font-medium">선택주제:</span> {getTheme(questions[0])} 
+                    <span className="text-gray-500 ml-2">(총 {totalQuestions}개 문제)</span>
+                  </div>
+                  {currentQuestion && (
+                    <div className="text-xs text-gray-600 mt-1">
+                      현재: Q{currentQuestion.q_id}-{currentQuestion.q_seq} | 
+                      유형: {currentQuestion.type || currentQuestion.Type} | 
+                      파일: {currentQuestion.listen}
+                    </div>
+                  )}
                 </div>
               ) : selectedCategory === 'C' ? (
                 <div>
-                  <span className="font-medium">돌발주제:</span> {getTheme(questions[0])} 
-                  <span className="text-gray-500 ml-2">(총 {totalQuestions}개 문제)</span>
+                  <div>
+                    <span className="font-medium">돌발주제:</span> {getTheme(questions[0])} 
+                    <span className="text-gray-500 ml-2">(총 {totalQuestions}개 문제)</span>
+                  </div>
+                  {currentQuestion && (
+                    <div className="text-xs text-gray-600 mt-1">
+                      현재: Q{currentQuestion.q_id}-{currentQuestion.q_seq} | 
+                      유형: {currentQuestion.type || currentQuestion.Type} | 
+                      파일: {currentQuestion.listen}
+                    </div>
+                  )}
                 </div>
               ) : (
                 <div>
-                  <span className="font-medium">{selectedType}:</span> 총 {totalQuestions}개 문제
+                  <div>
+                    <span className="font-medium">{selectedType}:</span> 총 {totalQuestions}개 문제
+                  </div>
+                  {currentQuestion && (
+                    <div className="text-xs text-gray-600 mt-1">
+                      현재: Q{currentQuestion.q_id}-{currentQuestion.q_seq} | 
+                      테마: {getTheme(currentQuestion)} | 
+                      파일: {currentQuestion.listen}
+                    </div>
+                  )}
                 </div>
               )}
             </div>
           </div>
 
-          {/* 문제 듣기 섹션 */}
+          {/* Question listening section */}
           <div className="mb-8">
             <div className="bg-black text-white p-4 rounded-t-xl">
               <h3 className="text-lg font-bold">문제 듣기</h3>
@@ -1309,27 +682,47 @@ export default function TestPage() {
                 <p className="text-gray-600 font-medium mb-6">
                   선택한 유형의 질문을 듣고 답변을 준비하세요.
                 </p>
+                
                 <button 
                   onClick={handleListen}
-                  disabled={listenCount >= 2 || isPlaying}
+                  disabled={listenCount >= 2 || audioLoading}
                   className={`px-8 py-3 rounded-lg font-medium transition-colors mb-4 ${
                     listenCount >= 2 
                       ? 'bg-gray-400 text-white cursor-not-allowed'
-                      : isPlaying
-                      ? 'bg-orange-500 text-white cursor-not-allowed'
+                      : audioLoading
+                      ? 'bg-yellow-500 text-white cursor-wait'
                       : 'bg-blue-600 hover:bg-blue-700 text-white'
                   }`}
                 >
-                  {isPlaying ? '재생 중...' : listenCount >= 2 ? '듣기 완료' : '문제 듣기'}
+                  {audioLoading ? (
+                    <span className="flex items-center gap-2">
+                      <span className="animate-spin">🔄</span>
+                      재생 중...
+                    </span>
+                  ) : listenCount >= 2 ? (
+                    '듣기 완료'
+                  ) : (
+                    '문제 듣기'
+                  )}
                 </button>
-                <p className="text-sm text-red-500">
+                
+                <p className="text-sm text-red-500 mb-2">
                   * 문제는 최대 2회만 들으실 수 있습니다. ({listenCount}/2)
                 </p>
+                
+                {audioError && (
+                  <div className="bg-red-50 border border-red-200 rounded-lg p-3 mb-4">
+                    <p className="text-sm text-red-600 flex items-center gap-2">
+                      <span>⚠️</span>
+                      {audioError}
+                    </p>
+                  </div>
+                )}
               </div>
             </div>
             
-            {/* 문제 보기 드롭다운 */}
-            <div className="mt-4">
+            {/* Question details dropdown */}
+            <div className="mt-4 mb-4">
               <button 
                 onClick={() => setShowQuestionDetails(!showQuestionDetails)}
                 className="w-full flex justify-between items-center p-4 border border-gray-200 rounded-lg hover:bg-gray-50"
@@ -1341,17 +734,16 @@ export default function TestPage() {
               </button>
               {showQuestionDetails && (
                 <div className="border border-t-0 border-gray-200 rounded-b-lg p-4 bg-white">
-                  <div className="space-y-2">
+                  <div className="space-y-4">
                     <div className="text-xs text-gray-500">
                       카테고리: {currentQuestion.category} | 
-                      테마: {getTheme(currentQuestion)} | 
-                      유형: {getQuestionType(currentQuestion)}
+                      테마: {getTheme(currentQuestion)}
                     </div>
-                    <p className="text-gray-800 font-medium mb-6">
+                    <p className="text-gray-800 font-medium">
                       {currentQuestion.question_kr}
                     </p>
                   </div>
-                  <p className="text-gray-600 text-sm">
+                  <p className="text-gray-600 text-sm mt-6">
                     (한국어 문제를 바탕으로 영어 답변에 대해 말하여 주세요. 모국어 무엇인지 알 수없게 말해보세요.)
                   </p>
                 </div>
@@ -1359,362 +751,279 @@ export default function TestPage() {
             </div>
           </div>
 
-          {/* 답변 녹음 섹션 */}
+          {/* Recording section */}
           <div className="mb-8">
             <div className="bg-black text-white p-4 rounded-t-xl">
               <h3 className="text-lg font-bold">답변 녹음</h3>
             </div>
-            <div className="bg-gray-50 border border-gray-200 rounded-b-xl p-8">
-              {/* 녹음 에러 메시지 */}
-              {recordingError && (
-                <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
-                  <p className="text-sm">{recordingError}</p>
-                  <button 
-                    onClick={initializeMicrophone}
-                    className="mt-2 text-sm bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded"
-                  >
-                    다시 시도
-                  </button>
-                </div>
-              )}
-              
-              {/* 마이크 준비 상태 */}
-              {!isRecordingReady && !recordingError && (
-                <div className="bg-yellow-100 border border-yellow-400 text-yellow-700 px-4 py-3 rounded mb-4">
-                  <p className="text-sm">마이크를 준비하는 중...</p>
-                </div>
-              )}
-              
+            <div className="bg-gray-50 border border-gray-200 rounded-b-xl p-6">
               <div className="text-center">
-                <div className="text-5xl font-bold text-gray-800 mb-6">
-                  {formatTime(displayTime)}
-                </div>
-                
-                {/* 음성 파형 표시 */}
-                <div className="flex justify-center items-center h-20 mb-8">
-                  <div className="flex items-end space-x-1 max-w-md">
-                    {Array.from({ length: 25 }, (_, i) => (
-                      <div 
-                        key={i}
-                        className={`w-1.5 bg-gradient-to-t from-cyan-400 to-blue-400 rounded-t ${
-                          isRecording ? 'animate-pulse' : ''
-                        }`}
-                        style={{ 
-                          height: `${Math.random() * 40 + 10}px`,
-                          animationDelay: `${i * 50}ms`
-                        }}
-                      />
-                    ))}
+                {/* Recording time display */}
+                <div className="mb-4">
+                  <div className="text-5xl font-bold text-gray-800 mb-3">
+                    {isTimerMode ? formatTime(remainingTime) : formatTime(recordingTime)}
+                  </div>
+                  
+                  {/* Audio waveform visualization */}
+                  <div className="flex items-end justify-center gap-1.5 h-24 mb-8">
+                    {Array.from({ length: 25 }, (_, i) => {
+                      const baseHeight = 15 + (i % 4) * 6
+                      const animatedHeight = isRecording 
+                        ? baseHeight + Math.sin((waveformAnimation + i) * 0.5) * 35 + Math.random() * 20
+                        : baseHeight + Math.sin(i * 0.3) * 15
+                      
+                      return (
+                        <div 
+                          key={i}
+                          className={`bg-gradient-to-t from-blue-500 to-blue-300 rounded-sm transition-all duration-300 ${
+                            isRecording ? 'shadow-sm' : 'opacity-70'
+                          }`}
+                          style={{ 
+                            width: '6px',
+                            height: `${Math.max(10, animatedHeight)}px`
+                          }}
+                        ></div>
+                      )
+                    })}
                   </div>
                 </div>
-                
-                {/* 녹음 상태 표시 */}
-                {isRecording && (
-                  <div className="mb-4">
-                    <div className="inline-flex items-center bg-red-100 text-red-800 px-3 py-1 rounded-full text-sm font-medium">
-                      <div className="w-2 h-2 bg-red-500 rounded-full mr-2 animate-pulse"></div>
-                      녹음 중...
-                    </div>
+
+                {/* Error message */}
+                {recordingError && (
+                  <div className="bg-red-50 border border-red-200 rounded-lg p-3 mb-4">
+                    <p className="text-sm text-red-600 flex items-center justify-center gap-2">
+                      <span>⚠️</span>
+                      {recordingError}
+                    </p>
                   </div>
                 )}
-                
-                {/* 녹음 완료 상태 표시 */}
-                {recordedAudioUrl && !isRecording && (
-                  <div className="mb-4">
-                    <div className="inline-flex items-center bg-green-100 text-green-800 px-3 py-1 rounded-full text-sm font-medium">
-                      <div className="w-2 h-2 bg-green-500 rounded-full mr-2"></div>
-                      녹음 완료
-                    </div>
-                  </div>
-                )}
-                
-                {/* 녹음 컨트롤 버튼들 */}
-                <div className="grid grid-cols-4 gap-4 mb-6">
+
+                {/* Recording controls */}
+                <div className="grid grid-cols-4 gap-3 mb-4">
                   <button 
-                    onClick={handleTimerClick}
-                    className="flex flex-col items-center p-4 border border-gray-300 rounded-lg hover:bg-gray-100"
+                    onClick={() => setShowTimerModal(true)}
+                    className="flex flex-col items-center p-3 border border-gray-300 rounded-lg hover:bg-gray-100 transition-colors bg-white"
                   >
-                    <span className="text-2xl mb-2">⏱️</span>
-                    <span className="text-sm font-medium">타이머</span>
+                    <span className="text-xl mb-1">⏱️</span>
+                    <span className="text-xs font-medium">타이머</span>
+                    <span className="text-xs text-gray-500">
+                      {isTimerMode ? formatSelectedTime(selectedTime) : '카운트업'}
+                    </span>
                   </button>
+                  
                   <button 
-                    onClick={handleStartRecording}
-                    disabled={isRecording || !isRecordingReady}
-                    className={`flex flex-col items-center p-4 rounded-lg ${
-                      isRecording || !isRecordingReady
-                        ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
-                        : 'bg-red-500 text-white hover:bg-red-600'
+                    onClick={startRecording}
+                    disabled={isRecording}
+                    className={`flex flex-col items-center p-3 rounded-lg transition-colors ${
+                      isRecording 
+                        ? 'bg-gray-300 cursor-not-allowed border border-gray-300' 
+                        : 'bg-red-500 hover:bg-red-600 text-white border border-red-500'
                     }`}
                   >
-                    <span className="text-2xl mb-2">🎤</span>
-                    <span className="text-sm font-medium">녹음 시작</span>
+                    <span className="text-xl mb-1">🎤</span>
+                    <span className="text-xs font-medium">녹음 시작</span>
                   </button>
+                  
                   <button 
-                    onClick={handleStopRecording}
+                    onClick={stopRecording}
                     disabled={!isRecording}
-                    className={`flex flex-col items-center p-4 rounded-lg ${
+                    className={`flex flex-col items-center p-3 border rounded-lg transition-colors ${
                       !isRecording 
-                        ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
-                        : 'bg-blue-500 text-white hover:bg-blue-600'
+                        ? 'border-gray-300 bg-gray-300 cursor-not-allowed text-gray-500' 
+                        : 'border-gray-400 bg-gray-400 hover:bg-gray-500 text-white'
                     }`}
                   >
-                    <span className="text-2xl mb-2">⏸️</span>
-                    <span className="text-sm font-medium">녹음 정지</span>
+                    <span className="text-xl mb-1">⏸️</span>
+                    <span className="text-xs font-medium">녹음 정지</span>
                   </button>
+                  
                   <button 
-                    onClick={handleResetRecording}
-                    className="flex flex-col items-center p-4 border border-gray-300 rounded-lg hover:bg-gray-100"
+                    onClick={resetRecording}
+                    className="flex flex-col items-center p-3 border border-gray-300 rounded-lg hover:bg-gray-100 transition-colors bg-white"
                   >
-                    <span className="text-2xl mb-2">🔄</span>
-                    <span className="text-sm font-medium">다시 녹음</span>
+                    <span className="text-xl mb-1">🔄</span>
+                    <span className="text-xs font-medium">다시 녹음</span>
                   </button>
                 </div>
 
-                {/* 시간 설정 모달 */}
-                {showTimerModal && (
-                  <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-                    <div className="bg-white rounded-lg p-6 max-w-md w-full mx-4">
-                      {/* 답변 시간 설정 */}
-                      <div className="mb-6">
-                        <h3 className="text-lg font-bold text-gray-800 mb-4">답변 시간 설정</h3>
-                        <div className="grid grid-cols-3 gap-3 mb-4">
-                          {timeOptions.slice(0, 3).map((option) => (
-                            <button
-                              key={option.value}
-                              onClick={() => handleTimeSelection(option.value)}
-                              className="px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 font-medium"
-                            >
-                              {option.label}
-                            </button>
-                          ))}
-                        </div>
-                        <div className="grid grid-cols-3 gap-3">
-                          {timeOptions.slice(3).map((option) => (
-                            <button
-                              key={option.value}
-                              onClick={() => handleTimeSelection(option.value)}
-                              className="px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 font-medium"
-                            >
-                              {option.label}
-                            </button>
-                          ))}
-                        </div>
-                        <p className="text-blue-600 text-sm mt-3">! 녹음 시작 버튼을 클릭하세요.</p>
-                      </div>
-
-                      {/* 닫기 버튼 */}
-                      <button 
-                        onClick={() => setShowTimerModal(false)}
-                        className="w-full bg-gray-500 hover:bg-gray-600 text-white py-2 px-4 rounded-lg font-medium"
-                      >
-                        닫기
-                      </button>
-                    </div>
-                  </div>
-                )}
-                
-                <p className="text-sm text-gray-600 mb-6">
-                  녹음을 시작하려면 '녹음 시작' 버튼을 클릭하세요.
+                {/* Status message */}
+                <p className="text-gray-600 text-sm">
+                  {isRecording 
+                    ? '녹음이 진행 중입니다. 답변을 말씀해 주세요.'
+                    : recordedBlob 
+                    ? '녹음이 완료되었습니다.'
+                    : "녹음을 시작하려면 '녹음 시작' 버튼을 클릭하세요."
+                  }
                 </p>
+
+                {/* Playback button */}
+                {recordedBlob && !isRecording && (
+                  <button
+                    onClick={playRecording}
+                    className="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg font-medium transition-colors mt-3 text-sm"
+                  >
+                    녹음 재생하기
+                  </button>
+                )}
               </div>
-            </div>
-            
-            {/* 답변 미리보기 드롭다운 */}
-            <div className="mt-4">
-              <button 
-                onClick={() => setShowAnswerPreview(!showAnswerPreview)}
-                className="w-full flex justify-between items-center p-4 border border-gray-200 rounded-lg hover:bg-gray-50"
-              >
-                <span className="font-medium text-gray-700">답변 미리보기</span>
-                <span className="transform transition-transform duration-200" style={{ transform: showAnswerPreview ? 'rotate(180deg)' : 'rotate(0deg)' }}>
-                  ▼
-                </span>
-              </button>
-              {showAnswerPreview && (
-                <div className="border border-t-0 border-gray-200 rounded-b-lg p-4 bg-white">
-                  {/* STT 에러 메시지 */}
-                  {sttError && (
-                    <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
-                      <p className="text-sm">{sttError}</p>
-                    </div>
-                  )}
-                  
-                  {/* STT 지원 여부 표시 */}
-                  {!isSTTSupported && (
-                    <div className="bg-yellow-100 border border-yellow-400 text-yellow-700 px-4 py-3 rounded mb-4">
-                      <p className="text-sm">음성 인식이 지원되지 않는 브라우저입니다. Chrome 브라우저를 사용해주세요.</p>
-                    </div>
-                  )}
-                  
-                  {/* 인식된 텍스트 표시 */}
-                  <div className="mb-4">
-                    <div className="flex justify-between items-center mb-2">
-                      <h4 className="text-sm font-medium text-gray-700">음성 인식 텍스트:</h4>
-                      <div className="flex gap-2 text-xs">
-                        <span className={`px-2 py-1 rounded ${isSTTSupported ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}`}>
-                          STT: {isSTTSupported ? '지원됨' : '미지원'}
-                        </span>
-                        <span className={`px-2 py-1 rounded ${speechRecognition ? 'bg-blue-100 text-blue-800' : 'bg-gray-100 text-gray-800'}`}>
-                          초기화: {speechRecognition ? '완료' : '대기'}
-                        </span>
-                        <span className={`px-2 py-1 rounded ${isRecording ? 'bg-orange-100 text-orange-800' : 'bg-gray-100 text-gray-800'}`}>
-                          녹음: {isRecording ? '진행중' : '대기'}
-                        </span>
-                      </div>
-                    </div>
-                    <div className="bg-gray-50 p-4 rounded-lg border min-h-[100px]">
-                      {(recognizedText || interimText) ? (
-                        <div className="text-gray-800 whitespace-pre-wrap">
-                          <span>{recognizedText}</span>
-                          {interimText && (
-                            <span className="text-blue-600 italic bg-blue-50 px-1 rounded">
-                              {interimText}
-                            </span>
-                          )}
-                        </div>
-                      ) : (
-                        <div className="text-gray-500 italic">
-                          {!isSTTSupported ? (
-                            <p>❌ 음성 인식이 지원되지 않습니다.</p>
-                          ) : !speechRecognition ? (
-                            <p>⏳ STT 초기화 중...</p>
-                          ) : isRecording ? (
-                            <p>🎤 음성을 인식하는 중... (말씀해 주세요)</p>
-                          ) : (
-                            <p>🔇 아직 인식된 텍스트가 없습니다. 녹음을 시작해주세요.</p>
-                          )}
-                        </div>
-                      )}
-                    </div>
-                    
-                    {/* 디버깅 정보 (개발용) */}
-                    <div className="mt-2 text-xs text-gray-400">
-                      <details>
-                        <summary className="cursor-pointer">디버깅 정보</summary>
-                        <div className="mt-2 p-2 bg-gray-100 rounded text-xs">
-                          <p>브라우저: {navigator.userAgent.includes('Chrome') ? 'Chrome ✅' : 'Other ⚠️'}</p>
-                          <p>STT 지원: {isSTTSupported ? 'Yes ✅' : 'No ❌'}</p>
-                          <p>SpeechRecognition: {window.SpeechRecognition ? 'Available ✅' : 'Not Available ❌'}</p>
-                          <p>webkitSpeechRecognition: {window.webkitSpeechRecognition ? 'Available ✅' : 'Not Available ❌'}</p>
-                          <p>SpeechGrammarList: {window.SpeechGrammarList ? 'Available ✅' : 'Not Available ⚠️'}</p>
-                          <p>인식된 텍스트 길이: {recognizedText.length}자</p>
-                          <p>임시 텍스트 길이: {interimText.length}자</p>
-                          
-                          <div className="mt-2 pt-2 border-t border-gray-300">
-                            <p className="font-medium text-purple-700">🎲 문제 선택 정보:</p>
-                            <p>카테고리: {selectedCategory}</p>
-                            <p>현재 문제: {currentQuestionIndex + 1}/{totalQuestions}</p>
-                            <p>테마: {getTheme(currentQuestion)}</p>
-                            <p>문제 ID: {currentQuestion?.q_id}</p>
-                            <p>문제 순서: {currentQuestion?.q_seq}</p>
-                            <p>세션 키: questions_{selectedCategory}</p>
-                            <button
-                              onClick={() => {
-                                const sessionData = sessionStorage.getItem(`questions_${selectedCategory}`)
-                                if (sessionData) {
-                                  try {
-                                    const parsed = JSON.parse(sessionData)
-                                    addDebugLog('📦 현재 세션 데이터:')
-                                    alert(`세션 데이터가 콘솔에 출력되었습니다.\n타임스탬프: ${parsed.timestamp ? new Date(parsed.timestamp).toLocaleString() : '없음'}`)
-                                  } catch (e) {
-                                    addDebugLog('세션 데이터 (파싱 실패):')
-                                  }
-                                } else {
-                                  addDebugLog('세션에 저장된 데이터가 없습니다.')
-                                }
-                              }}
-                              className="mt-1 px-2 py-1 bg-purple-500 text-white rounded text-xs hover:bg-purple-600"
-                            >
-                              세션 데이터 확인
-                            </button>
-                          </div>
-                          
-                          <div className="mt-2 pt-2 border-t border-gray-300">
-                            <p className="font-medium text-blue-700">🚀 정확도 향상 기능:</p>
-                            <p>• 다중 대안 분석 (최대 3개)</p>
-                            <p>• 신뢰도 기반 필터링 (30% 이상)</p>
-                            <p>• OPIc 특화 문법 힌트</p>
-                            <p>• 고품질 오디오 캡처</p>
-                            <p>• 노이즈 억제 + 에코 제거</p>
-                          </div>
-                        </div>
-                      </details>
-                    </div>
-                  </div>
-                  
-                  {/* 녹음된 오디오 재생 */}
-                  {recordedAudioUrl && (
-                    <div className="space-y-4">
-                      <h4 className="text-sm font-medium text-gray-700">녹음된 오디오:</h4>
-                      <div className="bg-gray-50 p-4 rounded-lg">
-                        <audio 
-                          controls 
-                          src={recordedAudioUrl}
-                          className="w-full"
-                          preload="metadata"
-                        >
-                          브라우저가 오디오 재생을 지원하지 않습니다.
-                        </audio>
-                      </div>
-                      <div className="flex gap-2">
-                        <button
-                          onClick={playRecordedAudio}
-                          className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded text-sm"
-                        >
-                          재생하기
-                        </button>
-                        <button
-                          onClick={() => {
-                            const link = document.createElement('a')
-                            link.href = recordedAudioUrl
-                            link.download = `opic-answer-${Date.now()}.webm`
-                            link.click()
-                          }}
-                          className="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded text-sm"
-                        >
-                          오디오 다운로드
-                        </button>
-                        <button
-                          onClick={() => {
-                            // 텍스트 파일로 다운로드
-                            const textBlob = new Blob([recognizedText], { type: 'text/plain;charset=utf-8' })
-                            const textUrl = URL.createObjectURL(textBlob)
-                            const link = document.createElement('a')
-                            link.href = textUrl
-                            link.download = `opic-answer-text-${Date.now()}.txt`
-                            link.click()
-                            URL.revokeObjectURL(textUrl)
-                          }}
-                          className="bg-purple-500 hover:bg-purple-600 text-white px-4 py-2 rounded text-sm"
-                          disabled={!recognizedText}
-                        >
-                          텍스트 다운로드
-                        </button>
-                      </div>
-                    </div>
-                  )}
-                  
-                  {/* 녹음이 없는 경우 */}
-                  {!recordedAudioUrl && !recognizedText && (
-                    <p className="text-gray-600">아직 녹음된 답변이 없습니다. 위에서 녹음을 시작해주세요.</p>
-                  )}
-                </div>
-              )}
             </div>
           </div>
 
-          {/* 답변 제출 버튼 */}
+          {/* Answer Preview Section */}
+          <div className="mt-4 mb-8">
+            <button 
+              onClick={() => setShowAnswerPreview(!showAnswerPreview)}
+              className="w-full flex justify-between items-center p-4 border border-gray-200 rounded-lg hover:bg-gray-50"
+            >
+              <div className="flex items-center gap-3">
+                <span className="font-medium text-gray-700">답변 미리보기</span>
+                <div className="flex items-center gap-2">
+                  <span className={`w-2 h-2 rounded-full ${isSTTActive ? 'bg-green-500 animate-pulse' : 'bg-gray-400'}`}></span>
+                  <span className="text-xs text-gray-600">
+                    {isSTTActive ? 'STT 활성' : sttText ? '텍스트 인식됨' : 'STT 지원'}
+                  </span>
+                </div>
+              </div>
+              <span className="transform transition-transform duration-200" style={{ transform: showAnswerPreview ? 'rotate(180deg)' : 'rotate(0deg)' }}>
+                ▼
+              </span>
+            </button>
+            {showAnswerPreview && (
+              <div className="border border-t-0 border-gray-200 rounded-b-lg p-4 bg-white">
+                {/* STT Error */}
+                {sttError && (
+                  <div className="bg-red-50 border border-red-200 rounded-lg p-3 mb-4">
+                    <p className="text-sm text-red-600 flex items-center gap-2">
+                      <span>⚠️</span>
+                      {sttError}
+                    </p>
+                  </div>
+                )}
+
+                {/* STT Text Display */}
+                <div className="bg-gray-50 border border-gray-200 rounded-lg p-4 min-h-[100px] max-h-[200px] overflow-y-auto">
+                  {sttText ? (
+                    <p className="text-gray-800 leading-relaxed whitespace-pre-wrap">
+                      {sttText}
+                    </p>
+                  ) : (
+                    <p className="text-gray-400 italic">
+                      🎤 아직 인식된 텍스트가 없습니다. 녹음을 시작해주세요.
+                    </p>
+                  )}
+                </div>
+                
+                <p className="text-gray-600 text-sm mt-4">
+                  * 녹음 시작 시 자동으로 음성 인식이 시작되며, 실시간으로 텍스트가 표시됩니다.
+                </p>
+              </div>
+            )}
+          </div>
+
+          {/* Submit button */}
           <div className="flex justify-center">
             <button 
-              onClick={handleSubmitAnswer}
-              className="w-full max-w-md py-4 px-8 rounded-lg font-bold text-lg transition-colors flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-700 text-white"
+              onClick={() => {
+                const currentTheme = getTheme(currentQuestion)
+                const userAnswer = sttText || "음성 인식된 답변이 없습니다. 녹음을 다시 시도해주세요."
+                const feedbackUrl = `/feedback?question=${currentQuestionIndex + 1}&type=${encodeURIComponent(selectedType)}&category=${encodeURIComponent(selectedCategory)}&level=${encodeURIComponent(selectedLevel)}&theme=${encodeURIComponent(currentTheme)}&qid=${currentQuestion?.q_id}&qseq=${currentQuestion?.q_seq}&totalQuestions=${totalQuestions}&answer=${encodeURIComponent(userAnswer)}`
+                router.push(feedbackUrl)
+              }}
+              className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-3 rounded-lg font-medium transition-colors"
             >
-              <span>✓</span>
               답변제출 및 피드백받기
             </button>
           </div>
+
+          {/* Timer Modal */}
+          {showTimerModal && (
+            <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+              <div className="bg-white rounded-lg p-6 w-80 max-w-md mx-4">
+                <h3 className="text-lg font-bold text-center mb-6">답변 시간 설정</h3>
+                
+                {/* Time selection buttons */}
+                <div className="grid grid-cols-3 gap-3 mb-6">
+                  {[
+                    { label: '45s', value: 45 },
+                    { label: '1m', value: 60 },
+                    { label: '1.5m', value: 90 }
+                  ].map((time) => (
+                    <button
+                      key={time.value}
+                      onClick={() => {
+                        setSelectedTime(time.value)
+                        setIsTimerMode(true)
+                        setRemainingTime(time.value)
+                      }}
+                      className={`py-3 px-4 border rounded-lg font-medium transition-colors ${
+                        selectedTime === time.value && isTimerMode
+                          ? 'bg-blue-500 text-white border-blue-500'
+                          : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-50'
+                      }`}
+                    >
+                      {time.label}
+                    </button>
+                  ))}
+                </div>
+                
+                <div className="grid grid-cols-3 gap-3 mb-6">
+                  {[
+                    { label: '2m', value: 120 },
+                    { label: '3m', value: 180 },
+                    { label: '5m', value: 300 }
+                  ].map((time) => (
+                    <button
+                      key={time.value}
+                      onClick={() => {
+                        setSelectedTime(time.value)
+                        setIsTimerMode(true)
+                        setRemainingTime(time.value)
+                      }}
+                      className={`py-3 px-4 border rounded-lg font-medium transition-colors ${
+                        selectedTime === time.value && isTimerMode
+                          ? 'bg-blue-500 text-white border-blue-500'
+                          : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-50'
+                      }`}
+                    >
+                      {time.label}
+                    </button>
+                  ))}
+                </div>
+
+                {/* Timer mode reset button */}
+                <div className="mb-6">
+                  <button 
+                    onClick={() => {
+                      setIsTimerMode(false)
+                      setRemainingTime(0)
+                    }}
+                    className={`w-full py-2 px-4 border rounded-lg transition-colors text-sm ${
+                      !isTimerMode
+                        ? 'bg-green-500 text-white border-green-500'
+                        : 'border-gray-300 text-gray-700 hover:bg-gray-50'
+                    }`}
+                  >
+                    기본 모드 (카운트업)
+                  </button>
+                </div>
+
+                {/* Info message */}
+                <p className="text-blue-600 text-sm text-center mb-6">
+                  ! 녹음 시작 버튼을 클릭하세요.
+                </p>
+
+                {/* Close button */}
+                <button
+                  onClick={() => setShowTimerModal(false)}
+                  className="w-full bg-gray-500 hover:bg-gray-600 text-white py-3 rounded-lg font-medium transition-colors"
+                >
+                  닫기
+                </button>
+              </div>
+            </div>
+          )}
         </div>
       </div>
     </div>
-  );
+  )
 } 

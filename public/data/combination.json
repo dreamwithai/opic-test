@@ -1051,30 +1051,6 @@
         "question": "Have you ever visited or lived in the countryside? What was your experience like? Have you ever had any memorable experience?",
         "question_kr": "시골을 방문하거나 살았던 적이 있습니까? 당신의 경험은 어땠습니까? 기억에 남는 경험을 한 적이 있습니까?"
       }
-    ],
-    "Unknown": [
-      {
-        "category": "C",
-        "theme": "",
-        "q_theme": "",
-        "q_id": 0,
-        "q_seq": 0,
-        "listen": "",
-        "type": "",
-        "question": "",
-        "question_kr": ""
-      },
-      {
-        "category": "C",
-        "theme": "",
-        "q_theme": "",
-        "q_id": 0,
-        "q_seq": 0,
-        "listen": "",
-        "type": "",
-        "question": "",
-        "question_kr": ""
-      }
     ]
   }
 }

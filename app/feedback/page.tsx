@@ -93,33 +93,58 @@ export default function FeedbackPage() {
   }
 
   const handleNextQuestion = () => {
-    // 현재 문제가 마지막 문제인지 확인해야 함
-    // 임시로 간단한 로직 구현 (실제로는 세션에서 총 문제 수를 가져와야 함)
+    // URL 파라미터에서 총 문제 수 확인
+    const urlTotalQuestions = searchParams.get('totalQuestions')
+    let totalQuestions = 3 // 기본값
     
-    // 세션에서 현재 카테고리의 문제들을 가져와서 총 개수 확인
-    const sessionKey = `questions_${selectedCategory}`
-    const storedData = sessionStorage.getItem(sessionKey)
-    
-    if (storedData) {
-      try {
-        const sessionData = JSON.parse(storedData)
-        const totalQuestions = sessionData.questions ? sessionData.questions.length : 3
-        const nextQuestionIndex = questionInfo.questionIndex + 1
-        
-        if (nextQuestionIndex <= totalQuestions) {
-          // 다음 문제가 있으면 테스트 페이지의 다음 문제로 이동
-          router.push(`/test?type=${encodeURIComponent(selectedType)}&category=${selectedCategory}&question=${nextQuestionIndex}&level=${encodeURIComponent(selectedLevel)}`)
-        } else {
-          // 모든 문제 완료 - 문제유형선택 페이지로 이동
-          router.push(`/question-type?level=${encodeURIComponent(selectedLevel)}`)
-        }
-      } catch (error) {
-        // 세션 데이터 파싱 실패 시 유형선택으로 이동
-        router.push(`/question-type?level=${encodeURIComponent(selectedLevel)}`)
-      }
+    if (urlTotalQuestions) {
+      totalQuestions = parseInt(urlTotalQuestions)
     } else {
-      // 세션 데이터가 없으면 유형선택으로 이동
-      router.push(`/question-type?level=${encodeURIComponent(selectedLevel)}`)
+      // URL에 없으면 세션 스토리지 확인
+      const sessionKey = `questions_${selectedCategory}_${selectedType}`
+      let storedData = sessionStorage.getItem(sessionKey)
+      
+      // 키가 없으면 다른 키 형태들 시도
+      if (!storedData) {
+        const altKeys = [
+          `questions_${selectedCategory}`,
+          `selectedQuestions_${selectedCategory}`,
+          `test_questions_${selectedCategory}`
+        ]
+        
+        for (const key of altKeys) {
+          storedData = sessionStorage.getItem(key)
+          if (storedData) {
+            break
+          }
+        }
+      }
+      
+      if (storedData) {
+        try {
+          const sessionData = JSON.parse(storedData)
+          totalQuestions = sessionData.questions ? sessionData.questions.length : 
+                          sessionData.length ? sessionData.length : 3
+        } catch (error) {
+          // 파싱 에러 시 기본적으로 3문제로 가정
+          totalQuestions = 3
+        }
+      } else {
+        // 세션 데이터가 없으면 기본 3문제로 가정
+        totalQuestions = 3
+      }
+    }
+    
+    const nextQuestionIndex = questionInfo.questionIndex + 1
+    
+    if (nextQuestionIndex <= totalQuestions) {
+      // 다음 문제가 있으면 테스트 페이지의 다음 문제로 이동
+      const nextTestUrl = `/test?type=${encodeURIComponent(selectedType)}&category=${selectedCategory}&question=${nextQuestionIndex}&level=${encodeURIComponent(selectedLevel)}`
+      router.push(nextTestUrl)
+    } else {
+      // 모든 문제 완료 - 문제유형선택 페이지로 이동
+      const completeUrl = `/question-type?level=${encodeURIComponent(selectedLevel)}`
+      router.push(completeUrl)
     }
   }
 
@@ -134,19 +159,52 @@ export default function FeedbackPage() {
 
   // 마지막 문제인지 확인
   const isLastQuestion = (() => {
-    const sessionKey = `questions_${selectedCategory}`
-    const storedData = sessionStorage.getItem(sessionKey)
+    // 먼저 URL 파라미터에서 총 문제 수 확인 시도
+    const urlTotalQuestions = searchParams.get('totalQuestions')
+    if (urlTotalQuestions) {
+      const total = parseInt(urlTotalQuestions)
+      const isLast = questionInfo.questionIndex >= total
+      return isLast
+    }
+    
+    // URL에 없으면 세션 스토리지 확인
+    const sessionKey = `questions_${selectedCategory}_${selectedType}`
+    let storedData = sessionStorage.getItem(sessionKey)
+    
+    // 키가 없으면 다른 키 형태들 시도
+    if (!storedData) {
+      const altKeys = [
+        `questions_${selectedCategory}`,
+        `selectedQuestions_${selectedCategory}`,
+        `test_questions_${selectedCategory}`,
+        `questions_${selectedType}_${selectedCategory}`
+      ]
+      
+      for (const key of altKeys) {
+        storedData = sessionStorage.getItem(key)
+        if (storedData) {
+          break
+        }
+      }
+    }
     
     if (storedData) {
       try {
         const sessionData = JSON.parse(storedData)
-        const totalQuestions = sessionData.questions ? sessionData.questions.length : 3
-        return questionInfo.questionIndex >= totalQuestions
+        const totalQuestions = sessionData.questions ? sessionData.questions.length : 
+                             sessionData.length ? sessionData.length : 3
+        const isLast = questionInfo.questionIndex >= totalQuestions
+        
+        return isLast
       } catch (error) {
-        return true
+        // 파싱 에러 시 기본적으로 3문제로 가정
+        return questionInfo.questionIndex >= 3
       }
     }
-    return true
+    
+    // 세션 데이터가 없으면 기본 3문제로 가정
+    const isLast = questionInfo.questionIndex >= 3
+    return isLast
   })()
 
   // TODO: API 연동 시 수정 필요
@@ -274,7 +332,7 @@ export default function FeedbackPage() {
               onClick={handleNextQuestion}
               className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-3 rounded-lg font-medium transition-colors"
             >
-              {isLastQuestion ? '테스트완료' : '다른 문제 풀기'}
+              {isLastQuestion ? '테스트 완료' : '다음 문제 풀기'}
             </button>
           </div>
         </div>
