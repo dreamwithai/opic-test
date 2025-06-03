@@ -17,9 +17,11 @@ export function getAudioUrl(fileName: string, category?: string): string {
   
   // 카테고리가 제공된 경우
   if (category) {
+    // 파일명에 이미 .mp3가 있는지 확인하고, 없으면 추가
+    const fullFileName = fileName.endsWith('.mp3') ? fileName : `${fileName}.mp3`
     const { data } = supabase.storage
       .from('audio-files')
-      .getPublicUrl(`${category}/${fileName}.mp3`)
+      .getPublicUrl(`${category}/${fullFileName}`)
     return data.publicUrl
   }
   
