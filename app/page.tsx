@@ -98,7 +98,7 @@ export default function Home() {
             </div>
             <div className="mt-4 md:mt-12 w-full md:w-auto">
               <p className="text-base md:text-lg text-left pl-4 md:pl-0">
-                오픽시험과 전략적 필수 테스트로<br />
+                오픽시험전 전략적 필수 테스트로<br />
                 <span className="text-base md:text-lg">84,000원 아끼세요!</span>
               </p>
             </div>
@@ -112,7 +112,7 @@ export default function Home() {
             <div className="space-y-2">
               <div className="flex items-start space-x-2">
                 <span className="flex-shrink-0 text-xl">✅</span>
-                <span className="text-base md:text-lg font-medium">내가 약한 유형 집중 연습 (선택, 롤플레이, 돌발, 콤플레 선택 연습)</span>
+                <span className="text-base md:text-lg font-medium">내가 약한 유형 집중 연습 (선택, 롤플레이, 돌발, 풀세트 선택 연습)</span>
               </div>
               <div className="flex items-start space-x-2">
                 <span className="flex-shrink-0 text-xl">✅</span>
@@ -129,7 +129,7 @@ export default function Home() {
 
       {/* 해당 모의고사는 Section */}
       <section className="container mx-auto px-4 py-8">
-        <div className="max-w-4xl mx-auto text-left">
+        <div className="max-w-6xl mx-auto text-left">
           <h3 className="text-3xl font-bold text-gray-800 mb-6">해당 모의고사는,</h3>
           
           <div className="space-y-2 text-lg text-gray-700">
@@ -176,7 +176,7 @@ export default function Home() {
               <span className="text-xl font-bold text-gray-800 flex-shrink-0">4.</span>
               <div>
                 <span className="text-xl font-bold text-gray-800">문제풀이</span>
-                <span className="text-gray-600 ml-2">선택주제, 롤플레이, 돌발주제는 콤보 출제롤 콤보문제 연속풀이 가능</span>
+                <span className="text-gray-600 ml-2">선택주제, 롤플레이, 돌발주제는 콤보 출제로 콤보문제 연속풀이 가능</span>
               </div>
             </div>
             
@@ -201,7 +201,7 @@ export default function Home() {
             >
               <div>
                 <h3 className="text-xl font-bold text-gray-800 mb-1">기초설문/이용동의</h3>
-                <p className="text-sm text-gray-600">*서비스 이용 활수설문으로 놓아서 선택하세요</p>
+                <p className="text-sm text-gray-600">*서비스 이용 필수설문으로 눌러서 선택하세요</p>
               </div>
               <div className={`transform transition-transform ${isFormOpen ? 'rotate-180' : ''}`}>
                 <svg className="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -625,7 +625,7 @@ export default function Home() {
       <footer className="bg-gray-800 text-white py-8">
         <div className="container mx-auto px-4 text-center">
           <p className="text-gray-400 font-medium">
-            © 2024 OPIc 모의테스트. All rights reserved.
+            © 2025 OPIc 모의테스트. All rights reserved.
           </p>
         </div>
       </footer>
