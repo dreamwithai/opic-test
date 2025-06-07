@@ -26,68 +26,91 @@ export default function Home() {
       </header>
 
       {/* Hero Section */}
-      <section className="container mx-auto px-4 py-12">
-        <div className="bg-gradient-to-r from-blue-600 to-blue-700 rounded-2xl text-white p-8 md:p-12 mb-16 max-w-4xl mx-auto">
-          <h2 className="text-3xl md:text-5xl font-bold mb-4 text-center">
-            OPIc 모의테스트
-          </h2>
-          <p className="text-xl md:text-2xl mb-6 opacity-90 text-center font-medium">
-            오픽 시험 전에, 내 약점 진단하세요.
-          </p>
-          <p className="text-lg md:text-xl mb-8 font-semibold text-center">
-            84000원 시험비 아끼는 가장 현명한 방법!
-          </p>
-          
-          <div className="space-y-4 max-w-3xl mx-auto">
-            <div className="flex items-center space-x-3">
-              <span className="w-6 h-6 text-green-300 flex-shrink-0 text-xl">✓</span>
-              <span className="text-base md:text-lg font-medium">완벽한 오픽 모의테스트 제공</span>
+      <section className="container mx-auto px-4 py-8">
+        <div className="rounded-2xl text-white p-8 md:p-12 mb-8 max-w-4xl mx-auto" style={{ backgroundColor: '#063ff9' }}>
+          <div className="flex flex-col md:flex-row justify-between items-end mb-4">
+            <div className="flex items-start w-full md:w-auto">
+              <img 
+                src="/4hour-opic-title.png" 
+                alt="4시간오픽 모의고사" 
+                className="max-w-full h-auto"
+                style={{ maxHeight: '180px' }}
+              />
             </div>
-            <div className="flex items-center space-x-3">
-              <span className="w-6 h-6 text-green-300 flex-shrink-0 text-xl">✓</span>
-              <span className="text-base md:text-lg font-medium">선택주제 / 롤플레이 / 돌발문제 중 약한 유형만 골라서 집중 연습 가능</span>
-            </div>
-            <div className="flex items-center space-x-3">
-              <span className="w-6 h-6 text-green-300 flex-shrink-0 text-xl">✓</span>
-              <span className="text-base md:text-lg font-medium">결과 피드백 제공 → 나의 취약 포인트 한눈에!</span>
-            </div>
-            <div className="flex items-center space-x-3">
-              <span className="w-6 h-6 text-green-300 flex-shrink-0 text-xl">✓</span>
-              <span className="text-base md:text-lg font-medium">오픽 점수를 올리고 싶은 취준생·직장인 필수 사전 점검 툴</span>
+            <div className="mt-4 md:mt-12 w-full md:w-auto">
+              <p className="text-base md:text-lg text-left pl-4 md:pl-0">
+                오픽시험과 전략적 필수 테스트로<br />
+                <span className="text-base md:text-lg">84,000원 아끼세요!</span>
+              </p>
             </div>
           </div>
-
-          <div className="mt-8 h-1 bg-white bg-opacity-30 rounded-full max-w-md mx-auto"></div>
+          
+          <div className="mb-8 mt-12">
+            <h3 className="text-2xl md:text-3xl font-bold mb-6 text-left pl-4 md:pl-0">
+              왜? 4시간오픽 모의고사
+            </h3>
+            
+            <div className="space-y-2 pl-4 md:pl-0">
+              <div className="flex items-start space-x-3">
+                <span className="flex-shrink-0 text-xl">✅</span>
+                <span className="text-base md:text-lg font-medium">내가 약한 유형 집중 연습 (선택, 롤플레이, 돌발, 콤플레 선택 연습)</span>
+              </div>
+              <div className="flex items-start space-x-3">
+                <span className="flex-shrink-0 text-xl">✅</span>
+                <span className="text-base md:text-lg font-medium">모든 연습 녹음 저장 → 내 실력 추적 관리</span>
+              </div>
+              <div className="flex items-start space-x-3">
+                <span className="flex-shrink-0 text-xl">✅</span>
+                <span className="text-base md:text-lg font-medium">오픽 점수를 올리고 싶은 취준생·직장인 필수 시험 점검 툴</span>
+              </div>
+            </div>
+          </div>
         </div>
       </section>
 
       {/* How to Use Section */}
-      <section className="container mx-auto px-4 py-16">
+      <section className="container mx-auto px-4 py-8">
         <div className="max-w-6xl mx-auto">
-          <h3 className="text-3xl font-bold text-gray-800 mb-12">이용 방법</h3>
+          <h3 className="text-3xl font-bold text-gray-800 mb-12">이용방법</h3>
           
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <div className="text-left">
-              <div className="mb-6">
-                <span className="text-4xl font-bold text-blue-600">01</span>
-                <h4 className="text-xl font-bold text-gray-800 mt-2 mb-4">목표 레벨 선택</h4>
-                <p className="text-gray-600 font-medium">목표로 하는 OPIc 수준은 레벨을 선택하여 적절한 연습 문제를 받아보세요.</p>
+          <div className="space-y-2 text-left">
+            <div className="flex items-start space-x-4">
+              <span className="text-xl font-bold text-gray-800 flex-shrink-0">1.</span>
+              <div>
+                <span className="text-xl font-bold text-gray-800">4시간오픽 사이트 가입 후 기본 설문</span>
+                <span className="text-gray-600 ml-2">*서비스 이용 탐수사향</span>
               </div>
             </div>
             
-            <div className="text-left">
-              <div className="mb-6">
-                <span className="text-4xl font-bold text-blue-600">02</span>
-                <h4 className="text-xl font-bold text-gray-800 mt-2 mb-4">말하기 연습</h4>
-                <p className="text-gray-600 font-medium">실제 시험처럼 질문을 듣고 녹음 타이머로 답변을 녹음해 보세요.</p>
+            <div className="flex items-start space-x-4">
+              <span className="text-xl font-bold text-gray-800 flex-shrink-0">2.</span>
+              <div>
+                <span className="text-xl font-bold text-gray-800">목표레벨 선택</span>
+                <span className="text-gray-600 ml-2">IM2, IH, AL 중 택1 *테스트마다 변경가능</span>
               </div>
             </div>
             
-            <div className="text-left">
-              <div className="mb-6">
-                <span className="text-4xl font-bold text-blue-600">03</span>
-                <h4 className="text-xl font-bold text-gray-800 mt-2 mb-4">피드백 받기</h4>
-                <p className="text-gray-600 font-medium">말한 답변을 텍스트로 점검하고 더 높은 점수를 위한 AI 생성 개선방향을 받아보세요.</p>
+            <div className="flex items-start space-x-4">
+              <span className="text-xl font-bold text-gray-800 flex-shrink-0">3.</span>
+              <div>
+                <span className="text-xl font-bold text-gray-800">문제유형 선택</span>
+                <span className="text-gray-600 ml-2">선택주제, 롤플레이, 돌발주제, 콤플레션 1회 총 택1</span>
+              </div>
+            </div>
+            
+            <div className="flex items-start space-x-4">
+              <span className="text-xl font-bold text-gray-800 flex-shrink-0">4.</span>
+              <div>
+                <span className="text-xl font-bold text-gray-800">모의고사</span>
+                <span className="text-gray-600 ml-2">선택구간 지정레이어 테스트간 금막 측정로 콘텐츠에 검포로제 여윽품이 가능</span>
+              </div>
+            </div>
+            
+            <div className="flex items-start space-x-4">
+              <span className="text-xl font-bold text-gray-800 flex-shrink-0">5.</span>
+              <div>
+                <span className="text-xl font-bold text-gray-800">답변저장</span>
+                <span className="text-gray-600 ml-2">통한 테스트 내역 확인가능</span>
               </div>
             </div>
           </div>

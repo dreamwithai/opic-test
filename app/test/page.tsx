@@ -740,13 +740,19 @@ export default function TestPage() {
                       카테고리: {currentQuestion.category} | 
                       테마: {getTheme(currentQuestion)}
                     </div>
-                    <p className="text-gray-800 font-medium">
-                      {currentQuestion.question_kr}
-                    </p>
+                    <div className="space-y-3">
+                      <div>
+                        <p className="text-gray-800 font-medium text-sm">
+                          {getQuestionText(currentQuestion)}
+                        </p>
+                      </div>
+                      <div>
+                        <p className="text-gray-800 font-medium text-sm">
+                          {currentQuestion.question_kr}
+                        </p>
+                      </div>
+                    </div>
                   </div>
-                  <p className="text-gray-600 text-sm mt-6">
-                    (한국어 문제를 바탕으로 영어 답변에 대해 말하여 주세요. 모국어 무엇인지 알 수없게 말해보세요.)
-                  </p>
                 </div>
               )}
             </div>
