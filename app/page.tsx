@@ -1,12 +1,11 @@
-import { Metadata } from 'next'
-import Link from 'next/link'
+'use client'
 
-export const metadata: Metadata = {
-  title: 'OPIc 영어 말하기 연습',
-  description: 'OPIc 시험 전에, 내 약점 진단하세요. 84000원 시험비 아끼는 가장 현명한 방법!',
-}
+import Link from 'next/link'
+import { useState } from 'react'
 
 export default function Home() {
+  const [isFormOpen, setIsFormOpen] = useState(false)
+
   return (
     <div className="min-h-screen bg-white font-sans" style={{ fontFamily: "'Noto Sans KR', 'Malgun Gothic', 'Apple SD Gothic Neo', sans-serif" }}>
       {/* Header */}
@@ -45,25 +44,40 @@ export default function Home() {
             </div>
           </div>
           
-          <div className="mb-8 mt-12">
-            <h3 className="text-2xl md:text-3xl font-bold mb-6 text-left pl-4 md:pl-0">
+          <div className="mb-8 mt-12 pl-4 md:pl-0">
+            <h3 className="text-2xl md:text-3xl font-bold mb-6 text-left">
               왜? 4시간오픽 모의고사
             </h3>
             
-            <div className="space-y-2 pl-4 md:pl-0">
-              <div className="flex items-start space-x-3">
+            <div className="space-y-2">
+              <div className="flex items-start space-x-2">
                 <span className="flex-shrink-0 text-xl">✅</span>
                 <span className="text-base md:text-lg font-medium">내가 약한 유형 집중 연습 (선택, 롤플레이, 돌발, 콤플레 선택 연습)</span>
               </div>
-              <div className="flex items-start space-x-3">
+              <div className="flex items-start space-x-2">
                 <span className="flex-shrink-0 text-xl">✅</span>
                 <span className="text-base md:text-lg font-medium">모든 연습 녹음 저장 → 내 실력 추적 관리</span>
               </div>
-              <div className="flex items-start space-x-3">
+              <div className="flex items-start space-x-2">
                 <span className="flex-shrink-0 text-xl">✅</span>
                 <span className="text-base md:text-lg font-medium">오픽 점수를 올리고 싶은 취준생·직장인 필수 시험 점검 툴</span>
               </div>
             </div>
+          </div>
+        </div>
+      </section>
+
+      {/* 해당 모의고사는 Section */}
+      <section className="container mx-auto px-4 py-8">
+        <div className="max-w-4xl mx-auto text-left">
+          <h3 className="text-3xl font-bold text-gray-800 mb-6">해당 모의고사는,</h3>
+          
+          <div className="space-y-2 text-lg text-gray-700">
+            <p>강지완쌤 국룰서베이 기반 테스트입니다.</p>
+            <p className="text-base text-gray-600">
+              (서베이 항목 : 집, 공연, 콘서트, 카페, 술집, 음악듣기, 조깅, 걷기, 하이킹, 운동안함, 국내여행, 해외여행)
+            </p>
+            <p>문제풀이와 내 답변저장 및 답변 다시듣기 서비스는 무료로 제공됩니다.</p>
           </div>
         </div>
       </section>
@@ -77,8 +91,8 @@ export default function Home() {
             <div className="flex items-start space-x-4">
               <span className="text-xl font-bold text-gray-800 flex-shrink-0">1.</span>
               <div>
-                <span className="text-xl font-bold text-gray-800">4시간오픽 사이트 가입 후 기본 설문</span>
-                <span className="text-gray-600 ml-2">*서비스 이용 탐수사향</span>
+                <span className="text-xl font-bold text-gray-800">4시간오픽 사이트 가입 후 기초 설문</span>
+                <span className="text-gray-600 ml-2">*서비스 이용 필수사항</span>
               </div>
             </div>
             
@@ -86,23 +100,23 @@ export default function Home() {
               <span className="text-xl font-bold text-gray-800 flex-shrink-0">2.</span>
               <div>
                 <span className="text-xl font-bold text-gray-800">목표레벨 선택</span>
-                <span className="text-gray-600 ml-2">IM2, IH, AL 중 택1 *테스트마다 변경가능</span>
+                <span className="text-gray-600 ml-2">IM2, IH, AL 중 택1, *테스트마다 변경가능</span>
               </div>
             </div>
             
             <div className="flex items-start space-x-4">
               <span className="text-xl font-bold text-gray-800 flex-shrink-0">3.</span>
               <div>
-                <span className="text-xl font-bold text-gray-800">문제유형 선택</span>
-                <span className="text-gray-600 ml-2">선택주제, 롤플레이, 돌발주제, 콤플레션 1회 총 택1</span>
+                <span className="text-xl font-bold text-gray-800">문제융형 선택</span>
+                <span className="text-gray-600 ml-2">선택주제, 롤플레이, 돌발주제, 모의고사 1회 중 택1</span>
               </div>
             </div>
             
             <div className="flex items-start space-x-4">
               <span className="text-xl font-bold text-gray-800 flex-shrink-0">4.</span>
               <div>
-                <span className="text-xl font-bold text-gray-800">모의고사</span>
-                <span className="text-gray-600 ml-2">선택구간 지정레이어 테스트간 금막 측정로 콘텐츠에 검포로제 여윽품이 가능</span>
+                <span className="text-xl font-bold text-gray-800">문제풀이</span>
+                <span className="text-gray-600 ml-2">선택주제, 롤플레이, 돌발주제는 콤보 출제롤 콤보문제 연속풀이 가능</span>
               </div>
             </div>
             
@@ -117,64 +131,201 @@ export default function Home() {
         </div>
       </section>
 
+      {/* Survey Section */}
+      <section className="container mx-auto px-4 py-8">
+        <div className="max-w-4xl mx-auto">
+          <div className="border border-gray-300 rounded-lg">
+            <button 
+              onClick={() => setIsFormOpen(!isFormOpen)}
+              className="w-full flex justify-between items-center p-4 text-left hover:bg-gray-50 transition-colors"
+            >
+              <div>
+                <h3 className="text-xl font-bold text-gray-800 mb-1">기초설문/이용동의</h3>
+                <p className="text-sm text-gray-600">*서비스 이용 활수설문으로 놓아서 선택하세요</p>
+              </div>
+              <div className={`transform transition-transform ${isFormOpen ? 'rotate-180' : ''}`}>
+                <svg className="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                </svg>
+              </div>
+            </button>
+            
+            {isFormOpen && (
+              <div className="border-t border-gray-300 p-6 space-y-6">
+                {/* 오픽 응시경험 */}
+                <div>
+                  <h4 className="font-medium text-gray-800 mb-3">(필수)오픽 응시경험이 있으신가요?</h4>
+                  <div className="flex flex-wrap gap-4">
+                    <label className="flex items-center space-x-2">
+                      <input type="radio" name="experience" className="form-radio" />
+                      <span className="text-sm">미응시</span>
+                    </label>
+                    <label className="flex items-center space-x-2">
+                      <input type="radio" name="experience" className="form-radio" />
+                      <span className="text-sm">1회</span>
+                    </label>
+                    <label className="flex items-center space-x-2">
+                      <input type="radio" name="experience" className="form-radio" />
+                      <span className="text-sm">2회</span>
+                    </label>
+                    <label className="flex items-center space-x-2">
+                      <input type="radio" name="experience" className="form-radio" />
+                      <span className="text-sm">3회이상</span>
+                    </label>
+                  </div>
+                </div>
+
+                {/* 현재 등급 */}
+                <div>
+                  <h4 className="font-medium text-gray-800 mb-3">(필수)현재 등급을 알려주세요.</h4>
+                  <div className="flex flex-wrap gap-4">
+                    <label className="flex items-center space-x-2">
+                      <input type="radio" name="level" className="form-radio" />
+                      <span className="text-sm">없음(미응시)</span>
+                    </label>
+                    <label className="flex items-center space-x-2">
+                      <input type="radio" name="level" className="form-radio" />
+                      <span className="text-sm">NH이하</span>
+                    </label>
+                    <label className="flex items-center space-x-2">
+                      <input type="radio" name="level" className="form-radio" />
+                      <span className="text-sm">IM1</span>
+                    </label>
+                    <label className="flex items-center space-x-2">
+                      <input type="radio" name="level" className="form-radio" />
+                      <span className="text-sm">IM2</span>
+                    </label>
+                    <label className="flex items-center space-x-2">
+                      <input type="radio" name="level" className="form-radio" />
+                      <span className="text-sm">IM3</span>
+                    </label>
+                    <label className="flex items-center space-x-2">
+                      <input type="radio" name="level" className="form-radio" />
+                      <span className="text-sm">IH</span>
+                    </label>
+                    <label className="flex items-center space-x-2">
+                      <input type="radio" name="level" className="form-radio" />
+                      <span className="text-sm">AL</span>
+                    </label>
+                  </div>
+                </div>
+
+                {/* 오픽응시 목적 */}
+                <div>
+                  <h4 className="font-medium text-gray-800 mb-3">(필수)오픽응시 목적은? (복수 선택 가능)</h4>
+                  <div className="flex flex-wrap gap-4">
+                    <label className="flex items-center space-x-2">
+                      <input type="checkbox" className="form-checkbox" />
+                      <span className="text-sm">취업준비</span>
+                    </label>
+                    <label className="flex items-center space-x-2">
+                      <input type="checkbox" className="form-checkbox" />
+                      <span className="text-sm">이직준비</span>
+                    </label>
+                    <label className="flex items-center space-x-2">
+                      <input type="checkbox" className="form-checkbox" />
+                      <span className="text-sm">승진 및 직장 여가기준 충족</span>
+                    </label>
+                    <label className="flex items-center space-x-2">
+                      <input type="checkbox" className="form-checkbox" />
+                      <span className="text-sm">자기계발 및 성장</span>
+                    </label>
+                  </div>
+                </div>
+
+                {/* 예정일 */}
+                <div>
+                  <h4 className="font-medium text-gray-800 mb-3">(필수)오픽 응시 예정일은 언제인가요?</h4>
+                  <div className="flex flex-wrap gap-4">
+                    <label className="flex items-center space-x-2">
+                      <input type="radio" name="schedule" className="form-radio" />
+                      <span className="text-sm">1주일이내</span>
+                    </label>
+                    <label className="flex items-center space-x-2">
+                      <input type="radio" name="schedule" className="form-radio" />
+                      <span className="text-sm">1개월이내</span>
+                    </label>
+                    <label className="flex items-center space-x-2">
+                      <input type="radio" name="schedule" className="form-radio" />
+                      <span className="text-sm">3개월이내</span>
+                    </label>
+                    <label className="flex items-center space-x-2">
+                      <input type="radio" name="schedule" className="form-radio" />
+                      <span className="text-sm">6개월이내</span>
+                    </label>
+                    <label className="flex items-center space-x-2">
+                      <input type="radio" name="schedule" className="form-radio" />
+                      <span className="text-sm">날짜 미정</span>
+                    </label>
+                  </div>
+                </div>
+
+                {/* 이용 동의 안내 */}
+                <div className="border-t pt-6">
+                  <h4 className="font-medium text-gray-800 mb-3">(필수)이용 동의 안내</h4>
+                  <div className="bg-gray-50 p-4 rounded-lg text-sm text-gray-700 mb-4">
+                    <p className="mb-2">4시간오픽 모의고사 서비스를 원활히 제공하고, 응답자의 데이터를 안전하게 활용하기 위해 아래 내용을 안내드립니다.</p>
+                    <p className="mb-2">사용자의 답변(음성/텍스트) 및 설문 결과는 서비스 품질 개선 및 통계 분석 목적으로 활용될 수 있습니다.</p>
+                    <p className="mb-2">서비스 이용을 위해 위 내용을 이해하고 동의해주셔야 모의고사를 이용하실 수 있습니다.</p>
+                    <p>이에 동의하십니까?</p>
+                  </div>
+                  <div className="space-y-2">
+                    <label className="flex items-center space-x-2">
+                      <input type="radio" name="agreement" className="form-radio" />
+                      <span className="text-sm">동의함 (필수)</span>
+                    </label>
+                    <label className="flex items-center space-x-2">
+                      <input type="radio" name="agreement" className="form-radio" />
+                      <span className="text-sm">동의하지 않음 (서비스 이용불가)</span>
+                    </label>
+                  </div>
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
+      </section>
+
       {/* Level Selection Section */}
       <section className="bg-gray-50 py-16">
         <div className="container mx-auto px-4">
           <div className="max-w-6xl mx-auto">
-            <h3 className="text-3xl font-bold text-gray-800 mb-12">목표 OPIc 레벨 선택</h3>
+            <h3 className="text-3xl font-bold text-gray-800 mb-12">목표레벨선택</h3>
             
-            {/* First Row - IM2 and IH */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-              <div className="text-left hover:shadow-lg transition-shadow bg-white rounded-xl border p-6">
-                <div className="mb-6">
-                  <h4 className="text-2xl font-bold mb-4">IM2</h4>
-                  <p className="text-base text-gray-600 font-medium">
-                    일상적인 주제에 대해 다양한 의사소통을 합리적인 정확도로 할 수 있습니다.
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              <Link href="/question-type?level=IM2">
+                <div className="bg-blue-600 hover:bg-blue-700 text-white rounded-xl p-6 cursor-pointer transition-colors h-full">
+                  <div className="mb-4">
+                    <h4 className="text-4xl font-bold mb-2">IM2 <span className="text-lg font-medium">선택</span></h4>
+                  </div>
+                  <p className="text-white/90 text-sm leading-relaxed">
+                    "쉽게 간단한 문장과 원하는 정도를 할 수 있다"
                   </p>
                 </div>
-                <div className="flex justify-center">
-                  <Link href="/question-type?level=IM2">
-                    <button className="w-32 bg-blue-600 hover:bg-blue-700 text-white py-2 px-6 rounded-lg font-medium transition-colors">
-                      IM2 선택
-                    </button>
-                  </Link>
-                </div>
-              </div>
+              </Link>
 
-              <div className="text-left hover:shadow-lg transition-shadow bg-white rounded-xl border p-6">
-                <div className="mb-6">
-                  <h4 className="text-2xl font-bold mb-4">IH</h4>
-                  <p className="text-base text-gray-600 font-medium">
-                    대부분의 비공식적 대화와 일부 공식적인 대화에 효과적으로 처리할 수 있습니다.
+              <Link href="/question-type?level=IH">
+                <div className="bg-blue-600 hover:bg-blue-700 text-white rounded-xl p-6 cursor-pointer transition-colors h-full">
+                  <div className="mb-4">
+                    <h4 className="text-4xl font-bold mb-2">IH <span className="text-lg font-medium">선택</span></h4>
+                  </div>
+                  <p className="text-white/90 text-sm leading-relaxed">
+                    "문단으로 말하고,<br />
+                    시제/돌발/일기정보이 가능해야 한다"
                   </p>
                 </div>
-                <div className="flex justify-center">
-                  <Link href="/question-type?level=IH">
-                    <button className="w-32 bg-blue-600 hover:bg-blue-700 text-white py-2 px-6 rounded-lg font-medium transition-colors">
-                      IH 선택
-                    </button>
-                  </Link>
-                </div>
-              </div>
-            </div>
+              </Link>
 
-            {/* Second Row - AL */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div className="text-left hover:shadow-lg transition-shadow bg-white rounded-xl border p-6">
-                <div className="mb-6">
-                  <h4 className="text-2xl font-bold mb-4">AL</h4>
-                  <p className="text-base text-gray-600 font-medium">
-                    대부분의 비공식적 대화와 많은 공식적인 대화에 참여할 수 있습니다.
+              <Link href="/question-type?level=AL">
+                <div className="bg-blue-600 hover:bg-blue-700 text-white rounded-xl p-6 cursor-pointer transition-colors h-full">
+                  <div className="mb-4">
+                    <h4 className="text-4xl font-bold mb-2">AL <span className="text-lg font-medium">선택</span></h4>
+                  </div>
+                  <p className="text-white/90 text-sm leading-relaxed">
+                    "실수가 극히 적고, 표현이 다양해야 한다."
                   </p>
                 </div>
-                <div className="flex justify-center">
-                  <Link href="/question-type?level=AL">
-                    <button className="w-32 bg-blue-600 hover:bg-blue-700 text-white py-2 px-6 rounded-lg font-medium transition-colors">
-                      AL 선택
-                    </button>
-                  </Link>
-                </div>
-              </div>
+              </Link>
             </div>
           </div>
         </div>
