@@ -63,30 +63,31 @@ const defaultFeedbackData = {
 export default function FeedbackPage() {
   const router = useRouter()
   const searchParams = useSearchParams()
-  const [selectedLevel, setSelectedLevel] = useState<string>('IM2')
-  const [selectedType, setSelectedType] = useState<string>('선택주제')
-  const [selectedCategory, setSelectedCategory] = useState<string>('S')
-  const [currentTheme, setCurrentTheme] = useState<string>('Hobbies')
-  const [questionInfo, setQuestionInfo] = useState({ qid: 1, qseq: 1, questionIndex: 1 })
-  const [userAnswer, setUserAnswer] = useState<string>('')
-
+  
+  // URL parameters
+  const currentQuestion = searchParams.get('question') || '1'
+  const selectedType = searchParams.get('type') || '선택주제'
+  const selectedCategory = searchParams.get('category') || 'S'
+  const selectedLevel = searchParams.get('level') || 'IM2'
+  const currentTheme = searchParams.get('theme') || 'Unknown'
+  const currentQId = searchParams.get('qid') || '1'
+  const currentQSeq = searchParams.get('qseq') || '1'
+  const userAnswer = searchParams.get('answer') || '답변을 찾을 수 없습니다.'
+  
+  // 모든 답변 가져오기
+  const [allAnswers, setAllAnswers] = useState<any[]>([])
+  
   useEffect(() => {
-    const type = searchParams.get('type') || '선택주제'
-    const category = searchParams.get('category') || 'S'
-    const level = searchParams.get('level') || 'IM2'
-    const theme = searchParams.get('theme') || 'Hobbies'
-    const qid = parseInt(searchParams.get('qid') || '1')
-    const qseq = parseInt(searchParams.get('qseq') || '1')
-    const questionIndex = parseInt(searchParams.get('question') || '1')
-    const answer = searchParams.get('answer') || sampleAnswer
-    
-    setSelectedType(type)
-    setSelectedCategory(category)
-    setSelectedLevel(level)
-    setCurrentTheme(theme)
-    setQuestionInfo({ qid, qseq, questionIndex })
-    setUserAnswer(answer)
-  }, [searchParams])
+    const storedAnswers = JSON.parse(localStorage.getItem('testAnswers') || '[]')
+    setAllAnswers(storedAnswers)
+  }, [])
+
+  const questionInfo = {
+    questionIndex: parseInt(currentQuestion),
+    theme: currentTheme,
+    qid: parseInt(currentQId),
+    qseq: parseInt(currentQSeq)
+  }
 
   const handleSave = () => {
     alert('피드백이 저장되었습니다.')
@@ -152,10 +153,10 @@ export default function FeedbackPage() {
     router.back()
   }
 
-  const currentQuestion = sampleQuestions[0]
+  const currentQuestionData = sampleQuestions.find(q => q.q_id === questionInfo.qid && q.q_seq === questionInfo.qseq)
   
   // 동적 피드백 데이터 생성
-  const feedbackData = generateFeedbackData(currentTheme, questionInfo.qseq)
+  const feedbackData = generateFeedbackData(questionInfo.theme, questionInfo.qseq)
 
   // 마지막 문제인지 확인
   const isLastQuestion = (() => {
@@ -264,57 +265,83 @@ export default function FeedbackPage() {
 
           {/* Main Content Grid */}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
-            {/* Left Column - 내 답변 */}
+            {/* Left Column - 내 답변들 */}
             <div>
-              <div className="bg-black text-white p-4 rounded-t-xl">
-                <h3 className="text-lg font-bold">내 답변 - {currentTheme}</h3>
-              </div>
-              <div className="bg-gray-50 border border-gray-200 rounded-b-xl p-6">
-                <div className="text-gray-800 leading-relaxed">
-                  {userAnswer}
+              {allAnswers.length > 0 ? (
+                <div>
+                  <div className="bg-black text-white p-4 rounded-t-xl">
+                    <h3 className="text-lg font-bold">내 답변 - {allAnswers[0]?.theme || questionInfo.theme}</h3>
+                  </div>
+                  <div className="bg-gray-50 border border-gray-200 rounded-b-xl p-6 space-y-6">
+                    {allAnswers.map((answer, index) => (
+                      <div key={index}>
+                        <h4 className="font-semibold text-gray-700 mb-2">{index + 1}/3</h4>
+                        <div className="text-gray-600 text-sm leading-relaxed">
+                          {answer.answer}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
                 </div>
-              </div>
+              ) : (
+                <div>
+                  <div className="bg-black text-white p-4 rounded-t-xl">
+                    <h3 className="text-lg font-bold">내 답변 - {questionInfo.theme}</h3>
+                  </div>
+                  <div className="bg-gray-50 border border-gray-200 rounded-b-xl p-6">
+                    <div className="text-gray-800 leading-relaxed">
+                      {userAnswer}
+                    </div>
+                  </div>
+                </div>
+              )}
             </div>
 
             {/* Right Column - 전문가 피드백 */}
-            <div>
-              <div className="bg-white border border-gray-200 rounded-xl">
-                <div className="p-6 border-b border-gray-200">
-                  <h3 className="text-lg font-bold text-gray-800 mb-4">전문가 피드백</h3>
-                  
-                  {/* 종합 평가 */}
-                  <div className="mb-6">
-                    <h4 className="font-semibold text-gray-700 mb-2">종합 평가</h4>
-                    <p className="text-gray-600 text-sm leading-relaxed">
-                      {feedbackData.overallComment}
-                    </p>
-                  </div>
+            <div className="relative">
+              <div className="bg-black text-white p-4 rounded-t-xl">
+                <h3 className="text-lg font-bold">전문가 피드백</h3>
+              </div>
+              <div className="bg-gray-50 border border-gray-200 rounded-b-xl p-6 blur-sm">
+                {/* 종합 평가 */}
+                <div className="mb-6">
+                  <h4 className="font-semibold text-gray-700 mb-2">종합 평가</h4>
+                  <p className="text-gray-600 text-sm leading-relaxed">
+                    {feedbackData.overallComment}
+                  </p>
+                </div>
 
-                  {/* 문법 피드백 */}
-                  <div className="mb-6">
-                    <h4 className="font-semibold text-gray-700 mb-3">문법 피드백</h4>
-                    <ul className="space-y-2">
-                      {feedbackData.grammarFeedback.map((feedback, index) => (
-                        <li key={index} className="text-gray-600 text-sm leading-relaxed flex items-start">
-                          <span className="text-blue-500 mr-2 mt-1">•</span>
-                          <span>{feedback}</span>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
+                {/* 문법 피드백 */}
+                <div className="mb-6">
+                  <h4 className="font-semibold text-gray-700 mb-3">문법 피드백</h4>
+                  <ul className="space-y-2">
+                    {feedbackData.grammarFeedback.map((feedback, index) => (
+                      <li key={index} className="text-gray-600 text-sm leading-relaxed flex items-start">
+                        <span className="text-blue-500 mr-2 mt-1">•</span>
+                        <span>{feedback}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
 
-                  {/* 발음 피드백 */}
-                  <div className="mb-6">
-                    <h4 className="font-semibold text-gray-700 mb-3">발음 피드백</h4>
-                    <ul className="space-y-2">
-                      {feedbackData.pronunciationFeedback.map((feedback, index) => (
-                        <li key={index} className="text-gray-600 text-sm leading-relaxed flex items-start">
-                          <span className="text-blue-500 mr-2 mt-1">•</span>
-                          <span>{feedback}</span>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
+                {/* 발음 피드백 */}
+                <div className="mb-6">
+                  <h4 className="font-semibold text-gray-700 mb-3">발음 피드백</h4>
+                  <ul className="space-y-2">
+                    {feedbackData.pronunciationFeedback.map((feedback, index) => (
+                      <li key={index} className="text-gray-600 text-sm leading-relaxed flex items-start">
+                        <span className="text-blue-500 mr-2 mt-1">•</span>
+                        <span>{feedback}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              </div>
+              
+              {/* 추후 예정 오버레이 */}
+              <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-20 rounded-xl">
+                <div className="bg-white px-6 py-3 rounded-lg shadow-lg border-2 border-gray-300">
+                  <span className="text-xl font-bold text-gray-700">(추후 예정)</span>
                 </div>
               </div>
             </div>
@@ -326,13 +353,13 @@ export default function FeedbackPage() {
               onClick={handleSave}
               className="bg-green-500 hover:bg-green-600 text-white px-8 py-3 rounded-lg font-medium transition-colors"
             >
-              저장하기
+              저장 및 응시 리스트보기
             </button>
             <button 
               onClick={handleNextQuestion}
               className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-3 rounded-lg font-medium transition-colors"
             >
-              {isLastQuestion ? '테스트 완료' : '다음 문제 풀기'}
+              {isLastQuestion ? '다른 문제 풀기' : '다음 문제 풀기'}
             </button>
           </div>
         </div>

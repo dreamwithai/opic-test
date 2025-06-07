@@ -199,28 +199,18 @@ export default function TestPage() {
       if (extractedQuestions.length > 0) {
         let selectedQuestions: Question[] = []
         
-        if (category === 'S' || category === 'C') {
-          // Select random q_id and get all questions for that id
-          const uniqueQIds = Array.from(new Set(extractedQuestions.map(q => q.q_id)))
+        // 모든 카테고리에서 동일한 로직: 랜덤 q_id 선택 후 해당 q_id의 모든 문제를 q_seq 순서대로 가져오기
+        const uniqueQIds = Array.from(new Set(extractedQuestions.map(q => q.q_id)))
+        
+        if (uniqueQIds.length > 0) {
+          const randomIndex = Math.floor(Math.random() * uniqueQIds.length)
+          const randomQId = uniqueQIds[randomIndex]
           
-          if (uniqueQIds.length > 0) {
-            const randomIndex = Math.floor(Math.random() * uniqueQIds.length)
-            const randomQId = uniqueQIds[randomIndex]
-            
-            selectedQuestions = extractedQuestions
-              .filter(q => q.q_id === randomQId)
-              .sort((a, b) => a.q_seq - b.q_seq)
-          } else {
-            selectedQuestions = defaultQuestions
-          }
+          selectedQuestions = extractedQuestions
+            .filter(q => q.q_id === randomQId)
+            .sort((a, b) => a.q_seq - b.q_seq)
         } else {
-          // Random 3 questions for other categories
-          const shuffled = [...extractedQuestions]
-          for (let i = shuffled.length - 1; i > 0; i--) {
-            const j = Math.floor(Math.random() * (i + 1))
-            ;[shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]]
-          }
-          selectedQuestions = shuffled.slice(0, Math.min(3, shuffled.length))
+          selectedQuestions = defaultQuestions
         }
         
         // 세션 스토리지에 선택된 문제들 저장
@@ -929,17 +919,68 @@ export default function TestPage() {
 
           {/* Submit button */}
           <div className="flex justify-center">
-            <button 
-              onClick={() => {
-                const currentTheme = getTheme(currentQuestion)
-                const userAnswer = sttText || "음성 인식된 답변이 없습니다. 녹음을 다시 시도해주세요."
-                const feedbackUrl = `/feedback?question=${currentQuestionIndex + 1}&type=${encodeURIComponent(selectedType)}&category=${encodeURIComponent(selectedCategory)}&level=${encodeURIComponent(selectedLevel)}&theme=${encodeURIComponent(currentTheme)}&qid=${currentQuestion?.q_id}&qseq=${currentQuestion?.q_seq}&totalQuestions=${totalQuestions}&answer=${encodeURIComponent(userAnswer)}`
-                router.push(feedbackUrl)
-              }}
-              className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-3 rounded-lg font-medium transition-colors"
-            >
-              답변제출 및 피드백받기
-            </button>
+            {currentQuestionIndex < questions.length - 1 ? (
+              // 마지막 문제가 아닌 경우: 다음문제 버튼
+              <button 
+                onClick={() => {
+                  // STT 텍스트와 녹음 데이터를 로컬 스토리지에 저장
+                  const answerData = {
+                    questionIndex: currentQuestionIndex,
+                    qId: currentQuestion?.q_id,
+                    qSeq: currentQuestion?.q_seq,
+                    theme: getTheme(currentQuestion),
+                    answer: sttText || "음성 인식된 답변이 없습니다. 녹음을 다시 시도해주세요.",
+                    recordedBlob: recordedBlob
+                  }
+                  
+                  // 기존 답변들 가져오기
+                  const existingAnswers = JSON.parse(localStorage.getItem('testAnswers') || '[]')
+                  existingAnswers[currentQuestionIndex] = answerData
+                  localStorage.setItem('testAnswers', JSON.stringify(existingAnswers))
+                  
+                  // 다음 문제로 이동
+                  setCurrentQuestionIndex(currentQuestionIndex + 1)
+                  setRecordedBlob(null)
+                  setSttText('')
+                  setRecordingTime(0)
+                  setListenCount(0)
+                  
+                  // 페이지 상단으로 스크롤
+                  window.scrollTo({ top: 0, behavior: 'smooth' })
+                }}
+                className="bg-green-600 hover:bg-green-700 text-white px-8 py-3 rounded-lg font-medium transition-colors"
+              >
+                다음문제
+              </button>
+            ) : (
+              // 마지막 문제인 경우: 답변제출 및 피드백받기 버튼
+              <button 
+                onClick={() => {
+                  const currentTheme = getTheme(currentQuestion)
+                  const userAnswer = sttText || "음성 인식된 답변이 없습니다. 녹음을 다시 시도해주세요."
+                  
+                  // 마지막 답변도 저장
+                  const answerData = {
+                    questionIndex: currentQuestionIndex,
+                    qId: currentQuestion?.q_id,
+                    qSeq: currentQuestion?.q_seq,
+                    theme: currentTheme,
+                    answer: userAnswer,
+                    recordedBlob: recordedBlob
+                  }
+                  
+                  const existingAnswers = JSON.parse(localStorage.getItem('testAnswers') || '[]')
+                  existingAnswers[currentQuestionIndex] = answerData
+                  localStorage.setItem('testAnswers', JSON.stringify(existingAnswers))
+                  
+                  const feedbackUrl = `/feedback?question=${currentQuestionIndex + 1}&type=${encodeURIComponent(selectedType)}&category=${encodeURIComponent(selectedCategory)}&level=${encodeURIComponent(selectedLevel)}&theme=${encodeURIComponent(currentTheme)}&qid=${currentQuestion?.q_id}&qseq=${currentQuestion?.q_seq}&totalQuestions=${totalQuestions}&answer=${encodeURIComponent(userAnswer)}`
+                  router.push(feedbackUrl)
+                }}
+                className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-3 rounded-lg font-medium transition-colors"
+              >
+                답변제출 및 피드백받기
+              </button>
+            )}
           </div>
 
           {/* Timer Modal */}

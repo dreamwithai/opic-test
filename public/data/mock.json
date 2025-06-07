@@ -1,0 +1,1239 @@
+{
+  "questionType": "모의고사",
+  "description": "모의고사 문제입니다.",
+  "themes": {
+    "comb001": [
+      {
+        "category": "Mock",
+        "theme": "comb001",
+        "q_id": 1,
+        "q_seq": 1,
+        "listen": "Mock_001_001.mp3",
+        "question": "Let’s start the interview now. Tell me about yourself.",
+        "question_kr": "지금부터 면접을 시작하겠습니다. 자기소개를 해주세요."
+      },
+      {
+        "category": "Mock",
+        "theme": "comb001",
+        "q_id": 1,
+        "q_seq": 2,
+        "listen": "Mock_001_002.mp3",
+        "question": "What kind of appointments do you usually make? Who do you make appointments with and how do you make them?",
+        "question_kr": "평소에는 어떤 약속을 잡으시나요? 누구와 약속을 잡고 어떻게 약속을 잡습니까?"
+      },
+      {
+        "category": "Mock",
+        "theme": "comb001",
+        "q_id": 1,
+        "q_seq": 3,
+        "listen": "Mock_001_003.mp3",
+        "question": "Tell me about an appointment you had when you were a child. What was the appointment for? Was it with a doctor or a dentist? How did it go?",
+        "question_kr": "어렸을 때 했던 약속에 대해 말씀해 주세요. 어떤 이유로 예약되었나요? 의사와 함께했나요, 치과 의사와 함께했나요? 어떻게 됐어?"
+      },
+      {
+        "category": "Mock",
+        "theme": "comb001",
+        "q_id": 1,
+        "q_seq": 4,
+        "listen": "Mock_001_004.mp3",
+        "question": "Tell me about a memorable experience you had during an appointment. Was it unexpected? What happened? And how did you deal with the situation?",
+        "question_kr": "진료 중에 기억에 남는 경험에 대해 말씀해 주십시오. 예상치 못한 일이었나요? 무슨?일이?있었나요? 그리고 그 상황에 어떻게 대처했습니까?"
+      },
+      {
+        "category": "Mock",
+        "theme": "comb001",
+        "q_id": 1,
+        "q_seq": 5,
+        "listen": "Mock_001_005.mp3",
+        "question": "I’d like to know and talk about where you live. Tell me about the different rooms in your home. What’s your favorite room? Describe it in detail.",
+        "question_kr": "당신이 어디에 사시는지 알고 이야기하고 싶습니다. 집의 다른 방에 대해 말씀해 주세요. 가장 좋아하는 방이 어디입니까? 자세히 설명하십시오."
+      },
+      {
+        "category": "Mock",
+        "theme": "comb001",
+        "q_id": 1,
+        "q_seq": 6,
+        "listen": "Mock_001_006.mp3",
+        "question": "Tell me about the house or apartment where you grew up. What did your home and surrounding area look like when you were young? And how has it changed?",
+        "question_kr": "자란 집이나 아파트에 대해 말씀해 주세요. 어렸을 때 집과 주변 지역은 어떤 모습이었습니까? 그리고 어떻게 바뀌었습니까?"
+      },
+      {
+        "category": "Mock",
+        "theme": "comb001",
+        "q_id": 1,
+        "q_seq": 7,
+        "listen": "Mock_001_007.mp3",
+        "question": "Tell me about a special family memory that occurred at home. It could be something funny, surprising, or important. Describe a particular day or moment that stands out in your memory.",
+        "question_kr": "가정에서 있었던 특별한 가족 추억에 대해 말씀해 주세요. 그것은 재미있거나, 놀랍거나, 중요한 것일 수 있습니다. 기억에 남는 특정 날짜나 순간을 설명하십시오."
+      },
+      {
+        "category": "Mock",
+        "theme": "comb001",
+        "q_id": 1,
+        "q_seq": 8,
+        "listen": "Mock_001_008.mp3",
+        "question": "Most bars and pubs have a special area to make drinks. Tell me what this area looks like at your favorite bar or pub.",
+        "question_kr": "대부분의 바와 펍에는 음료를 만들 수 있는 특별한 공간이 있습니다. 좋아하는 바나 펍에서 이 지역이 어떻게 생겼는지 알려주세요."
+      },
+      {
+        "category": "Mock",
+        "theme": "comb001",
+        "q_id": 1,
+        "q_seq": 9,
+        "listen": "Mock_001_009.mp3",
+        "question": "Tell me about the first bar you remember going to. What did it look like? Give me as many details as you can.",
+        "question_kr": "기억나는 첫 번째 바에 대해 말씀해 주세요. 어떤 모습이었나요? 가능한 한 많은 세부 정보를 제공하십시오."
+      },
+      {
+        "category": "Mock",
+        "theme": "comb001",
+        "q_id": 1,
+        "q_seq": 10,
+        "listen": "Mock_001_010.mp3",
+        "question": "Tell me about a special visit to a bar or pub. Maybe you celebrated your birthday there, or a friend's birthday. Tell me what you did before and after your bar visit and how you spent your time at the bar. Tell me the whole story.",
+        "question_kr": "바나 펍에 특별히 방문한 것에 대해 알려주세요. 어쩌면 당신은 거기에서 당신의 생일을 축하했거나 친구의 생일을 축하했을 것입니다. 바 방문 전후에 무엇을 했는지, 바에서 어떻게 시간을 보냈는지 말씀해 주세요. 전체 이야기를 들려주세요."
+      },
+      {
+        "category": "Mock",
+        "theme": "comb001",
+        "q_id": 1,
+        "q_seq": 11,
+        "listen": "Mock_001_011.mp3",
+        "question": "I would like to give you a situation and ask you to act it out. You want to watch a movie with your friend. Call a theater and ask 3 or 4 questions about the movie tickets.",
+        "question_kr": "상황을 제시하고 연기해 주시기를 부탁드립니다. 친구와 함께 영화를 보고 싶습니다. 극장에 전화하여 영화 티켓에 대해 3-4 가지 질문을하십시오."
+      },
+      {
+        "category": "Mock",
+        "theme": "comb001",
+        "q_id": 1,
+        "q_seq": 12,
+        "listen": "Mock_001_012.mp3",
+        "question": "I'm sorry, but there is a problem I want you to resolve. You just found out you've been sold the wrong tickets. Ask someone at the movie theater for a solution, giving him or her 2 or 3 alternatives.",
+        "question_kr": "죄송합니다만, 해결해 주셨으면 하는 문제가 있습니다. 방금 티켓이 잘못 판매되었다는 것을 알게 되었습니다. 영화관에 있는 누군가에게 2-3가지 대안을 제시하여 해결책을 요청하십시오."
+      },
+      {
+        "category": "Mock",
+        "theme": "comb001",
+        "q_id": 1,
+        "q_seq": 13,
+        "listen": "Mock_001_013.mp3",
+        "question": "Have you ever been in a situation where you had a problem with buying tickets or making reservations? What was the situation, and how did you solve the problem?",
+        "question_kr": "티켓을 구매하거나 예약하는 데 문제가 있는 상황에 처한 적이 있습니까? 당시의 상황은 무엇이었으며, 어떻게 문제를 해결하셨습니까?"
+      },
+      {
+        "category": "Mock",
+        "theme": "comb001",
+        "q_id": 1,
+        "q_seq": 14,
+        "listen": "Mock_001_014.mp3",
+        "question": "Think about a country that is geographically close to your home country. In what ways has this country changed over the years? Has there been changes in its economy, politics, etc.? Describe this country and its changes in detail.",
+        "question_kr": "모국과 지리적으로 가까운 나라를 생각해 보십시오. 이 나라는 지난 몇 년 동안 어떤 식으로 변해 왔습니까? 경제, 정치 등에 변화가 있었습니까? 이 나라와 그 변화를 자세히 설명하십시오."
+      },
+      {
+        "category": "Mock",
+        "theme": "comb001",
+        "q_id": 1,
+        "q_seq": 15,
+        "listen": "Mock_001_015.mp3",
+        "question": "Tell me in detail about a news item you read or heard recently about a country near your country. What was the news story about? Tell me as much as you can about this report. Explain why the story is important.",
+        "question_kr": "당신의 나라와 가까운 나라에 대해 최근에 읽거나 들은 뉴스 기사에 대해 자세히 알려주세요. 뉴스 기사는 무엇에 관한 것이었습니까? 이 보고서에 대해 가능한 한 많이 알려주십시오. 이야기가 왜 중요한지 설명하십시오."
+      }
+    ],
+    "comb002": [
+      {
+        "category": "Mock",
+        "theme": "comb002",
+        "q_id": 2,
+        "q_seq": 1,
+        "listen": "Mock_002_001.mp3",
+        "question": "Let’s start the interview now. Tell me about yourself.",
+        "question_kr": "지금부터 면접을 시작하겠습니다. 자기소개를 해주세요."
+      },
+      {
+        "category": "Mock",
+        "theme": "comb002",
+        "q_id": 2,
+        "q_seq": 2,
+        "listen": "Mock_002_002.mp3",
+        "question": "Tell me about the furniture you have in your home. Is there a piece that is your favorite?",
+        "question_kr": "집에 있는 가구에 대해 말씀해 주세요. 가장 좋아하는 작품이 있습니까?"
+      },
+      {
+        "category": "Mock",
+        "theme": "comb002",
+        "q_id": 2,
+        "q_seq": 3,
+        "listen": "Mock_002_003.mp3",
+        "question": "Tell me about how you use your furniture on a typical day. What kinds of things do you do?",
+        "question_kr": "평소에 가구를 어떻게 사용하시는지 말씀해 주세요. 어떤 일을 하시나요?"
+      },
+      {
+        "category": "Mock",
+        "theme": "comb002",
+        "q_id": 2,
+        "q_seq": 4,
+        "listen": "Mock_002_004.mp3",
+        "question": "Tell me about the furniture that you had in your childhood home. Was there anything different from the furniture you have today? Describe for me what your home looked like at that time.",
+        "question_kr": "어렸을 때 집에 가지고 있던 가구에 대해 말씀해 주세요. 지금 가지고 있는 가구와 다른 점이 있었나요? 그 당시 당신의 집은 어떤 모습이었는지 설명해 주십시오."
+      },
+      {
+        "category": "Mock",
+        "theme": "comb002",
+        "q_id": 2,
+        "q_seq": 5,
+        "listen": "Mock_002_005.mp3",
+        "question": "You indicated in the survey that you take vacations domestically. Tell me some of the places you like to travel and why you like to go there.",
+        "question_kr": "설문조사에서 국내에서 휴가를 간다고 밝히셨습니다. 여행을 좋아하는 곳과 그곳에 가는 것을 좋아하는 이유를 알려주세요."
+      },
+      {
+        "category": "Mock",
+        "theme": "comb002",
+        "q_id": 2,
+        "q_seq": 6,
+        "listen": "Mock_002_006.mp3",
+        "question": "Tell me about some of the trips you took when you were a child. Where did you go? Who did you go with? And what did you see or do during those early trips?",
+        "question_kr": "어렸을 때 다녀왔던 여행에 대해 말씀해 주세요. 어디 갔었어요? 누구와 함께 갔나요? 그리고 그 초기 여행 동안 무엇을 보거나 무엇을 했습니까?"
+      },
+      {
+        "category": "Mock",
+        "theme": "comb002",
+        "q_id": 2,
+        "q_seq": 7,
+        "listen": "Mock_002_007.mp3",
+        "question": "Traveling can lead to many kinds of interesting, funny, and unexpected experiences. Tell me about one travel experience you had that was unforgettable. Start by telling me when this happened, where you were, and who you were with. Then tell me all the things that happened to make that experience so unforgettable.",
+        "question_kr": "여행은 여러 종류의 흥미롭고, 재미있고, 예상치 못한 경험으로 이어질 수 있습니다. 잊을 수 없는 여행 경험에 대해 말씀해 주세요. 언제 이런 일이 일어났는지, 어디에 있었는지, 누구와 함께 있었는지 먼저 말씀해 주십시오. 그런 다음 그 경험을 잊을 수 없게 만든 모든 일을 이야기하십시오."
+      },
+      {
+        "category": "Mock",
+        "theme": "comb002",
+        "q_id": 2,
+        "q_seq": 8,
+        "listen": "Mock_002_008.mp3",
+        "question": "Tell me about gatherings and celebrations in your country. How do people celebrate them? And what do they do when they get together?",
+        "question_kr": "한국의 모임과 축하 행사에 대해 말씀해 주십시오. 사람들은 어떻게 기념할까요? 그리고 그들은 함께 모일 때 무엇을 합니까?"
+      },
+      {
+        "category": "Mock",
+        "theme": "comb002",
+        "q_id": 2,
+        "q_seq": 9,
+        "listen": "Mock_002_009.mp3",
+        "question": "Tell me about the last gathering or celebration you went to. What was it? And what did you do there?",
+        "question_kr": "마지막으로 참석한 모임이나 축하 행사에 대해 말씀해 주십시오. 그것은 무엇이었습니까? 그리고 거기서 뭘 하셨나요?"
+      },
+      {
+        "category": "Mock",
+        "theme": "comb002",
+        "q_id": 2,
+        "q_seq": 10,
+        "listen": "Mock_002_010.mp3",
+        "question": "Tell me about a memorable experience you had at a gathering or celebration. What happened? And why is it unforgettable?",
+        "question_kr": "모임이나 축하 행사에서 기억에 남는 경험에 대해 말씀해 주세요. 무슨?일이?있었나요? 그리고 왜 잊을 수 없을까요?"
+      },
+      {
+        "category": "Mock",
+        "theme": "comb002",
+        "q_id": 2,
+        "q_seq": 11,
+        "listen": "Mock_002_011.mp3",
+        "question": "I’d like to give you a situation and ask you to act it out. You want to get together with a friend this weekend. Call your friend and ask 3 or 4 questions about when you can meet and what you can do.",
+        "question_kr": "상황을 제시하고 연기해 보라고 부탁하고 싶습니다. 이번 주말에 친구와 만나고 싶습니다. 친구에게 전화를 걸어 언제 만날 수 있고 무엇을 할 수 있는지에 대해 3-4가지 질문을 하십시오."
+      },
+      {
+        "category": "Mock",
+        "theme": "comb002",
+        "q_id": 2,
+        "q_seq": 12,
+        "listen": "Mock_002_012.mp3",
+        "question": "I’m sorry, but there is a problem which I need you to resolve. You realize that you are not able to meet your friend at the time and the place you agreed upon. Call your friend and explain the problem, then offer some suggestions.",
+        "question_kr": "죄송합니다. 해결해야 할 문제가 있습니다. 당신은 당신이 약속한 시간과 장소에서 친구를 만날 수 없다는 것을 깨닫습니다. 친구에게 전화를 걸어 문제를 설명한 다음 몇 가지 제안을 하십시오."
+      },
+      {
+        "category": "Mock",
+        "theme": "comb002",
+        "q_id": 2,
+        "q_seq": 13,
+        "listen": "Mock_002_013.mp3",
+        "question": "That’s the end of the situation. Have you ever had plans in your free time that didn’t turn out as you hoped? Maybe the weather was bad, maybe you had work or chores you took care of. Tell me in detail about when your free time plans didn’t go as you expected.",
+        "question_kr": "그것이 상황의 끝입니다. 여가 시간에 계획했는데 원하는 대로 되지 않은 적이 있습니까? 어쩌면 날씨가 나빴을 수도 있고, 일이 있었거나 집안일을 처리했을 수도 있습니다. 여가 시간 계획이 예상대로 진행되지 않았던 경우에 대해 자세히 알려주세요."
+      },
+      {
+        "category": "Mock",
+        "theme": "comb002",
+        "q_id": 2,
+        "q_seq": 14,
+        "listen": "Mock_002_014.mp3",
+        "question": "Compare the movies today to movies you watched when you were a child. How have movies changed over the years? Tell me the similarities and differences between them.",
+        "question_kr": "오늘날의 영화와 어렸을 때 보았던 영화를 비교해 보십시오. 지난 몇 년 동안 영화는 어떻게 변했나요? 그들 사이의 유사점과 차이점을 말해주세요."
+      },
+      {
+        "category": "Mock",
+        "theme": "comb002",
+        "q_id": 2,
+        "q_seq": 15,
+        "listen": "Mock_002_015.mp3",
+        "question": "What issues about movies do you talk about with your friends or your family members these days? What are they and why are they big issues?",
+        "question_kr": "요즘 친구들이나 가족들과 영화에 관한 어떤 문제들에 대해 이야기하나요? 그것들은 무엇이며 왜 큰 문제입니까?"
+      }
+    ],
+    "comb003": [
+      {
+        "category": "Mock",
+        "theme": "comb003",
+        "q_id": 3,
+        "q_seq": 1,
+        "listen": "Mock_003_001.mp3",
+        "question": "Let’s start the interview now. Tell me about yourself.",
+        "question_kr": "지금부터 면접을 시작하겠습니다. 자기소개를 해주세요."
+      },
+      {
+        "category": "Mock",
+        "theme": "comb003",
+        "q_id": 3,
+        "q_seq": 2,
+        "listen": "Mock_003_002.mp3",
+        "question": "What is the weather like in your country? Also tell me about the seasons.",
+        "question_kr": "당신의 나라에 있는 날씨는 어떤가요? 계절에 대해서도 말씀해 주세요."
+      },
+      {
+        "category": "Mock",
+        "theme": "comb003",
+        "q_id": 3,
+        "q_seq": 3,
+        "listen": "Mock_003_003.mp3",
+        "question": "How is the weather today where you are? What is happening now?",
+        "question_kr": "당신이 있는 곳의 오늘 날씨는 어떻습니까? 지금 무슨 일이 일어나고 있습니까?"
+      },
+      {
+        "category": "Mock",
+        "theme": "comb003",
+        "q_id": 3,
+        "q_seq": 4,
+        "listen": "Mock_003_004.mp3",
+        "question": "How has the weather changed in your country over time? Was the weather different when you were a child?",
+        "question_kr": "당신의 나라는 시간이 지남에 따라 날씨가 어떻게 변했나요? 당신이 어렸을 때 날씨가 달랐나요?"
+      },
+      {
+        "category": "Mock",
+        "theme": "comb003",
+        "q_id": 3,
+        "q_seq": 5,
+        "listen": "Mock_003_005.mp3",
+        "question": "Tell me what cafes and coffee shops typically look like in your community.",
+        "question_kr": "귀하의 커뮤니티에서 카페와 커피숍이 일반적으로 어떻게 생겼는지 알려주세요."
+      },
+      {
+        "category": "Mock",
+        "theme": "comb003",
+        "q_id": 3,
+        "q_seq": 6,
+        "listen": "Mock_003_006.mp3",
+        "question": "Tell me about the first time you remember going to a cafe or coffee shop. Were you a child or were you older? What happened when you were there? Tell about that experience in detail from beginning to end.",
+        "question_kr": "카페나 커피숍에 처음 갔던 기억이 떠오르는 순간에 대해 말씀해 주세요. 어렸을 때였나요, 아니면 나이가 많았나요? 그곳에 있었을 때 무슨 일이 있었나요? 그 경험에 대해 처음부터 끝까지 자세히 이야기하십시오."
+      },
+      {
+        "category": "Mock",
+        "theme": "comb003",
+        "q_id": 3,
+        "q_seq": 7,
+        "listen": "Mock_003_007.mp3",
+        "question": "Tell me about a time you went to a cafe or coffee shop that was very memorable. Did something unusual or strange happen? Tell me all about that memorable experience.",
+        "question_kr": "카페나 커피숍에 갔을 때 기억에 남는 순간에 대해 말씀해 주세요. 뭔가 이상하거나 이상한 일이 일어났나요? 기억에 남는 경험에 대해 말씀해 주세요."
+      },
+      {
+        "category": "Mock",
+        "theme": "comb003",
+        "q_id": 3,
+        "q_seq": 8,
+        "listen": "Mock_003_008.mp3",
+        "question": "What kind of concert do you like to go to? Why do you like those kinds of concerts?",
+        "question_kr": "어떤 콘서트에 가는 것을 좋아합니까? 왜 그런 콘서트를 좋아하나요?"
+      },
+      {
+        "category": "Mock",
+        "theme": "comb003",
+        "q_id": 3,
+        "q_seq": 9,
+        "listen": "Mock_003_009.mp3",
+        "question": "When did you start going to concerts? How did you first become interested in going to concerts?",
+        "question_kr": "언제부터 콘서트를 보러 가기 시작했나요? 어떻게 처음 콘서트 공연에 관심을 갖게 되었나요?"
+      },
+      {
+        "category": "Mock",
+        "theme": "comb003",
+        "q_id": 3,
+        "q_seq": 10,
+        "listen": "Mock_003_010.mp3",
+        "question": "Tell me about the last time you went to a concert. Whose concert was it? Where was it? And who did you go with?",
+        "question_kr": "마지막으로 공연을 보러 갔던 게 언제였는지 말해 달라. 누구의 콘서트였나요? 그곳은 어디에 있었는가? 그리고 누구와 함께 갔습니까?"
+      },
+      {
+        "category": "Mock",
+        "theme": "comb003",
+        "q_id": 3,
+        "q_seq": 11,
+        "listen": "Mock_003_011.mp3",
+        "question": "I’d like to give you a situation and ask you to act it out. A friend has invited you for a holiday meal. Call your friend and ask three or four questions to find out when you should come, what you should bring and any other information about the event.",
+        "question_kr": "상황을 제시하고 연기해 보라고 부탁하고 싶습니다. 친구가 당신을 명절 식사에 초대했습니다. 친구에게 전화를 걸어 서너 가지 질문을 해서 언제 와야 하는지, 무엇을 가져와야 하는지, 그리고 행사에 대한 다른 정보가 있는지 알아보세요."
+      },
+      {
+        "category": "Mock",
+        "theme": "comb003",
+        "q_id": 3,
+        "q_seq": 12,
+        "listen": "Mock_003_012.mp3",
+        "question": "I’m sorry. There is a problem which I’ll need you to resolve. On your way to your friend’s house, your car breaks down. You realize you will be very late. Call your friend and explain what happened in detail. Then make some suggestions as to how and when you will get to the holiday meal.",
+        "question_kr": "미안해. 당신이 해결해야 할 문제가 있습니다. 친구의 집으로 가는 길에 차가 고장 났어요. 당신은 당신이 매우 늦을 것이라는 것을 깨닫습니다. 친구에게 전화를 걸어 무슨 일이 있었는지 자세히 설명하십시오. 그런 다음 명절 식사를 언제 어떻게 할 것인지에 대해 몇 가지 제안을 하십시오."
+      },
+      {
+        "category": "Mock",
+        "theme": "comb003",
+        "q_id": 3,
+        "q_seq": 13,
+        "listen": "Mock_003_013.mp3",
+        "question": "Did you ever have holiday plans that did not go as you had expected? Maybe people had trouble with travel, maybe there was unusual weather that complicated your holiday plans. Tell me about a holiday that did not go the way you had planned. Tell me everything that happened and what you did to deal with the situation.",
+        "question_kr": "휴가 계획이 예상한 대로 진행되지 않은 적이 있습니까? 어쩌면 사람들이 여행에 어려움을 겪었을 수도 있고, 휴가 계획을 복잡하게 만든 비정상적인 날씨가 있었을 수도 있습니다. 계획한 대로 진행되지 않은 휴가에 대해 말씀해 주세요. 무슨 일이 있었는지, 그리고 그 상황에 대처하기 위해 무엇을 했는지 말해 주십시오."
+      },
+      {
+        "category": "Mock",
+        "theme": "comb003",
+        "q_id": 3,
+        "q_seq": 14,
+        "listen": "Mock_003_014.mp3",
+        "question": "You indicated in the survey that you like to take vacations domestically. How was traveling domestically different when you were young compared to these days? Is it easier or more difficult now than in the past? Tell me how traveling has changed.",
+        "question_kr": "설문조사에서 국내에서 휴가를 가는 것을 좋아한다고 표시하셨습니다. 어렸을 때 국내 여행은 지금과 비교했을 때 어떻게 달랐나요? 과거보다 지금 더 쉬운가, 더 어려운가? 여행이 어떻게 바뀌었는지 말씀해 주세요."
+      },
+      {
+        "category": "Mock",
+        "theme": "comb003",
+        "q_id": 3,
+        "q_seq": 15,
+        "listen": "Mock_003_015.mp3",
+        "question": "What are some issues concerning people traveling these days? What things are people most interested in? What things cause these concerns? Tell me what people discuss as the main concern of traveling.",
+        "question_kr": "요즘 여행하는 사람들과 관련된 몇 가지 문제는 무엇입니까? 사람들이 가장 관심을 갖는 것은 무엇입니까? 이러한 우려를 일으키는 원인은 무엇입니까? 사람들이 여행의 주요 관심사로 논의하는 내용을 알려주세요."
+      }
+    ],
+    "comb004": [
+      {
+        "category": "Mock",
+        "theme": "comb004",
+        "q_id": 4,
+        "q_seq": 1,
+        "listen": "Mock_004_001.mp3",
+        "question": "Let’s start the interview now. Tell me about yourself.",
+        "question_kr": "지금부터 면접을 시작하겠습니다. 자기소개를 해주세요."
+      },
+      {
+        "category": "Mock",
+        "theme": "comb004",
+        "q_id": 4,
+        "q_seq": 2,
+        "listen": "Mock_004_002.mp3",
+        "question": "Tell me about a rising industry or company in your country. What is it? And why is that industry or company rising and becoming popular?",
+        "question_kr": "해당 국가에서 떠오르는 산업 또는 회사에 대해 알려주십시오. 이게 뭐예요? 그리고 그 산업이나 회사가 부상하고 인기를 얻는 이유는 무엇입니까?"
+      },
+      {
+        "category": "Mock",
+        "theme": "comb004",
+        "q_id": 4,
+        "q_seq": 3,
+        "listen": "Mock_004_003.mp3",
+        "question": "Tell me about a promising company in that industry you mentioned. Why is the company considered promising, and what benefits does it bring to your society?",
+        "question_kr": "말씀하신 그 업계의 유망한 회사에 대해 말씀해 주시겠습니까? 회사가 유망한 것으로 간주되는 이유는 무엇이며 사회에 어떤 이점을 제공합니까?"
+      },
+      {
+        "category": "Mock",
+        "theme": "comb004",
+        "q_id": 4,
+        "q_seq": 4,
+        "listen": "Mock_004_004.mp3",
+        "question": "Tell me about recent changes in that company you mention about. For example, the company released a new product.",
+        "question_kr": "말씀하신 회사의 최근 변화에 대해 말씀해 주세요. 예를 들어, 회사는 신제품을 출시했습니다."
+      },
+      {
+        "category": "Mock",
+        "theme": "comb004",
+        "q_id": 4,
+        "q_seq": 5,
+        "listen": "Mock_004_005.mp3",
+        "question": "Please tell me about your house. Where is it located? What does it look like? Which one is your favorite room? Please tell me everything about your house.",
+        "question_kr": "집에 대해 가르쳐 주세요. 어디에 있습니까? 어떤 모습입니까? 가장 좋아하는 방은 어디인가요? 집에 대한 모든 것을 가르쳐 주세요."
+      },
+      {
+        "category": "Mock",
+        "theme": "comb004",
+        "q_id": 4,
+        "q_seq": 6,
+        "listen": "Mock_004_006.mp3",
+        "question": "Please tell me about the changes that you have made to your house recently. Why did you make the changes? Are you satisfied with them? Please tell me in as much detail as possible.",
+        "question_kr": "최근 집에 바뀐 점을 가르쳐 주세요. 왜 변경했나요? 당신은 그들에 만족합니까? 가능한 한 자세하게 가르쳐주세요."
+      },
+      {
+        "category": "Mock",
+        "theme": "comb004",
+        "q_id": 4,
+        "q_seq": 7,
+        "listen": "Mock_004_007.mp3",
+        "question": "Have you had any problems at home? For instance, a piece of furniture or home appliances could be broken or damaged. How did you handle the situation?",
+        "question_kr": "집에서 문제가 있었습니까? 예를 들어, 가구나 가전 제품이 파손되거나 손상될 수 있습니다. 그 상황에 어떻게 대처했나요?"
+      },
+      {
+        "category": "Mock",
+        "theme": "comb004",
+        "q_id": 4,
+        "q_seq": 8,
+        "listen": "Mock_004_008.mp3",
+        "question": "You indicated on the survey that you enjoy traveling domestically. What is your favorite location? And why do you like that place?",
+        "question_kr": "설문조사에서 국내 여행을 즐긴다고 표시하셨습니다. 가장 좋아하는 장소는 어디인가요? 그리고 당신은 왜 그곳을 좋아합니까?"
+      },
+      {
+        "category": "Mock",
+        "theme": "comb004",
+        "q_id": 4,
+        "q_seq": 9,
+        "listen": "Mock_004_009.mp3",
+        "question": "Tell me about your trip you took when you were a child, where did you go? And who did you go with? Why did you go there?",
+        "question_kr": "어렸을 때 다녀온 여행에 대해 말씀해 주세요, 어디를 가셨나요? 그리고 누구와 함께 갔습니까? 왜 그곳에 갔습니까?"
+      },
+      {
+        "category": "Mock",
+        "theme": "comb004",
+        "q_id": 4,
+        "q_seq": 10,
+        "listen": "Mock_004_010.mp3",
+        "question": "Have you had any interesting or unforgettable experiences while you are traveling in your own country? Tell me what happened in detail.",
+        "question_kr": "당신은 당신의 나라를 여행하는 동안 흥미롭거나 잊을 수 없는 경험들 무엇이든 가지고 있나요? 무슨 일이 있었는지 자세히 알려주세요."
+      },
+      {
+        "category": "Mock",
+        "theme": "comb004",
+        "q_id": 4,
+        "q_seq": 11,
+        "listen": "Mock_004_011.mp3",
+        "question": "I'd like to give you a situation and ask you to act it out. Your relatives are going to travel, and their house is going to be empty. You are asked to take care of the house while they are away on the trip. Call your relatives and ask 3 or 4 questions about responsibilities that you need to do for them.",
+        "question_kr": "상황을 제시하고 연기해 보라고 부탁하고 싶습니다. 당신의 친척들은 여행을 떠날 것이고, 그들의 집은 텅 비게 될 것입니다. 그들이 여행을 떠나 있는 동안 집을 돌봐달라는 요청을 받았습니다. 친척에게 전화를 걸어 당신이 그들을 위해 해야 할 책임에 대해 3-4가지 질문을 하십시오."
+      },
+      {
+        "category": "Mock",
+        "theme": "comb004",
+        "q_id": 4,
+        "q_seq": 12,
+        "listen": "Mock_004_012.mp3",
+        "question": "I'm sorry, but there is a problem I need you to resolve. You just arrived at your relatives' house, but you cannot get in because you cannot find the key to the house. Call your relatives and ask several questions to solve the problem.",
+        "question_kr": "죄송합니다만, 해결해 주셨으면 하는 문제가 있습니다. 친척 집에 방금 도착했는데 집 열쇠를 찾을 수 없어 들어갈 수 없습니다. 친척에게 전화를 걸어 문제를 해결하기 위해 몇 가지 질문을 하십시오."
+      },
+      {
+        "category": "Mock",
+        "theme": "comb004",
+        "q_id": 4,
+        "q_seq": 13,
+        "listen": "Mock_004_013.mp3",
+        "question": "That's the end of the situation. Have you ever been in a situation where you couldn't keep a promise to a friend or family member? Perhaps you couldn't make it to an event or had to cancel plans unexpectedly. What was the reason you couldn't keep the promise, and how did you deal with the situation? Did you communicate with the person involved and try to make it up to them in any way? Please share your experience from beginning to end.",
+        "question_kr": "그것이 상황의 끝입니다. 친구나 가족과의 약속을 지킬 수 없는 상황에 처해 본 적이 있습니까? 어쩌면 이벤트에 참석할 수 없었거나 예기치 않게 계획을 취소해야 했을 수도 있습니다. 약속을 지킬 수 없었던 이유는 무엇이며, 그 상황에 어떻게 대처했는가? 관련된 사람과 의사 소통을 하고 어떤 식으로든 그들에게 화해하려고 노력했습니까? 당신의 경험을 처음부터 끝까지 공유해 주세요."
+      },
+      {
+        "category": "Mock",
+        "theme": "comb004",
+        "q_id": 4,
+        "q_seq": 14,
+        "listen": "Mock_004_014.mp3",
+        "question": "Talk about two different kinds of music or musicians that you like. What are some similarities and differences between them?",
+        "question_kr": "당신이 좋아하는 두 가지 다른 종류의 음악이나 음악가에 대해 이야기하십시오. 그들 사이에는 어떤 유사점과 차이점이 있습니까?"
+      },
+      {
+        "category": "Mock",
+        "theme": "comb004",
+        "q_id": 4,
+        "q_seq": 15,
+        "listen": "Mock_004_015.mp3",
+        "question": "Tell me about some music gadgets or equipment people in your country are interested in. Why are people interested in these music gadgets or equipment?",
+        "question_kr": "당신의 나라에 있는 사람들이 관심을 가질 만한 음악 기기나 장비에 대해 말씀해 주세요. 사람들이 이러한 음악 기기나 장비에 관심을 갖는 이유는 무엇입니까?"
+      }
+    ],
+    "comb005": [
+      {
+        "category": "Mock",
+        "theme": "comb005",
+        "q_id": 5,
+        "q_seq": 1,
+        "listen": "Mock_005_001.mp3",
+        "question": "Let’s start the interview now. Tell me about yourself.",
+        "question_kr": "지금부터 면접을 시작하겠습니다. 자기소개를 해주세요."
+      },
+      {
+        "category": "Mock",
+        "theme": "comb005",
+        "q_id": 5,
+        "q_seq": 2,
+        "listen": "Mock_005_002.mp3",
+        "question": "What type of music do you like listening to? Who is your favorite singer or composer?",
+        "question_kr": "어떤 종류의 음악을 듣는 것을 좋아합니까? 당신이 좋아하는 가수나 작곡가는 누구인가요?"
+      },
+      {
+        "category": "Mock",
+        "theme": "comb005",
+        "q_id": 5,
+        "q_seq": 3,
+        "listen": "Mock_005_003.mp3",
+        "question": "When and where do you listen to music? Do you listen to the radio, or do you go to concerts?",
+        "question_kr": "음악은 언제, 어디서 듣나요? 라디오를 듣습니까, 아니면 콘서트를 보러 갑니까?"
+      },
+      {
+        "category": "Mock",
+        "theme": "comb005",
+        "q_id": 5,
+        "q_seq": 4,
+        "listen": "Mock_005_004.mp3",
+        "question": "When did you first become interested in listening to music? What kind of music did you listen to when you were a child? How has your interest in music changed over time?",
+        "question_kr": "언제 처음 음악을 듣는 것에 관심을 갖게 되었나요? 어렸을 때 어떤 음악을 들었나요? 시간이 지나면서 음악에 대한 관심은 어떻게 변했나요?"
+      },
+      {
+        "category": "Mock",
+        "theme": "comb005",
+        "q_id": 5,
+        "q_seq": 5,
+        "listen": "Mock_005_005.mp3",
+        "question": "Tell me about your country's geography. Are there mountains, rivers, or lakes in your country?",
+        "question_kr": "당신 나라의 지리에 대해 말씀해 주십시오. 당신의 나라에 산, 강 또는 호수가 있습니까?"
+      },
+      {
+        "category": "Mock",
+        "theme": "comb005",
+        "q_id": 5,
+        "q_seq": 6,
+        "listen": "Mock_005_006.mp3",
+        "question": "What are some typical activities people in your country do? Do they go hiking, swimming, or ride their bicycles?",
+        "question_kr": "당신의 나라에 있는 사람들이 하는 전형적인 활동들 몇 가지는 무엇인가요? 그들은 하이킹, 수영 또는 자전거를 타러 가는가?"
+      },
+      {
+        "category": "Mock",
+        "theme": "comb005",
+        "q_id": 5,
+        "q_seq": 7,
+        "listen": "Mock_005_007.mp3",
+        "question": "Tell me about a special landscape you've seen. What is special about it? When did you see it?",
+        "question_kr": "당신이 본 특별한 풍경에 대해 가르쳐 주세요. 특별한 점은 무엇입니까? 언제 보셨나요?"
+      },
+      {
+        "category": "Mock",
+        "theme": "comb005",
+        "q_id": 5,
+        "q_seq": 8,
+        "listen": "Mock_005_008.mp3",
+        "question": "Tell me about cafes or coffee shops in your country. What are they like? What do people usually do there?",
+        "question_kr": "한국의 카페나 커피숍에 대해 알려주세요. 그들은 어떤 사람들입니까? 사람들은 보통 그곳에서 무엇을 합니까?"
+      },
+      {
+        "category": "Mock",
+        "theme": "comb005",
+        "q_id": 5,
+        "q_seq": 9,
+        "listen": "Mock_005_009.mp3",
+        "question": "Tell me about the first time you went to a coffee shop. When was it? Who did you go with? What do you remember the most about it?",
+        "question_kr": "처음 커피숍에 갔을 때를 말씀해 주세요. 언제였습니까? 누구와 함께 갔나요? 그것에 대해 가장 기억에 남는 것은 무엇입니까?"
+      },
+      {
+        "category": "Mock",
+        "theme": "comb005",
+        "q_id": 5,
+        "q_seq": 10,
+        "listen": "Mock_005_010.mp3",
+        "question": "Tell me about the most memorable event you've experienced at a cafe. What happened? What made it so memorable to you?",
+        "question_kr": "카페에서 경험한 가장 기억에 남는 이벤트에 대해 알려주세요. 무슨?일이?있었나요? 어떤 점이 그렇게 기억에 남나요?"
+      },
+      {
+        "category": "Mock",
+        "theme": "comb005",
+        "q_id": 5,
+        "q_seq": 11,
+        "listen": "Mock_005_011.mp3",
+        "question": "I'd like to give you a situation and ask you to act it out. You want to make a doctor's appointment. Call the doctor's office and ask 3 or 4 questions about making an appointment.",
+        "question_kr": "상황을 제시하고 연기해 보라고 부탁하고 싶습니다. 당신은 의사의 약속을 잡고 싶습니다. 병원에 전화하여 예약에 대해 3-4가지 질문을 하십시오."
+      },
+      {
+        "category": "Mock",
+        "theme": "comb005",
+        "q_id": 5,
+        "q_seq": 12,
+        "listen": "Mock_005_012.mp3",
+        "question": "I'm sorry, but there's a problem I want you to resolve. You made an appointment with your doctor, but something came up, so you cannot make it. Call the doctor's office, explain the situation, and reschedule the appointment.",
+        "question_kr": "죄송합니다만, 해결해 주셨으면 하는 문제가 있습니다. 의사와 약속을 잡았는데 뭔가가 생겨서 약속을 잡을 수 없습니다. 병원에 전화하여 상황을 설명하고 진료 일정을 다시 잡습니다."
+      },
+      {
+        "category": "Mock",
+        "theme": "comb005",
+        "q_id": 5,
+        "q_seq": 13,
+        "listen": "Mock_005_013.mp3",
+        "question": "Tell me about an experience when you had to cancel an appointment you made. What happened? Why did you have to cancel the appointment? And how did you deal with the situation?",
+        "question_kr": "약속을 취소해야 했던 경험에 대해 말씀해 주세요. 무슨?일이?있었나요? 왜 약속을 취소해야 했나요? 그리고 그 상황에 어떻게 대처했습니까?"
+      },
+      {
+        "category": "Mock",
+        "theme": "comb005",
+        "q_id": 5,
+        "q_seq": 14,
+        "listen": "Mock_005_014.mp3",
+        "question": "You indicated in a survey that you take vacations domestically. How is traveling different now compared to the past? Do you think traveling is easier or more difficult now than before?",
+        "question_kr": "설문조사에서 국내에서 휴가를 간다고 밝혔습니다. 과거와 비교했을 때 지금의 여행은 어떻게 달라졌나요? 당신은 여행이 전보다 지금 더 쉬워졌다고 생각하나요, 아니면 더 어려워졌나요?"
+      },
+      {
+        "category": "Mock",
+        "theme": "comb005",
+        "q_id": 5,
+        "q_seq": 15,
+        "listen": "Mock_005_015.mp3",
+        "question": "Tell me about some issues concerning traveling. How do people handle those issues or problems?",
+        "question_kr": "여행과 관련된 몇 가지 문제에 대해 알려주세요. 사람들은 그러한 문제나 문제들을 어떻게 처리합니까?"
+      }
+    ],
+    "comb006": [
+      {
+        "category": "Mock",
+        "theme": "comb006",
+        "q_id": 6,
+        "q_seq": 1,
+        "listen": "Mock_006_001.mp3",
+        "question": "Let’s start the interview now. Tell me about yourself.",
+        "question_kr": "지금부터 면접을 시작하겠습니다. 자기소개를 해주세요."
+      },
+      {
+        "category": "Mock",
+        "theme": "comb006",
+        "q_id": 6,
+        "q_seq": 2,
+        "listen": "Mock_006_002.mp3",
+        "question": "Tell me about transportation in your country. What types of transportation do people use?",
+        "question_kr": "해당 국가의 교통 수단에 대해 알려주세요. 사람들은 어떤 종류의 교통 수단을 사용합니까?"
+      },
+      {
+        "category": "Mock",
+        "theme": "comb006",
+        "q_id": 6,
+        "q_seq": 3,
+        "listen": "Mock_006_003.mp3",
+        "question": "What kind of transportation do you use to get around? Do you use public transportation, or do you drive?",
+        "question_kr": "이동하기 위해 어떤 종류의 교통 수단을 이용합니까? 대중 교통을 이용하십니까, 아니면 운전을 하십니까?"
+      },
+      {
+        "category": "Mock",
+        "theme": "comb006",
+        "q_id": 6,
+        "q_seq": 4,
+        "listen": "Mock_006_004.mp3",
+        "question": "Sometimes riding a subway or bus can be uncomfortable. Have you ever experienced any problems while taking public transportation?",
+        "question_kr": "지하철이나 버스를 타는 것이 불편할 때가 있습니다. 대중 교통을 이용하는 동안 문제를 경험한 적이 있습니까?"
+      },
+      {
+        "category": "Mock",
+        "theme": "comb006",
+        "q_id": 6,
+        "q_seq": 5,
+        "listen": "Mock_006_005.mp3",
+        "question": "What do people usually do when they travel overseas? What kinds of items do people bring on an international trip? Please tell me all the details.",
+        "question_kr": "사람들은 해외 여행을 할 때 보통 무엇을 합니까? 해외 여행에 어떤 물건을 가져오나요? 자세한 내용을 모두 알려주세요."
+      },
+      {
+        "category": "Mock",
+        "theme": "comb006",
+        "q_id": 6,
+        "q_seq": 6,
+        "listen": "Mock_006_006.mp3",
+        "question": "Tell me about your first trip abroad. Where did you go, and who did you go with? What did you do there?",
+        "question_kr": "첫 해외 여행에 대해 말씀해 주세요. 어디로 가셨고, 누구와 함께 가셨나요? 거기서 뭘 하셨나요?"
+      },
+      {
+        "category": "Mock",
+        "theme": "comb006",
+        "q_id": 6,
+        "q_seq": 7,
+        "listen": "Mock_006_007.mp3",
+        "question": "Tell me about a memorable or unforgettable experience you had while traveling abroad. What happened, and why was the experience memorable?",
+        "question_kr": "해외 여행에서 기억에 남거나 잊을 수 없는 경험에 대해 말씀해 주세요. 무슨 일이 있었으며, 그 경험이 기억에 남는 이유는 무엇입니까?"
+      },
+      {
+        "category": "Mock",
+        "theme": "comb006",
+        "q_id": 6,
+        "q_seq": 8,
+        "listen": "Mock_006_008.mp3",
+        "question": "You indicated in the survey that you like to listen to music. Please tell me about your favorite music or singers.",
+        "question_kr": "설문조사에서 음악을 듣는 것을 좋아한다고 표시했습니다. 좋아하는 음악이나 가수에 대해 알려주세요."
+      },
+      {
+        "category": "Mock",
+        "theme": "comb006",
+        "q_id": 6,
+        "q_seq": 9,
+        "listen": "Mock_006_009.mp3",
+        "question": "How did you first become interested in music? What kind of music did you like when you were young, and why? How has your interest in music changed over time?",
+        "question_kr": "어떻게 처음 음악에 관심을 갖게 되었나요? 어렸을 때 어떤 음악을 좋아했고, 그 이유는 무엇인가요? 시간이 지나면서 음악에 대한 관심은 어떻게 변했나요?"
+      },
+      {
+        "category": "Mock",
+        "theme": "comb006",
+        "q_id": 6,
+        "q_seq": 10,
+        "listen": "Mock_006_010.mp3",
+        "question": "Tell me about your experience of listening to live music. What were the vibes like? How did you enjoy the music you listened to?",
+        "question_kr": "라이브 음악을 들었던 경험에 대해 말씀해 주세요. 분위기는 어땠나요? 들었던 음악은 어땠나요?"
+      },
+      {
+        "category": "Mock",
+        "theme": "comb006",
+        "q_id": 6,
+        "q_seq": 11,
+        "listen": "Mock_006_011.mp3",
+        "question": "I'd like to give you a situation and ask you to act it out. You want to buy a piece of furniture for your house. Ask the salesperson at the furniture store three or four questions about the furniture you want to buy.",
+        "question_kr": "상황을 제시하고 연기해 보라고 부탁하고 싶습니다. 집에 넣을 가구를 사고 싶습니다. 가구점의 점원에게 사고 싶은 가구에 대해 서너 가지 질문을 한다."
+      },
+      {
+        "category": "Mock",
+        "theme": "comb006",
+        "q_id": 6,
+        "q_seq": 12,
+        "listen": "Mock_006_012.mp3",
+        "question": "There is an issue with the furniture you bought. Call the store, explain the situation, and suggest two or three solutions.",
+        "question_kr": "구입하신 가구에 문제가 있습니다. 매장에 전화하여 상황을 설명하고 두세 가지 해결책을 제안하십시오."
+      },
+      {
+        "category": "Mock",
+        "theme": "comb006",
+        "q_id": 6,
+        "q_seq": 13,
+        "listen": "Mock_006_013.mp3",
+        "question": "Have you ever had a problem with something you bought? What was the problem, and how did you solve it?",
+        "question_kr": "구매한 물건에 문제가 생긴 적이 있습니까? 무엇이 문제였으며 어떻게 해결했습니까?"
+      },
+      {
+        "category": "Mock",
+        "theme": "comb006",
+        "q_id": 6,
+        "q_seq": 14,
+        "listen": "Mock_006_014.mp3",
+        "question": "How does internet usage differ among people in different age groups? What activities do younger people typically engage in on the internet? And what about older people?",
+        "question_kr": "인터넷 사용은 연령대에 따라 사람들 사이에서 어떻게 다릅니까? 젊은이들은 일반적으로 인터넷에서 어떤 활동에 참여합니까? 나이 든 사람들은 어떠한가?"
+      },
+      {
+        "category": "Mock",
+        "theme": "comb006",
+        "q_id": 6,
+        "q_seq": 15,
+        "listen": "Mock_006_015.mp3",
+        "question": "Tell me about some issues people are concerned about related to the internet these days, such as security or safety issues. How do these concerns affect people's lives?",
+        "question_kr": "요즘 사람들이 인터넷과 관련하여 우려하는 보안 또는 안전 문제와 같은 몇 가지 문제에 대해 알려주세요. 이러한 염려들은 사람들의 삶에 어떤 영향을 미칩니까?"
+      }
+    ],
+    "comb007": [
+      {
+        "category": "Mock",
+        "theme": "comb007",
+        "q_id": 7,
+        "q_seq": 1,
+        "listen": "Mock_007_001.mp3",
+        "question": "Let’s start the interview now. Tell me about yourself.",
+        "question_kr": "지금부터 면접을 시작하겠습니다. 자기소개를 해주세요."
+      },
+      {
+        "category": "Mock",
+        "theme": "comb007",
+        "q_id": 7,
+        "q_seq": 2,
+        "listen": "Mock_007_002.mp3",
+        "question": "You indicated in the survey that you enjoy listening to music. What kind of music do you like? Who is your favorite musician or composer? When and where do you typically listen to music? Is there any particular place you find special for enjoying music? Can you tell me when and why you listen to music, providing me with all the details?",
+        "question_kr": "설문조사에서 음악을 듣는 것을 즐긴다고 표시하셨습니다. 어떤 음악을 좋아하세요? 당신이 좋아하는 음악가 또는 작곡가는 누구인가요? 당신은 보통 언제 어디서 음악을 듣나요? 음악을 즐길 수 있는 특별한 장소가 있나요? 음악을 언제 왜 듣는지, 그리고 모든 세부 사항을 알려주실 수 있습니까?"
+      },
+      {
+        "category": "Mock",
+        "theme": "comb007",
+        "q_id": 7,
+        "q_seq": 3,
+        "listen": "Mock_007_003.mp3",
+        "question": "When did you first become interested in music? Was there any person who influenced your music preference? Do you still listen to the same kind of music that you did when you were young? Has your music preference changed?",
+        "question_kr": "언제 처음 음악에 관심을 갖게 되었나요? 당신의 음악 선호도에 영향을 준 사람이 있었나요? 어렸을 때 했던 것과 같은 종류의 음악을 아직도 듣고 있습니까? 음악 선호도가 바뀌었습니까?"
+      },
+      {
+        "category": "Mock",
+        "theme": "comb007",
+        "q_id": 7,
+        "q_seq": 4,
+        "listen": "Mock_007_004.mp3",
+        "question": "Tell me about a particular time when you went to listen to some live music. Did you go to concerts or a live caf?? What did you do there, and what happened? What made this experience memorable?",
+        "question_kr": "라이브 음악을 들으러 갔던 특별한 시간에 대해 말씀해 주세요. 콘서트나 라이브 카페에 갔나요? 그곳에서 무엇을 했고, 무슨 일이 있었나요? 이 경험이 기억에 남는 이유는 무엇입니까?"
+      },
+      {
+        "category": "Mock",
+        "theme": "comb007",
+        "q_id": 7,
+        "q_seq": 5,
+        "listen": "Mock_007_005.mp3",
+        "question": "Tell me about the public transportation system in your country. What kind of transportation do people use to get around? Tell me everything about how people get to work or school every day.",
+        "question_kr": "한국의 대중 교통 시스템에 대해 알려주세요. 사람들은 어떤 종류의 교통 수단을 사용하여 이동합니까? 사람들이 매일 직장이나 학교에 어떻게 도착하는지 모두 알려주세요."
+      },
+      {
+        "category": "Mock",
+        "theme": "comb007",
+        "q_id": 7,
+        "q_seq": 6,
+        "listen": "Mock_007_006.mp3",
+        "question": "How has transportation changed over the years? How is the way people get around different now compared to the past?",
+        "question_kr": "지난 몇 년 동안 교통 수단은 어떻게 변해 왔습니까? 사람들이 돌아다니는 방식은 과거와 비교했을 때 어떻게 달라졌나요?"
+      },
+      {
+        "category": "Mock",
+        "theme": "comb007",
+        "q_id": 7,
+        "q_seq": 7,
+        "listen": "Mock_007_007.mp3",
+        "question": "Problems can occur when using transportation. Trains run late, traffic gets jammed. Tell me about a time when you had trouble due to a certain mode of transportation.",
+        "question_kr": "교통 수단을 사용할 때 문제가 발생할 수 있습니다. 기차는 늦게 운행되고 교통 체증이 발생합니다. 특정 교통 수단으로 인해 어려움을 겪었던 경험을 들려주세요."
+      },
+      {
+        "category": "Mock",
+        "theme": "comb007",
+        "q_id": 7,
+        "q_seq": 8,
+        "listen": "Mock_007_008.mp3",
+        "question": "Tell me about healthy food you know of. What kind of healthy food do you eat every day? Please describe them in detail.",
+        "question_kr": "당신이 알고 있는 건강한 음식에 대해 말씀해 주세요. 당신은 매일 어떤 종류의 건강한 음식을 먹나요? 자세히 설명해 주십시오."
+      },
+      {
+        "category": "Mock",
+        "theme": "comb007",
+        "q_id": 7,
+        "q_seq": 9,
+        "listen": "Mock_007_009.mp3",
+        "question": "What are some things that you personally do to stay healthy? Do you work out often? Do you eat well? Tell me what it is that you do for your health.",
+        "question_kr": "건강을 유지하기 위해 개인적으로 하는 일에는 어떤 것이 있습니까? 당신은 자주 운동하나요? 잘 드시나요? 건강을 위해 무엇을 하고 있는지 알려주세요."
+      },
+      {
+        "category": "Mock",
+        "theme": "comb007",
+        "q_id": 7,
+        "q_seq": 10,
+        "listen": "Mock_007_010.mp3",
+        "question": "I'd like to know about your eating experience. Can you tell me about foreign food you've tried? What was it? Where did you try it? Tell me about interesting food you had in the past.",
+        "question_kr": "식사 체험담을 알고 싶습니다. 먹어본 외국 음식에 대해 말씀해 주시겠습니까? 그것은 무엇이었습니까? 어디서 시도 했습니까? 과거에 먹었던 흥미로운 음식에 대해 말씀해 주세요."
+      },
+      {
+        "category": "Mock",
+        "theme": "comb007",
+        "q_id": 7,
+        "q_seq": 11,
+        "listen": "Mock_007_011.mp3",
+        "question": "I'm going to give you a situation for you to act out. You are looking for a new home to rent. Call the real estate and ask what kind of houses and services they provide.",
+        "question_kr": "나는 당신이 행동할 수 있는 상황을 줄 것입니다. 당신은 임대할 새 집을 찾고 있습니다. 부동산에 전화하여 어떤 종류의 주택과 서비스를 제공하는지 문의하십시오."
+      },
+      {
+        "category": "Mock",
+        "theme": "comb007",
+        "q_id": 7,
+        "q_seq": 12,
+        "listen": "Mock_007_012.mp3",
+        "question": "I'm sorry but there is a problem which I need you to resolve. When you got to a new house, you discovered that a window is broken. Call the repair shop, explain the situation, and ask for a solution.",
+        "question_kr": "죄송합니다. 해결해야 할 문제가 있습니다. 새 집에 도착했을 때 창문이 깨진 것을 발견했습니다. 수리점에 전화하여 상황을 설명하고 해결책을 요청하십시오."
+      },
+      {
+        "category": "Mock",
+        "theme": "comb007",
+        "q_id": 7,
+        "q_seq": 13,
+        "listen": "Mock_007_013.mp3",
+        "question": "That's the end of the situation. Do you have any similar experience where something was broken or damaged in your house? What happened that day? How did you fix the problem? Tell me about your experience in as much detail as possible.",
+        "question_kr": "그것이 상황의 끝입니다. 집에서 무언가가 부서지거나 손상된 유사한 경험이 있습니까? 그날 무슨 일이 있었나요? 문제를 어떻게 해결하셨나요? 당신의 경험에 대해 가능한 한 자세히 말씀해 주십시오."
+      },
+      {
+        "category": "Mock",
+        "theme": "comb007",
+        "q_id": 7,
+        "q_seq": 14,
+        "listen": "Mock_007_014.mp3",
+        "question": "How have coffee shops changed over the years? How were they like in the past, and what about now? Tell me all the changes in detail.",
+        "question_kr": "지난 몇 년 동안 커피숍은 어떻게 변했나요? 과거에는 어땠으며, 지금은 어떠한가? 모든 변경 사항을 자세히 알려주세요."
+      },
+      {
+        "category": "Mock",
+        "theme": "comb007",
+        "q_id": 7,
+        "q_seq": 15,
+        "listen": "Mock_007_015.mp3",
+        "question": "When friends and family members evaluate coffee shops in terms of what they like and dislike, what are some of the issues they discuss most frequently? How do some of these issues influence their experience at a coffee shop?",
+        "question_kr": "친구와 가족들이 커피숍을 그들이 좋아하는 것과 싫어하는 것으로 평가할 때, 그들이 가장 자주 논의하는 문제들은 무엇인가? 이러한 문제 중 일부는 커피숍에서의 경험에 어떤 영향을 미칩니까?"
+      }
+    ],
+    "comb009": [
+      {
+        "category": "Mock",
+        "theme": "comb009",
+        "q_id": 9,
+        "q_seq": 1,
+        "listen": "Mock_009_001.mp3",
+        "question": "Tell me about yourself.",
+        "question_kr": "자기소개를 해주세요."
+      },
+      {
+        "category": "Mock",
+        "theme": "comb009",
+        "q_id": 9,
+        "q_seq": 2,
+        "listen": "Mock_009_002.mp3",
+        "question": "You indicated in the survey that you enjoy going to the movies. Tell me about the kinds of movies you like to watch.",
+        "question_kr": "설문조사에서 영화 관람을 즐긴다고 밝혔습니다. 좋아하는 영화의 종류에 대해 말씀해 주세요."
+      },
+      {
+        "category": "Mock",
+        "theme": "comb009",
+        "q_id": 9,
+        "q_seq": 3,
+        "listen": "Mock_009_003.mp3",
+        "question": "Describe what you usually do when you go to the movies. Who do you like to go with? What do you do before and after the movie?",
+        "question_kr": "영화를 보러 갈 때 주로 하는 일을 설명해 주세요. 누구와 함께 가는 것을 좋아합니까? 영화 상영 전후에 무엇을 하시나요?"
+      },
+      {
+        "category": "Mock",
+        "theme": "comb009",
+        "q_id": 9,
+        "q_seq": 4,
+        "listen": "Mock_009_004.mp3",
+        "question": "Tell me about the last time you went to the movies. Describe everything that happened from the beginning to the end.",
+        "question_kr": "마지막으로 영화를 보러 간 것이 언제인지 말씀해 주세요. 시작부터 끝까지 일어난 모든 일을 설명하십시오."
+      },
+      {
+        "category": "Mock",
+        "theme": "comb009",
+        "q_id": 9,
+        "q_seq": 5,
+        "listen": "Mock_009_005.mp3",
+        "question": "Tell me about a restaurant near where you live. What kind of food does it serve? How are the prices? How often do you go there? Provide as many details as possible about one of your favorite local places to eat.",
+        "question_kr": "당신이 사는 곳 근처의 식당에 대해 알려주세요. 어떤 종류의 음식을 제공합니까? 가격은 어떻습니까? 당신은 거기에 얼마나 자주 가나요? 좋아하는 현지 식당 중 한 곳에 대해 가능한 한 많은 세부 정보를 제공하십시오."
+      },
+      {
+        "category": "Mock",
+        "theme": "comb009",
+        "q_id": 9,
+        "q_seq": 6,
+        "listen": "Mock_009_006.mp3",
+        "question": "When was the last time you ate at a restaurant with an international menu? Describe your experience.",
+        "question_kr": "당신이 세계 각국의 메뉴들이 있는 식당에서 마지막으로 식사했던 때는 언제였나요? 당신의 경험을 설명하십시오."
+      },
+      {
+        "category": "Mock",
+        "theme": "comb009",
+        "q_id": 9,
+        "q_seq": 7,
+        "listen": "Mock_009_007.mp3",
+        "question": "Describe a restaurant you remember from your childhood. What was the restaurant like? Was it different from the restaurants you visit today?",
+        "question_kr": "어린 시절에 기억나는 식당에 대해 설명해 주세요. 레스토랑은 어땠나요? 오늘 방문한 식당과 달랐습니까?"
+      },
+      {
+        "category": "Mock",
+        "theme": "comb009",
+        "q_id": 9,
+        "q_seq": 8,
+        "listen": "Mock_009_008.mp3",
+        "question": "Describe your country’s geography for me. Are there mountains, lakes, or rivers? What is your country like?",
+        "question_kr": "당신 나라의 지리를 설명해 주세요. 산, 호수 또는 강이 있습니까? 당신의 나라는 어떤가요?"
+      },
+      {
+        "category": "Mock",
+        "theme": "comb009",
+        "q_id": 9,
+        "q_seq": 9,
+        "listen": "Mock_009_009.mp3",
+        "question": "Tell me about an early memory of your country’s geography. Perhaps, you visited a special place or went to an important natural landmark. Describe what you saw when you visited that special place.",
+        "question_kr": "한국의 지리에 대한 어린 시절의 기억에 대해 말씀해 주십시오. 어쩌면 당신은 특별한 장소를 방문했거나 중요한 자연 명소에 갔을 수도 있습니다. 그 특별한 장소를 방문했을 때 무엇을 보았는지 설명해 주십시오."
+      },
+      {
+        "category": "Mock",
+        "theme": "comb009",
+        "q_id": 9,
+        "q_seq": 10,
+        "listen": "Mock_009_010.mp3",
+        "question": "How has your country changed in the past decade? Choose one area of change and provide a lot of details about urban development, tourism, or any other area.",
+        "question_kr": "지난 10년 동안 당신의 나라는 어떻게 변했나요? 변화의 영역 하나를 선택하고 도시 개발, 관광 또는 기타 영역에 대한 많은 세부 정보를 제공하십시오."
+      },
+      {
+        "category": "Mock",
+        "theme": "comb009",
+        "q_id": 9,
+        "q_seq": 11,
+        "listen": "Mock_009_011.mp3",
+        "question": "I’d like to give you a situation and ask you to act it out. You want to buy an MP3 player. You have a friend who knows a lot about MP3 players. Call your friend and ask three or four questions to get information about buying an MP3 player.",
+        "question_kr": "상황을 제시하고 연기해 보라고 부탁하고 싶습니다. MP3 플레이어를 구입하고 싶습니다. MP3 플레이어에 대해 많이 아는 친구가 있습니다. 친구에게 전화를 걸어 서너 가지 질문을 하여 MP3 플레이어 구입에 대한 정보를 얻으십시오."
+      },
+      {
+        "category": "Mock",
+        "theme": "comb009",
+        "q_id": 9,
+        "q_seq": 12,
+        "listen": "Mock_009_012.mp3",
+        "question": "I’m sorry, but there is a problem that I need you to resolve. You have borrowed your friend’s MP3 player but broke it. Call your friend and explain how you broke it and what its current condition is like. Then, offer two or three alternatives to get your friend a working MP3 player as soon as possible.",
+        "question_kr": "죄송합니다만, 해결해 주셨으면 하는 문제가 있습니다. 친구의 MP3 플레이어를 빌렸는데 고장 났습니다. 친구에게 전화를 걸어 어떻게 고장 났는지, 현재 상태가 어떤지 설명하십시오. 그런 다음 가능한 한 빨리 친구에게 작동하는 MP3 플레이어를 얻을 수 있도록 두세 가지 대안을 제공하십시오."
+      },
+      {
+        "category": "Mock",
+        "theme": "comb009",
+        "q_id": 9,
+        "q_seq": 13,
+        "listen": "Mock_009_013.mp3",
+        "question": "That’s the end of the situation. Tell me about a situation when some sort of equipment or gadget broke or did not work properly. Give me the background of the situation, what happened, and how you resolved the problem.",
+        "question_kr": "그것이 상황의 끝입니다. 어떤 종류의 장비나 장치가 고장 나거나 제대로 작동하지 않았던 상황에 대해 알려주세요. 상황의 배경, 무슨 일이 일어났는지, 어떻게 문제를 해결했는지 알려주세요."
+      },
+      {
+        "category": "Mock",
+        "theme": "comb009",
+        "q_id": 9,
+        "q_seq": 14,
+        "listen": "Mock_009_014.mp3",
+        "question": "Are people in your country hiking more or less than before? Perhaps there have been changes between the past and now regarding hiking. Why have they decided to hike more or less often?",
+        "question_kr": "당신의 나라에 있는 사람들은 전보다 더 많이 하이킹을 하나요, 아니면 덜 걷나요? 어쩌면 과거와 현재 사이에 하이킹에 관해서는 변화가 있었는지도 모른다. 그들은 왜 하이킹을 더 자주 또는 덜 자주 하기로 결정했을까요?"
+      },
+      {
+        "category": "Mock",
+        "theme": "comb009",
+        "q_id": 9,
+        "q_seq": 15,
+        "listen": "Mock_009_015.mp3",
+        "question": "What are the interesting topics or issues among hikers? What kinds of topics make them excited?",
+        "question_kr": "등산객들 사이에서 흥미로운 주제나 이슈는 무엇입니까? 어떤 종류의 주제가 그들을 흥분시키나요?"
+      }
+    ],
+    "comb010": [
+      {
+        "category": "Mock",
+        "theme": "comb010",
+        "q_id": 10,
+        "q_seq": 1,
+        "listen": "Mock_010_001.mp3",
+        "question": "Tell me about yourself.",
+        "question_kr": "자기소개를 해주세요."
+      },
+      {
+        "category": "Mock",
+        "theme": "comb010",
+        "q_id": 10,
+        "q_seq": 2,
+        "listen": "Mock_010_002.mp3",
+        "question": "Please introduce the public transportation that people often use in your country. What are some of its features, and how often do you use it?",
+        "question_kr": "당신의 나라에서 사람들이 자주 이용하는 대중 교통을 소개해주세요. 그 기능에는 어떤 것이 있으며 얼마나 자주 사용합니까?"
+      },
+      {
+        "category": "Mock",
+        "theme": "comb010",
+        "q_id": 10,
+        "q_seq": 3,
+        "listen": "Mock_010_003.mp3",
+        "question": "What are the most striking changes when comparing past and present transportation? Please describe the characteristics of past and present public transportation in detail and compare them as much as possible.",
+        "question_kr": "과거와 현재의 교통 수단을 비교할 때 가장 눈에 띄는 변화는 무엇입니까? 과거와 현재의 대중 교통의 특징을 자세히 설명하고 가능한 한 많이 비교하십시오."
+      },
+      {
+        "category": "Mock",
+        "theme": "comb010",
+        "q_id": 10,
+        "q_seq": 4,
+        "listen": "Mock_010_004.mp3",
+        "question": "Have you encountered any issues while using public transportation? What was the issue and what measures did you take to resolve the situation? Please tell me what you learned from that experience.",
+        "question_kr": "대중 교통을 이용하는 동안 문제가 발생했습니까? 어떤 문제가 있었고 상황을 해결하기 위해 어떤 조치를 취했습니까? 그 경험에서 배운 점을 가르쳐 주세요."
+      },
+      {
+        "category": "Mock",
+        "theme": "comb010",
+        "q_id": 10,
+        "q_seq": 5,
+        "listen": "Mock_010_005.mp3",
+        "question": "You indicated in the survey that you enjoy traveling abroad. What is the most memorable experience you've had while traveling abroad? What made that experience so special?",
+        "question_kr": "설문조사에서 해외 여행을 즐긴다고 밝히셨습니다. 해외 여행하면서 가졌던 가장 기억에 남는 경험은 무엇입니까? 그 경험이 그토록 특별했던 이유는 무엇이었습니까?"
+      },
+      {
+        "category": "Mock",
+        "theme": "comb010",
+        "q_id": 10,
+        "q_seq": 6,
+        "listen": "Mock_010_006.mp3",
+        "question": "Where did you travel abroad for the first time in your life? With whom and when did you travel, and what were the main reasons for choosing that travel destination? Please describe the process of planning the trip in detail, from the planning stage to the moment of the trip.",
+        "question_kr": "당신의 인생에서 처음으로 해외여행을 어디로 갔나요? 누구와 언제 여행을 하셨고, 여행지를 선택한 주된 이유는 무엇이었나요? 여행 계획 단계부터 여행 순간까지 여행을 계획하는 과정을 자세히 설명해 주십시오."
+      },
+      {
+        "category": "Mock",
+        "theme": "comb010",
+        "q_id": 10,
+        "q_seq": 7,
+        "listen": "Mock_010_007.mp3",
+        "question": "Tell me about the most memorable travel experience you had. When and where did you go? What did you see? Who did you go with? What happened? Why was this experience unforgettable to you?",
+        "question_kr": "가장 기억에 남는 여행 경험에 대해 말씀해 주세요. 언제, 어디로 갔나요? 당신은 무엇을 보았습니까? 누구와 함께 갔나요? 무슨?일이?있었나요? 이 경험이 왜 잊을 수 없는 경험이었는가?"
+      },
+      {
+        "category": "Mock",
+        "theme": "comb010",
+        "q_id": 10,
+        "q_seq": 8,
+        "listen": "Mock_010_008.mp3",
+        "question": "Please describe the places where people in your country spend their leisure time. Why do people want to spend their free time in those places, and what activities do they mainly do in those places?",
+        "question_kr": "당신의 나라 사람들이 여가 시간을 보내는 장소를 설명해 주세요. 사람들은 왜 그런 곳에서 여가 시간을 보내고 싶어 하며, 그 곳에서 주로 어떤 활동을 합니까?"
+      },
+      {
+        "category": "Mock",
+        "theme": "comb010",
+        "q_id": 10,
+        "q_seq": 9,
+        "listen": "Mock_010_009.mp3",
+        "question": "Do you have more or less free time compared to the past? Please describe your changed free time compared to the past and explain why your free time has changed.",
+        "question_kr": "과거에 비해 자유 시간이 더 많거나 적습니까? 과거에 비해 바뀐 여가 시간을 설명하고, 여가 시간이 바뀐 이유를 설명해 주세요."
+      },
+      {
+        "category": "Mock",
+        "theme": "comb010",
+        "q_id": 10,
+        "q_seq": 10,
+        "listen": "Mock_010_010.mp3",
+        "question": "Please tell me about the most recent free time you had. What did you do, and how did you feel after spending your free time? Please describe it in as much detail as possible.",
+        "question_kr": "가장 최근의 자유 시간에 대해 알려주세요. 당신은 무엇을 했고, 여가 시간을 보낸 후 어떤 기분이 들었나요? 가능한 한 자세히 설명해 주십시오."
+      },
+      {
+        "category": "Mock",
+        "theme": "comb010",
+        "q_id": 10,
+        "q_seq": 11,
+        "listen": "Mock_010_011.mp3",
+        "question": "I will give you a situation and I'd like you to act it out. You are looking for a new apartment to live in for a year. Call a real estate agent, introduce yourself, and ask them three to four questions about the services they provide in the house.",
+        "question_kr": "나는 당신에게 상황을 줄 것이고 당신이 그것을 연기하기를 바랍니다. 당신은 1년 동안 살 새 아파트를 찾고 있습니다. 부동산 중개인에게 전화를 걸어 자기소개를 하고 집에서 제공하는 서비스에 대해 3-4가지 질문을 하십시오."
+      },
+      {
+        "category": "Mock",
+        "theme": "comb010",
+        "q_id": 10,
+        "q_seq": 12,
+        "listen": "Mock_010_012.mp3",
+        "question": "I'm sorry, but you have a problem to solve. When you moved to a new house, you found that there is a leak in the wall. Describe the problem situation in detail when you call the repair shop. Also, provide two to three reasons why the repair needs to be done today.",
+        "question_kr": "죄송합니다만, 해결해야 할 문제가 있습니다. 새 집으로 이사했을 때 벽에 누수가 있는 것을 발견했습니다. 수리점에 전화할 때 문제 상황을 자세히 설명하십시오. 또한 오늘 수리를 해야 하는 두세 가지 이유를 제공하십시오."
+      },
+      {
+        "category": "Mock",
+        "theme": "comb010",
+        "q_id": 10,
+        "q_seq": 13,
+        "listen": "Mock_010_013.mp3",
+        "question": "Have you ever had an experience where something broke or malfunctioned and caused inconvenience? What was that, and how did you feel about that at first? Please describe it in detail.",
+        "question_kr": "무언가가 고장나거나 오작동하여 불편을 겪은 경험이 있습니까? 그것은 무엇이었으며, 처음에는 어떤 느낌이 들었습니까? 자세히 설명해 주세요."
+      },
+      {
+        "category": "Mock",
+        "theme": "comb010",
+        "q_id": 10,
+        "q_seq": 14,
+        "listen": "Mock_010_014.mp3",
+        "question": "Many people go to bars. How have bars changed over the years? How are current bars different from bars in the past? What are the differences and similarities?",
+        "question_kr": "많은 사람들이 술집에 갑니다. 지난 몇 년 동안 바는 어떻게 변했나요? 현재 바는 과거의 바와 어떻게 다릅니까? 차이점과 유사점은 무엇입니까?"
+      },
+      {
+        "category": "Mock",
+        "theme": "comb010",
+        "q_id": 10,
+        "q_seq": 15,
+        "listen": "Mock_010_015.mp3",
+        "question": "Have you heard the news or a media report about bars or pubs where the police are involved? What happened? How did it turn out in the end? What do people say about this? Tell me everything in detail.",
+        "question_kr": "경찰이 연루된 술집이나 술집에 대한 뉴스나 언론 보도를 들어본 적이 있습니까? 무슨?일이?있었나요? 결국 어떻게 되었습니까? 사람들은 이것에 대해 어떻게 말합니까? 모든 것을 자세히 알려주세요."
+      }
+    ]
+  }
+}

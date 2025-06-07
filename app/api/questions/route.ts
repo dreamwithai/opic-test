@@ -7,7 +7,7 @@ const QUESTION_TYPE_FILES: Record<string, string> = {
   '선택주제': 'topic.json',
   '돌발주제': 'combination.json',
   '롤플레이': 'roleplay.json',
-  '모의고사': 'mock_test.json'
+  '모의고사': 'mock.json'
 };
 
 export async function GET(request: NextRequest) {
