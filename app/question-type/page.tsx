@@ -73,7 +73,7 @@ export default function QuestionTypePage() {
 
       {/* Content */}
       <div className="container mx-auto px-4 py-4">
-        <div className="max-w-6xl mx-auto">
+        <div className={`max-w-6xl mx-auto ${selectedType ? 'pb-20 md:pb-0' : ''}`}>
           {/* Back button */}
           <button 
             onClick={handleBack}
@@ -179,13 +179,15 @@ export default function QuestionTypePage() {
 
           {/* 테스트 시작하기 버튼 */}
           {selectedType && (
-            <div className="flex justify-center">
-              <button 
-                onClick={handleStartTest}
-                className="bg-blue-600 hover:bg-blue-700 text-white px-12 py-3 rounded-lg font-bold text-lg transition-colors"
-              >
-                테스트 시작하기
-              </button>
+            <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 p-4 md:relative md:border-t-0 md:bg-transparent md:p-0">
+              <div className="flex justify-center">
+                <button 
+                  onClick={handleStartTest}
+                  className="bg-blue-600 hover:bg-blue-700 text-white px-12 py-3 rounded-lg font-bold text-lg transition-colors w-full md:w-auto"
+                >
+                  테스트 시작하기
+                </button>
+              </div>
             </div>
           )}
         </div>
