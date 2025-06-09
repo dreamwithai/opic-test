@@ -24,11 +24,7 @@ export default function STTTestPage() {
   const [continuous, setContinuous] = useState(true)
   const [interimResults, setInterimResults] = useState(true)
   
-  // 오디오 레벨 시각화
-  const [audioLevel, setAudioLevel] = useState(0)
-  const audioContextRef = useRef<AudioContext | null>(null)
-  const analyserRef = useRef<AnalyserNode | null>(null)
-  const micStreamRef = useRef<MediaStream | null>(null)
+  // 단순화된 상태
   
   // 테스트 로그
   const [testLogs, setTestLogs] = useState<string[]>([])
@@ -93,8 +89,21 @@ export default function STTTestPage() {
       }
     }
 
+    // 첫 번째 클릭 시 마이크 권한 요청 (모바일에서 중요!)
+    const handleFirstClick = () => {
+      requestMicrophoneAccess().catch(() => {}) // 에러는 무시
+      document.removeEventListener('click', handleFirstClick)
+    }
+
     collectDeviceInfo()
     checkMicrophonePermission()
+    
+    // 첫 번째 클릭 시 마이크 권한 요청 등록
+    document.addEventListener('click', handleFirstClick, { once: true })
+
+    return () => {
+      document.removeEventListener('click', handleFirstClick)
+    }
   }, [])
 
   const addLog = (message: string) => {
@@ -118,85 +127,115 @@ export default function STTTestPage() {
     const recognition = new SpeechRecognition()
     recognition.continuous = continuous
     recognition.interimResults = interimResults
+    recognition.maxAlternatives = 3  // 중요한 옵션 추가!
     recognition.lang = selectedLanguage
 
     recognition.onstart = () => {
       setIsSTTActive(true)
       setSttError('')
-      addLog('STT 시작됨')
+      addLog('🎤 STT 시작됨')
+    }
+
+    recognition.onspeechstart = () => {
+      addLog('🗣️ 음성이 감지되었습니다.')
+    }
+
+    recognition.onspeechend = () => {
+      addLog('🔇 음성 감지가 종료되었습니다.')
+    }
+
+    recognition.onaudiostart = () => {
+      addLog('🎵 오디오 캡처가 시작되었습니다.')
+    }
+
+    recognition.onaudioend = () => {
+      addLog('🔇 오디오 캡처가 종료되었습니다.')
     }
 
     recognition.onresult = (event: any) => {
-      let finalTranscript = ''
-      let interimText = ''
+      let allFinalText = ''
+      let allInterimText = ''
 
-      for (let i = event.resultIndex; i < event.results.length; i++) {
+      for (let i = 0; i < event.results.length; i++) {
         const transcript = event.results[i][0].transcript
         const confidence = event.results[i][0].confidence
         
-        addLog(`결과 수신: "${transcript}" (신뢰도: ${confidence?.toFixed(2) || 'N/A'}, 최종: ${event.results[i].isFinal})`)
-        
         if (event.results[i].isFinal) {
-          finalTranscript += transcript
+          allFinalText += transcript + ' '
+          if (i >= event.resultIndex) {
+            addLog(`✅ 최종 결과: "${transcript}" (신뢰도: ${(confidence * 100).toFixed(1)}%)`)
+          }
         } else {
-          interimText += transcript
+          allInterimText += transcript
+          if (i >= event.resultIndex) {
+            addLog(`📝 중간 결과: "${transcript}"`)
+          }
         }
       }
 
-      if (finalTranscript) {
-        setFinalTranscripts(prev => [...prev, finalTranscript])
-      }
-      
-      setInterimTranscript(interimText)
-      setSttText(finalTranscripts.join(' ') + ' ' + interimText)
+      setFinalTranscripts([allFinalText.trim()])
+      setInterimTranscript(allInterimText)
+      setSttText(allFinalText + allInterimText)
     }
 
     recognition.onerror = (event: any) => {
-      const errorMsg = `STT 오류: ${event.error} - ${event.message || ''}`
-      setSttError(errorMsg)
+      let errorMessage = ''
+      
+      switch (event.error) {
+        case 'no-speech':
+          errorMessage = '음성이 감지되지 않았습니다. 다시 시도해주세요.'
+          break
+        case 'audio-capture':
+          errorMessage = '오디오 캡처에 실패했습니다. 마이크를 확인해주세요.'
+          break
+        case 'not-allowed':
+          errorMessage = '마이크 권한이 거부되었습니다. 브라우저 설정을 확인해주세요.'
+          break
+        case 'network':
+          errorMessage = '네트워크 오류가 발생했습니다. 인터넷 연결을 확인해주세요.'
+          break
+        case 'service-not-allowed':
+          errorMessage = '음성 인식 서비스가 허용되지 않았습니다.'
+          break
+        case 'language-not-supported':
+          errorMessage = '선택한 언어가 지원되지 않습니다.'
+          break
+        default:
+          errorMessage = `알 수 없는 오류: ${event.error}`
+      }
+      
+      setSttError(errorMessage)
       setIsSTTActive(false)
-      addLog(errorMsg)
+      addLog(`❌ 오류 발생: ${errorMessage}`)
     }
 
     recognition.onend = () => {
       setIsSTTActive(false)
-      addLog('STT 종료됨')
+      addLog('⏹️ STT 종료됨')
     }
 
     return recognition
   }
 
   const startSTT = async () => {
-    try {
-      addLog('STT 시작 시도 중...')
-      
-      // 마이크 권한 먼저 요청
-      await requestMicrophoneAccess()
-      
-      // 기존 recognition이 있으면 정리
-      if (recognition) {
-        recognition.stop()
-        setRecognition(null)
-      }
-      
+    if (!recognition) {
       const newRecognition = initializeSpeechRecognition()
       if (newRecognition) {
         setRecognition(newRecognition)
-        addLog('SpeechRecognition 객체 생성 완료')
-        
-        // 모바일에서는 사용자 제스처가 필요할 수 있으므로 즉시 시작
-        setTimeout(() => {
-          try {
-            newRecognition.start()
-            addLog('recognition.start() 호출됨')
-          } catch (err) {
-            addLog('recognition.start() 오류: ' + err)
-            setSttError('STT 시작 오류: ' + err)
-          }
-        }, 100)
       }
+      return
+    }
+
+    if (isSTTActive) {
+      addLog('⚠️ 이미 STT가 실행 중입니다.')
+      return
+    }
+
+    try {
+      addLog('🎤 STT 시작 시도 중...')
+      recognition.start()
     } catch (error) {
-      addLog('STT 시작 실패: ' + error)
+      addLog('❌ STT 시작 실패: ' + error)
       setSttError('STT 시작 실패: ' + error)
     }
   }
@@ -204,17 +243,6 @@ export default function STTTestPage() {
   const stopSTT = () => {
     if (recognition && isSTTActive) {
       recognition.stop()
-    }
-    
-    // 오디오 컨텍스트 정리
-    if (audioContextRef.current) {
-      audioContextRef.current.close()
-      audioContextRef.current = null
-    }
-    
-    if (micStreamRef.current) {
-      micStreamRef.current.getTracks().forEach(track => track.stop())
-      micStreamRef.current = null
     }
   }
 
@@ -230,89 +258,13 @@ export default function STTTestPage() {
 
   const requestMicrophoneAccess = async () => {
     try {
-      // HTTPS 환경 체크
-      if (location.protocol !== 'https:' && location.hostname !== 'localhost') {
-        const httpsError = 'HTTPS 환경이 필요합니다. 모바일에서는 보안상 HTTPS에서만 마이크 접근이 가능합니다.'
-        addLog(httpsError)
-        throw new Error(httpsError)
-      }
-      
-      // navigator.mediaDevices 지원 확인
-      if (!navigator.mediaDevices) {
-        const noMediaDevicesError = 'navigator.mediaDevices가 지원되지 않습니다. 브라우저가 너무 오래되었거나 HTTPS 환경이 아닐 수 있습니다.'
-        addLog(noMediaDevicesError)
-        throw new Error(noMediaDevicesError)
-      }
-      
-      // getUserMedia 지원 확인
-      if (!navigator.mediaDevices.getUserMedia) {
-        const noGetUserMediaError = 'getUserMedia가 지원되지 않습니다.'
-        addLog(noGetUserMediaError)
-        throw new Error(noGetUserMediaError)
-      }
-      
-      addLog('마이크 접근 시도 중...')
-      const stream = await navigator.mediaDevices.getUserMedia({ 
-        audio: {
-          echoCancellation: true,
-          noiseSuppression: true,
-          autoGainControl: true
-        }
-      })
-      micStreamRef.current = stream
-      
-      // 오디오 컨텍스트 생성 (모바일에서 suspend 상태일 수 있음)
-      const audioContext = new (window.AudioContext || (window as any).webkitAudioContext)()
-      
-      // 모바일에서 AudioContext가 suspended 상태인 경우 resume
-      if (audioContext.state === 'suspended') {
-        await audioContext.resume()
-        addLog('AudioContext resumed')
-      }
-      
-      const analyser = audioContext.createAnalyser()
-      const microphone = audioContext.createMediaStreamSource(stream)
-      
-      analyser.fftSize = 256
-      microphone.connect(analyser)
-      
-      audioContextRef.current = audioContext
-      analyserRef.current = analyser
-      
-      // 오디오 레벨 모니터링
-      const updateAudioLevel = () => {
-        if (analyserRef.current) {
-          const dataArray = new Uint8Array(analyserRef.current.frequencyBinCount)
-          analyserRef.current.getByteFrequencyData(dataArray)
-          const average = dataArray.reduce((a, b) => a + b) / dataArray.length
-          setAudioLevel(average)
-        }
-        
-        if (isSTTActive) {
-          requestAnimationFrame(updateAudioLevel)
-        }
-      }
-      
-      updateAudioLevel()
-      addLog('마이크 접근 허용됨')
-      
+      addLog('📱 마이크 권한 요청 중...')
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: true })
+      addLog('✅ 마이크 권한이 허용되었습니다.')
+      // 스트림을 즉시 정리 (작동한 코드처럼)
+      stream.getTracks().forEach(track => track.stop())
     } catch (error: any) {
-      const errorMsg = `마이크 접근 실패: ${error.name || 'Unknown'} - ${error.message || error}`
-      addLog(errorMsg)
-      
-      // 구체적인 에러 타입별 안내
-      if (error.name === 'NotAllowedError') {
-        addLog('사용자가 마이크 권한을 거부했습니다.')
-      } else if (error.name === 'NotFoundError') {
-        addLog('마이크를 찾을 수 없습니다.')
-      } else if (error.name === 'NotSupportedError') {
-        addLog('이 브라우저에서는 마이크 접근이 지원되지 않습니다.')
-      } else if (error.name === 'NotReadableError') {
-        addLog('마이크가 다른 애플리케이션에서 사용 중입니다.')
-      } else if (error.name === 'SecurityError') {
-        addLog('보안 오류: HTTPS 환경이 필요할 수 있습니다.')
-      }
-      
+      addLog(`❌ 마이크 권한 요청 실패: ${error.message}`)
       throw error
     }
   }
@@ -440,17 +392,7 @@ export default function STTTestPage() {
               </div>
             </div>
 
-            {/* 오디오 레벨 표시 */}
-            <div className="mt-4 pt-4 border-t">
-              <h3 className="text-sm font-medium mb-2">오디오 레벨</h3>
-              <div className="w-full bg-gray-200 rounded-full h-3">
-                <div 
-                  className="bg-green-500 h-3 rounded-full transition-all duration-100"
-                  style={{ width: `${Math.min(audioLevel * 2, 100)}%` }}
-                ></div>
-              </div>
-              <p className="text-xs text-gray-500 mt-1">현재 레벨: {Math.round(audioLevel)}</p>
-            </div>
+
           </div>
 
           {/* STT 컨트롤 */}
