@@ -126,7 +126,7 @@ export default function STTTestPage() {
       addLog('STT 시작됨')
     }
 
-    recognition.onresult = (event) => {
+    recognition.onresult = (event: any) => {
       let finalTranscript = ''
       let interimText = ''
 
@@ -151,7 +151,7 @@ export default function STTTestPage() {
       setSttText(finalTranscripts.join(' ') + ' ' + interimText)
     }
 
-    recognition.onerror = (event) => {
+    recognition.onerror = (event: any) => {
       const errorMsg = `STT 오류: ${event.error} - ${event.message || ''}`
       setSttError(errorMsg)
       setIsSTTActive(false)
