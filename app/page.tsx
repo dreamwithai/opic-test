@@ -167,7 +167,7 @@ export default function Home() {
             <div className="flex items-start space-x-4">
               <span className="text-xl font-bold text-gray-800 flex-shrink-0">3.</span>
               <div>
-                <span className="text-xl font-bold text-gray-800">문제융형 선택</span>
+                <span className="text-xl font-bold text-gray-800">문제유형 선택</span>
                 <span className="text-gray-600 ml-2">선택주제, 롤플레이, 돌발주제, 모의고사 1회 중 택1</span>
               </div>
             </div>

@@ -565,14 +565,14 @@ export default function TestPage() {
     <div className="min-h-screen bg-white font-sans" style={{ fontFamily: "'Noto Sans KR', 'Malgun Gothic', 'Apple SD Gothic Neo', sans-serif" }}>
       {/* Header */}
       <header className="bg-white border-b border-gray-200">
-        <div className="container mx-auto px-4 py-4">
+        <div className="container mx-auto px-4 py-2">
           <nav className="flex justify-between items-center">
             <Link href="/">
-              <h1 className="text-xl font-bold text-blue-600 cursor-pointer">OPIc 모의테스트</h1>
+              <h1 className="text-lg font-bold text-blue-600 cursor-pointer">OPIc 모의테스트</h1>
             </Link>
-            <div className="flex items-center space-x-6">
-              <Link href="/" className="text-gray-600 hover:text-gray-800 font-medium text-sm">홈</Link>
-              <button className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-medium transition-colors text-sm">
+            <div className="flex items-center space-x-4">
+              <Link href="/" className="text-gray-600 hover:text-gray-800 font-medium text-xs">홈</Link>
+              <button className="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1.5 rounded-md font-medium transition-colors text-xs">
                 마이페이지
               </button>
             </div>
@@ -581,12 +581,12 @@ export default function TestPage() {
       </header>
 
       {/* Content */}
-      <div className="container mx-auto px-4 py-8">
+      <div className="container mx-auto px-4 py-4">
         <div className="max-w-4xl mx-auto">
           {/* Back button */}
           <button 
             onClick={handleBack}
-            className="flex items-center text-gray-600 hover:text-gray-800 mb-6"
+            className="flex items-center text-gray-600 hover:text-gray-800 mb-3 text-sm"
           >
             <span className="mr-2">←</span>
             <span className="font-medium">뒤로가기</span>
@@ -802,7 +802,7 @@ export default function TestPage() {
                     className="flex flex-col items-center p-3 border border-gray-300 rounded-lg hover:bg-gray-100 transition-colors bg-white"
                   >
                     <span className="text-xl mb-1">⏱️</span>
-                    <span className="text-xs font-medium">타이머</span>
+                    <span className="text-sm font-medium text-center leading-tight">타이머</span>
                     <span className="text-xs text-gray-500">
                       {isTimerMode ? formatSelectedTime(selectedTime) : '카운트업'}
                     </span>
@@ -818,7 +818,7 @@ export default function TestPage() {
                     }`}
                   >
                     <span className="text-xl mb-1">🎤</span>
-                    <span className="text-xs font-medium">녹음 시작</span>
+                    <span className="text-sm font-medium text-center leading-tight">녹음<br />시작</span>
                   </button>
                   
                   <button 
@@ -831,7 +831,7 @@ export default function TestPage() {
                     }`}
                   >
                     <span className="text-xl mb-1">⏸️</span>
-                    <span className="text-xs font-medium">녹음 정지</span>
+                    <span className="text-sm font-medium text-center leading-tight">녹음<br />정지</span>
                   </button>
                   
                   <button 
@@ -839,7 +839,7 @@ export default function TestPage() {
                     className="flex flex-col items-center p-3 border border-gray-300 rounded-lg hover:bg-gray-100 transition-colors bg-white"
                   >
                     <span className="text-xl mb-1">🔄</span>
-                    <span className="text-xs font-medium">다시 녹음</span>
+                    <span className="text-sm font-medium text-center leading-tight">다시<br />녹음</span>
                   </button>
                 </div>
 

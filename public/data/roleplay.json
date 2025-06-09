@@ -1,0 +1,974 @@
+{
+  "questionType": "롤플레이",
+  "description": "롤플레이 문제입니다.",
+  "themes": {
+    "RP01": [
+      {
+        "category": "RP",
+        "theme": "RP01",
+        "q_seq": 1,
+        "listen": "RP_001_001.mp3",
+        "question": "I'd like to give you a situation and ask you to act it out you want to go to the park or beach with your friend call your friend and ask three or four questions about going to the park together",
+        "q_id": 1,
+        "question_kr": "친구와 함께 공원이나 해변에 가고 싶은 상황을 제시하고, 친구에게 전화해서 공원에 가는 것에 대해 서너 가지 질문을 하세요."
+      },
+      {
+        "category": "RP",
+        "theme": "RP01",
+        "q_seq": 2,
+        "listen": "RP_001_002.mp3",
+        "question": "You have just discovered that the park you were planning to visit will be closed next weekend contact your friend to explain the situation and provide two or three Alternatives",
+        "q_id": 1,
+        "question_kr": "다음 주말에 방문하려고 했던 공원이 문을 닫는다는 것을 알게 되었습니다. 친구에게 연락해서 상황을 설명하고 두세 가지 대안을 제시하세요."
+      },
+      {
+        "category": "RP",
+        "theme": "RP01",
+        "q_seq": 3,
+        "listen": "RP_001_003.mp3",
+        "question": "That's the end of the situation have you ever experienced any problems or unexpected difficulties at the park what was the problem and how did you handle it please tell me what happened in detail",
+        "q_id": 1,
+        "question_kr": "이제 상황이 끝났습니다. 공원에서 문제나 예상치 못한 어려움을 겪은 적이 있습니까? 무엇이 문제였고 어떻게 처리했습니까? 무슨 일이 있었는지 자세히 말씀해 주세요."
+      }
+    ],
+    "RP02": [
+      {
+        "category": "RP",
+        "theme": "RP02",
+        "q_seq": 1,
+        "listen": "RP_002_001.mp3",
+        "question": "I'd like to give you a situation and ask you to act it out you want to make a doctor's appointment call the doctor's office and ask three or four questions to help you make an appointment",
+        "q_id": 2,
+        "question_kr": "상황을 제시하고, 실제로 행동으로 옮겨 보세요. 병원 예약을 하고 싶은 상황을 제시하고, 병원에 전화해서 예약하는 데 도움이 될 서너 가지 질문을 하세요."
+      },
+      {
+        "category": "RP",
+        "theme": "RP02",
+        "q_seq": 2,
+        "listen": "RP_002_002.mp3",
+        "question": "I'm sorry but there's a problem I need you to resolve you made an appointment with your doctor but something came up so you can't make it call the doctor's office explain the situation and reschedule the appointment",
+        "q_id": 2,
+        "question_kr": "죄송하지만 해결해야 할 문제가 있습니다. 의사와 예약을 했지만 다른 일이 생겨서 예약을 할 수 없습니다. 병원에 전화해서 상황을 설명하고 예약 일정을 변경하세요."
+      },
+      {
+        "category": "RP",
+        "theme": "RP02",
+        "q_seq": 3,
+        "listen": "RP_002_003.mp3",
+        "question": "Tell me about an experience when you had to cancel an appointment you made what happened why did you have to cancel the appointment and how did you deal with the situation",
+        "q_id": 2,
+        "question_kr": "어떤 일이 있었는지 경험에 대해 말씀해 주세요. 약속을 취소했는데 무슨 일이 있었나요? 왜 약속을 취소해야 했고, 그 상황을 어떻게 처리했나요?"
+      }
+    ],
+    "RP03": [
+      {
+        "category": "RP",
+        "theme": "RP03",
+        "q_seq": 1,
+        "listen": "RP_003_001.mp3",
+        "question": "I'd like to give you a situation to act out you want to buy a new cell phone call a store and ask three or four questions about the new cell phone you want to purchase",
+        "q_id": 3,
+        "question_kr": "새 휴대전화를 사고 싶은데, 매장에 전화해서 새 휴대전화에 대해 서너 가지 질문을 해보세요."
+      },
+      {
+        "category": "RP",
+        "theme": "RP03",
+        "q_seq": 2,
+        "listen": "RP_003_002.mp3",
+        "question": "I'm sorry but there is a problem that you need to resolve you bought a new cell phone and just received it but unfortunately it doesn't work you want to return it to get a new one or solve this problem somehow contact the store explain the situation and give two or three suggestions to solve the problem",
+        "q_id": 3,
+        "question_kr": "죄송하지만 해결해야 할 문제가 있습니다. 새 휴대전화를 구매했는데 방금 받았는데, 안타깝게도 작동하지 않습니다. 새 휴대전화를 받거나 이 문제를 어떻게든 해결하기 위해 반품하고 싶습니다. 매장에 연락해서 상황을 설명하고 문제 해결을 위한 두세 가지 제안을 해주세요."
+      },
+      {
+        "category": "RP",
+        "theme": "RP03",
+        "q_seq": 3,
+        "listen": "RP_003_003.mp3",
+        "question": "That's the end of the situation have you ever experienced buying the wrong product or a broken one what did you buy and what was the problem please tell me how you handled it",
+        "q_id": 3,
+        "question_kr": "상황은 여기까지입니다. 잘못된 제품이나 고장난 제품을 구매한 경험이 있나요? 무엇을 구매했고, 어떤 문제가 있었나요? 어떻게 처리했는지 알려주세요."
+      }
+    ],
+    "RP04": [
+      {
+        "category": "RP",
+        "theme": "RP04",
+        "q_seq": 1,
+        "listen": "RP_004_001.mp3",
+        "question": "There is a situation I would like you to act out you are planning to travel abroad and would like to rent a car call a rental car agency and ask three or four questions about renting a car",
+        "q_id": 4,
+        "question_kr": "해외 여행을 계획 중인데 렌터카를 빌리고 싶습니다. 렌터카 회사에 전화해서 렌터카에 대해 서너 가지 질문을 해보세요."
+      },
+      {
+        "category": "RP",
+        "theme": "RP04",
+        "q_seq": 2,
+        "listen": "RP_004_002.mp3",
+        "question": "I'm sorry but there is a problem that you need to resolve I'm not sure if you are allowed to rent a car because you don't have an international driver's license please explain what your license says and suggest two or three alternatives to rent a car",
+        "q_id": 4,
+        "question_kr": "죄송하지만 해결해야 할 문제가 있습니다. 국제 운전면허증이 없어서 차를 렌트할 수 없습니다. 면허증에 적힌 내용을 설명하고 차를 렌트할 수 있는 두세 가지 대안을 제시해 주세요."
+      },
+      {
+        "category": "RP",
+        "theme": "RP04",
+        "q_seq": 3,
+        "listen": "RP_004_003.mp3",
+        "question": "That's the end of the situation have you ever rented a car while traveling what was the reason you rented a car did something crazy or terrible happen what happened and how did you solve it why was the experience so memorable k k",
+        "q_id": 4,
+        "question_kr": "상황은 이렇게 끝났습니다. 여행 중에 차를 렌트해 본 적이 있습니까? 차를 렌트한 이유는 무엇이었습니까? 끔찍하거나 끔찍한 일이 일어났습니까? 무슨 일이 있었고 어떻게 해결했습니까? 왜 그 경험이 그렇게 기억에 남았습니까?"
+      }
+    ],
+    "RP05": [
+      {
+        "category": "RP",
+        "theme": "RP05",
+        "q_seq": 1,
+        "listen": "RP_005_001.mp3",
+        "question": "I'd like to give you a situation and ask you to act it out you want to purchase new furniture call a furniture store explain to a salesperson what you are looking for and ask three or four questions about the furniture you want to buy",
+        "q_id": 5,
+        "question_kr": "상황을 하나 제시하고 연기해 보도록 하겠습니다. 새 가구를 사고 싶습니다. 가구점에 전화하세요. 판매원에게 무엇을 찾고 있는지 설명하고 구매하려는 가구에 대해 세네 가지 질문을 하세요."
+      },
+      {
+        "category": "RP",
+        "theme": "RP05",
+        "q_seq": 2,
+        "listen": "RP_005_002.mp3",
+        "question": "I'm sorry but there is a problem that you need to resolve you discovered a problem with the f Furniture you bought it has just been delivered but the furniture that arrived is not what you ordered call the store explain this problem and give two or three options to solve the issue",
+        "q_id": 5,
+        "question_kr": ": 죄송하지만 해결해야 할 문제가 있습니다. 가구에 문제가 있음을 발견했습니다. 방금 배송되었지만 도착한 가구는 주문한 가구가 아닙니다. 가구점에 전화하세요. 이 문제를 설명하고 문제를 해결할 수 있는 두세 가지 방법을 제시해 주세요."
+      },
+      {
+        "category": "RP",
+        "theme": "RP05",
+        "q_seq": 3,
+        "listen": "RP_005_003.mp3",
+        "question": "That's the end of the situation have you ever been in a situation where you bought something that was broken or not working properly what was the problem and how did you solve it provide as as many details as possible",
+        "q_id": 5,
+        "question_kr": "상황은 이렇게 끝났습니다. 고장 났거나 제대로 작동하지 않는 물건을 렌트해 본 적이 있습니까? 문제가 무엇이었고 어떻게 해결했습니까? 가능한 한 자세한 내용"
+      }
+    ],
+    "RP06": [
+      {
+        "category": "RP",
+        "theme": "RP06",
+        "q_seq": 1,
+        "listen": "RP_006_001.mp3",
+        "question": "You have decided that you want to buy an MP3 player a friend of yours is particularly knowledgeable about them contact this friend and ask three or four questions to gain more information about purchasing an MP3 player",
+        "q_id": 6,
+        "question_kr": "MP3 플레이어를 사기로 하셨습니다. 친구가 해당 플레이어에 대해 잘 알고 있습니다. 이 친구에게 연락하여 MP3 플레이어 구매에 대한 자세한 정보를 얻기 위해 서너 가지 질문을 하세요."
+      },
+      {
+        "category": "RP",
+        "theme": "RP06",
+        "q_seq": 2,
+        "listen": "RP_006_002.mp3",
+        "question": "You borrowed an MP3 player from this friend but unfortunately you broke it contact your friend and describe how it broke in its current condition then suggest two or three ways to get another working MP3 player for your friend as quickly as possible",
+        "q_id": 6,
+        "question_kr": "친구에게 MP3 플레이어를 빌렸는데 안타깝게도 고장났습니다. 친구에게 연락하여 현재 상태로 고장난 경위를 설명하고, 친구에게 가능한 한 빨리 작동하는 새 MP3 플레이어를 구할 수 있는 두세 가지 방법을 제안해 주세요."
+      },
+      {
+        "category": "RP",
+        "theme": "RP06",
+        "q_seq": 3,
+        "listen": "RP_006_003.mp3",
+        "question": "Discuss an experience where you had some equipment that broke or was not working properly provide the background surrounding this situation and describe what happened how was the situation resolved",
+        "q_id": 6,
+        "question_kr": "장비가 고장 났거나 제대로 작동하지 않았던 경험에 대해 이야기해 주세요. 이 상황의 배경을 설명하고, 무슨 일이 있었는지 설명해 주세요. 어떻게 해결되었는지 설명해 주세요."
+      }
+    ],
+    "RP07": [
+      {
+        "category": "RP",
+        "theme": "RP07",
+        "q_seq": 1,
+        "listen": "RP_007_001.mp3",
+        "question": "I'd like to give you a situation and ask you to act it out you want to watch a movie with your friend call the movie theater and ask three or four questions to book the movie tickets",
+        "q_id": 7,
+        "question_kr": "한 가지 상황을 제시하고 연기해 보도록 하겠습니다. 친구와 영화를 보고 싶습니다. 영화관에 전화하여 영화 티켓을 예매하기 위해 서너 가지 질문을 하세요."
+      },
+      {
+        "category": "RP",
+        "theme": "RP07",
+        "q_seq": 2,
+        "listen": "RP_007_002.mp3",
+        "question": "I'm sorry but there is a problem that you need to resolve you found out you bought the wrong ticket explain the situation to the ticket agent and discuss what you can do",
+        "q_id": 7,
+        "question_kr": "죄송하지만 해결해야 할 문제가 있습니다. 잘못된 티켓을 구매했다는 것을 알게 되었습니다. 티켓 판매원에게 상황을 설명하고 어떻게 할 수 있는지 논의해 주세요."
+      },
+      {
+        "category": "RP",
+        "theme": "RP07",
+        "q_seq": 3,
+        "listen": "RP_007_003.mp3",
+        "question": "Have you ever experienced something similar have you ever made reservations or bought tickets and had something go wrong discuss this experience provide background on where and when this experience occurred and who was with with you most importantly discuss the details of this incident and how you resolved it hot",
+        "q_id": 7,
+        "question_kr": "비슷한 경험을 해 본 적이 있습니까? 티켓을 예매하거나 구매했는데 이 경험에 대해 이야기하고, 이 경험이 언제 어디서 발생했는지, 그리고 누가 당신과 함께 있었는지에 대한 배경을 설명하세요. 가장 중요한 것은 이 사건의 세부 사항과 어떻게 해결했는지에 대해 이야기하는 것입니다."
+      }
+    ],
+    "RP08": [
+      {
+        "category": "RP",
+        "theme": "RP08",
+        "q_seq": 1,
+        "listen": "RP_008_001.mp3",
+        "question": "You are in a new city so you need to find a hotel room for the evening you see a hotel so you enter and speak with the receptionist tell the receptionist what sort of room you need make several inquiries to learn more about what is available",
+        "q_id": 8,
+        "question_kr": "새로운 도시에 있으므로 저녁 동안 호텔 방을 찾아야 합니다. 호텔을 보고 호텔에 들어가 리셉션 담당자와 이야기를 나누고, 어떤 종류의 방이 필요한지 리셉션 담당자에게 말하세요."
+      },
+      {
+        "category": "RP",
+        "theme": "RP08",
+        "q_seq": 2,
+        "listen": "RP_008_002.mp3",
+        "question": "There's a problem I need you to act out the receptionist tells you the hotel has no vacancies make a phone call to the friend you are traveling with leave a voicemail explaining the problem then suggest some ways to solve the problem",
+        "q_id": 8,
+        "question_kr": "문제가 있습니다. 리셉션 직원이 호텔에 빈 객실이 없다고 합니다. 함께 여행하는 친구에게 전화를 걸어 문제를 설명하는 음성 메시지를 남기고 문제 해결 방법을 제시하세요."
+      },
+      {
+        "category": "RP",
+        "theme": "RP08",
+        "q_seq": 3,
+        "listen": "RP_008_003.mp3",
+        "question": "You arrive at the hotel but then you discover that the room is smaller than you expected and not clean at all please call the front desk and explain the problem come up with two to three ways to resolve the situation",
+        "q_id": 8,
+        "question_kr": "호텔에 도착했는데 방이 예상보다 작고 전혀 깨끗하지 않다는 것을 알게 되었습니다. 프런트 데스크에 전화하여 문제를 설명하고 두세 가지 해결 방법을 생각해 보세요."
+      }
+    ],
+    "RP09": [
+      {
+        "category": "RP",
+        "theme": "RP09",
+        "q_seq": 1,
+        "listen": "RP_009_001.mp3",
+        "question": "You are interested in joining a new gym that has recently opened in the area contact the manager in order to ask three to four questions that will allow you to become more familiar with this gym",
+        "q_id": 9,
+        "question_kr": "이 지역에 최근 문을 연 새로운 헬스장에 가입하고 싶습니다. 매니저에게 연락하여 헬스장에 대해 더 잘 알 수 있도록 세세 가지 질문을 하세요."
+      },
+      {
+        "category": "RP",
+        "theme": "RP09",
+        "q_seq": 2,
+        "listen": "RP_009_002.mp3",
+        "question": "You made a plan with a friend in order to visit a new gym this afternoon however you realize that you will be unable to go there with your friend today leave a voicemail message for him or her in order to explain the situation and propose two to three possible Alternatives so that you can reschedule this plan",
+        "q_id": 9,
+        "question_kr": "오늘 오후 친구와 함께 새로운 헬스장을 방문하기로 계획을 세웠지만, 오늘 친구와 함께 갈 수 없다는 것을 알게 되었습니다. 친구에게 음성 메시지를 남겨 상황을 설명하고 두세 가지 대안을 제시하여 일정을 변경하세요."
+      },
+      {
+        "category": "RP",
+        "theme": "RP09",
+        "q_seq": 3,
+        "listen": "RP_009_003.mp3",
+        "question": "Have you ever needed to adjust plans that you have with a friend for some reason what were you initially planning to do and what were the reasons why you needed to change the plans discuss this situation in detail and describe what the outcome was in the end po lesson",
+        "q_id": 9,
+        "question_kr": "어떤 이유로 친구와의 계획을 변경해야 했던 적이 있습니까? 처음에는 무엇을 계획하고 있었습니까? 계획을 변경해야 했던 이유는 무엇이었으며, 이 상황에 대해 자세히 논의하고 최종 결과를 설명하세요."
+      }
+    ],
+    "RP10": [
+      {
+        "category": "RP",
+        "theme": "RP10",
+        "q_seq": 1,
+        "listen": "RP_010_001.mp3",
+        "question": "You hope to take some singing lessons contact the music school in order to ask three to four questions to determine what you need to know about them",
+        "q_id": 10,
+        "question_kr": "노래 레슨을 받고 싶습니다. 음악 학교에 연락하여 레슨에 대해 알아야 할 사항을 파악하기 위해 3~4개의 질문을 하세요."
+      },
+      {
+        "category": "RP",
+        "theme": "RP10",
+        "q_seq": 2,
+        "listen": "RP_010_002.mp3",
+        "question": "You have determined that you will have to miss your next few singing lessons contact the singing coach provide details as to why you will have to miss them and suggest two to three options in order to make up these classes",
+        "q_id": 10,
+        "question_kr": "다음 노래 레슨을 몇 번 놓칠 것 같습니다. 노래 코치에게 연락하여 레슨에 결석해야 하는 이유를 자세히 설명하고 레슨을 보충할 수 있는 2~3가지 방법을 제안하세요."
+      },
+      {
+        "category": "RP",
+        "theme": "RP10",
+        "q_seq": 3,
+        "listen": "RP_010_003.mp3",
+        "question": "Please tell me about a singing experience you have had perhaps a time when you performed or sang in front of others or when something humorous unexpected or embarrassing occurred discuss the details of the experience and explain why it was Unforgettable",
+        "q_id": 10,
+        "question_kr": "다른 사람들 앞에서 공연하거나 노래했던 경험, 또는 예상치 못했거나 당황스러웠던 재미있는 일이 있었던 경험에 대해 이야기해 주세요. 그 경험에 대해 자세히 이야기하고 왜 잊지 못할 경험인지 설명하세요."
+      }
+    ],
+    "RP11": [
+      {
+        "category": "RP",
+        "theme": "RP11",
+        "q_seq": 1,
+        "listen": "RP_011_001.mp3",
+        "question": "You would like to take a friend of yours to a concert for his or her birthday contact the ticket office and ask three to four questions regarding this event before buying the tickets",
+        "q_id": 11,
+        "question_kr": "친구의 생일을 맞아 콘서트에 데려가고 싶습니다. 티켓을 구매하기 전에 매표소에 연락하여 이 행사에 대해 3~4개의 질문을 하세요."
+      },
+      {
+        "category": "RP",
+        "theme": "RP11",
+        "q_seq": 2,
+        "listen": "RP_011_002.mp3",
+        "question": "After buying the tickets you realize that you will be unable to go to the concert with your friend call him or her and leave a detailed message explaining the situation and offer two to three possible solutions to this problem",
+        "q_id": 11,
+        "question_kr": "티켓을 구매한 후 친구와 함께 콘서트에 갈 수 없다는 것을 알게 되었습니다. 친구에게 전화하여 상황을 자세히 설명하고 두 가지를 제안하는 메시지를 남겼습니다. 이 문제에 대한 세 가지 가능한 해결책"
+      },
+      {
+        "category": "RP",
+        "theme": "RP11",
+        "q_seq": 3,
+        "listen": "RP_011_003.mp3",
+        "question": "Have you ever been forced to miss a performance or show that you really hoped to attend what happened that interfered with you going and what did you do with the tickets provide background as to where and when this happened and who was with you also provide a detailed account of the situation in regard to everything that happened",
+        "q_id": 11,
+        "question_kr": "정말 가고 싶었던 공연이나 쇼에 참석하지 못하게 된 적이 있습니까? 무슨 일이 있었는지, 티켓은 어떻게 처리했습니까? 어디서 언제, 누가 함께 있었는지 배경을 설명하십시오. 또한 발생한 모든 상황에 대해 자세히 설명해 주십시오."
+      }
+    ],
+    "RP12": [
+      {
+        "category": "RP",
+        "theme": "RP12",
+        "q_seq": 1,
+        "listen": "RP_012_001.mp3",
+        "question": "You want to have another family come to your house for lunch please ask the other members of your family several questions so that you can decide the best date and time for your acquaintances to visit",
+        "q_id": 12,
+        "question_kr": "다른 가족이 점심 식사를 위해 집에 오게 하려고 합니다. 지인들이 방문하기에 가장 좋은 날짜와 시간을 결정할 수 있도록 다른 가족 구성원들에게 몇 가지 질문을 해 주십시오."
+      },
+      {
+        "category": "RP",
+        "theme": "RP12",
+        "q_seq": 2,
+        "listen": "RP_012_002.mp3",
+        "question": "Unfortunately on the morning of the day you are going to have lunch with your friend's family one member of your family becomes sick leave a message on your friend's voicemail and tell them the problem then give them a few suggestions for meeting up in the future",
+        "q_id": 12,
+        "question_kr": "안타깝게도 친구 가족과 점심 식사를 하기로 한 날 아침에 가족 중 한 명이 병가를 냈습니다. 친구의 음성 메시지에 메시지를 남겨 문제를 알리고 나중에 만날 수 있는 몇 가지 제안을 해 주십시오."
+      },
+      {
+        "category": "RP",
+        "theme": "RP12",
+        "q_seq": 3,
+        "listen": "RP_012_003.mp3",
+        "question": "Can you remember a time when something similar occurred in your life has it ever been necessary for you to change your plans because you needed to help one of your family members I'd like you to describe for me what happened with as many details as you can",
+        "q_id": 12,
+        "question_kr": "인생에서 비슷한 일이 있었던 적이 있습니까? 가족 중 한 명을 도와야 해서 계획을 변경해야 했던 적이 있습니까? 무슨 일이 있었는지 가능한 한 자세히 설명해 주십시오."
+      }
+    ],
+    "RP13": [
+      {
+        "category": "RP",
+        "theme": "RP13",
+        "q_seq": 1,
+        "listen": "RP_013_001.mp3",
+        "question": "Imagine that you just moved into a new apartment contact the building manager and ask 32 for questions to find out the necessary information about recycling",
+        "q_id": 13,
+        "question_kr": "방금 이사했다고 상상해 보십시오. 새 아파트 건물 관리자에게 연락하여 재활용에 대한 필요한 정보를 얻기 위해 32번 질문을 하세요."
+      },
+      {
+        "category": "RP",
+        "theme": "RP13",
+        "q_seq": 2,
+        "listen": "RP_013_002.mp3",
+        "question": "After having a party you usually take out the recyclable waste the next day however other people living in the same building often complain to you call the maintenance office explain the situation and suggest two to three resolutions for this issue",
+        "q_id": 13,
+        "question_kr": "파티가 끝나면 보통 다음 날 재활용 쓰레기를 버리지만, 같은 건물에 사는 다른 사람들이 종종 불평합니다. 관리 사무실에 전화하여 상황을 설명하고 이 문제에 대한 두세 가지 해결책을 제안하세요."
+      },
+      {
+        "category": "RP",
+        "theme": "RP13",
+        "q_seq": 3,
+        "listen": "RP_013_003.mp3",
+        "question": "Have you ever had any experience when you had difficulties with recycling maybe you didn't know the recycling rules or you took out the garbage to the wrong place discuss the details of this experience and explain what you had to do to resolve the situation",
+        "q_id": 13,
+        "question_kr": "재활용과 관련하여 어려움을 겪은 경험이 있습니까? 재활용 규칙을 몰랐거나 쓰레기를 잘못된 곳에 버렸을 수도 있습니다. 이 경험에 대해 자세히 이야기하고 상황을 해결하기 위해 무엇을 했는지 설명하세요."
+      }
+    ],
+    "RP14": [
+      {
+        "category": "RP",
+        "theme": "RP14",
+        "q_seq": 1,
+        "listen": "RP_014_001.mp3",
+        "question": "An old friend asks you to attend a party contact this friend and ask three to four questions to determine everything that you need to know about this particular event",
+        "q_id": 14,
+        "question_kr": "오랜 친구가 파티에 참석해 달라고 요청합니다. 이 친구에게 연락하여 이 특정 행사에 대해 알아야 할 모든 것을 파악하기 위해 세세한 질문을 하세요."
+      },
+      {
+        "category": "RP",
+        "theme": "RP14",
+        "q_seq": 2,
+        "listen": "RP_014_002.mp3",
+        "question": "On the evening of the party you have already made plans discuss this situation with your friend and suggest two to three Alternatives that will enable you to get together",
+        "q_id": 14,
+        "question_kr": "파티 당일 저녁에 이미 계획을 세웠습니다. 친구와 이 상황에 대해 이야기하고 함께 모일 수 있는 두세 가지 대안을 제안하세요."
+      },
+      {
+        "category": "RP",
+        "theme": "RP14",
+        "q_seq": 3,
+        "listen": "RP_014_003.mp3",
+        "question": "Discuss a memorable visit you had with friends perhaps you traveled to see someone you do not see very often or it might have been some sort of special occasion select one of those special visits and discuss it in detail when and where did this visit take place who was there what types of things went on during the visit specifically the things that made it so memorable",
+        "q_id": 14,
+        "question_kr": "친구들과 함께했던 기억에 남는 방문에 대해 이야기해 보세요. 자주 만나지 못하는 사람을 만나러 여행을 갔거나 특별한 행사였을 수도 있습니다. 그러한 특별한 방문 중 하나를 선택하여 이야기해 보세요. 이 방문이 언제 어디서 이루어졌는지, 누가 거기에 있었는지, 방문 중에 어떤 일이 있었는지, 특히 그 방문을 매우 기억에 남는 일로 만든 것이 무엇인지 자세히 설명하십시오."
+      }
+    ],
+    "RP15": [
+      {
+        "category": "RP",
+        "theme": "RP15",
+        "q_seq": 1,
+        "listen": "RP_015_001.mp3",
+        "question": "A friend invited you to dinner at a restaurant where you have never been before leave a message for your friend that enables you to ask three to four additional questions about this restaurant",
+        "q_id": 15,
+        "question_kr": "친구가 전에 가본 적 없는 식당에 저녁 식사 초대를 했습니다. 친구에게 이 식당에 대해 3~4가지 추가 질문을 할 수 있는 메시지를 남겨주세요."
+      },
+      {
+        "category": "RP",
+        "theme": "RP15",
+        "q_seq": 2,
+        "listen": "RP_015_002.mp3",
+        "question": "Unfortunately your arrival to the restaurant has been delayed due to an accident on the road you need to call your friend leave a voicemail for this person discuss the reasons for your delay and provide two to three solutions for the problem",
+        "q_id": 15,
+        "question_kr": "안타깝게도 도로 사고로 식당 도착이 지연되었습니다. 친구에게 전화하세요. 이 친구에게 음성 메시지를 남겨주세요. 지연 사유와 문제 해결 방안을 두세 가지 제시해 주세요."
+      },
+      {
+        "category": "RP",
+        "theme": "RP15",
+        "q_seq": 3,
+        "listen": "RP_015_003.mp3",
+        "question": "While going to a restaurant have you ever had some sort of unique or memorable experience maybe an unusual event occurred during the meal someone got lost on the way or someone found him or herself in a delay due to an accident discuss this situation from beginning to end",
+        "q_id": 15,
+        "question_kr": "식당에 가면서 독특하거나 기억에 남는 경험을 한 적이 있나요? 식사 중에 예상치 못한 일이 발생했거나, 길을 잃거나, 사고로 인해 지연된 경험이 있나요? 이 상황을 처음부터 끝까지 자세히 설명해 주세요."
+      }
+    ],
+    "RP16": [
+      {
+        "category": "RP",
+        "theme": "RP16",
+        "q_seq": 1,
+        "listen": "RP_016_001.mp3",
+        "question": "You want to open a bank account so you go to your Town's Bank please imagine that you are talking to A bank's salesperson make several questions about opening up a new account",
+        "q_id": 16,
+        "question_kr": "은행 계좌를 개설하려고 마을 은행에 갔습니다. 은행 직원과 이야기하는 상황을 상상해 보세요. 새 계좌 개설에 대해 몇 가지 질문을 하세요."
+      },
+      {
+        "category": "RP",
+        "theme": "RP16",
+        "q_seq": 2,
+        "listen": "RP_016_002.mp3",
+        "question": "Today you went shopping at a bookstore but when you left you forgot your credit card there please call the bookstore and explain your problem tell the bookstore's owner about the card's details and tell the owner how to return your card",
+        "q_id": 16,
+        "question_kr": "오늘 서점에 가서 쇼핑을 했는데, 나올 때 신용카드를 잊어버렸습니다. 서점에 전화해서 문제를 설명하고, 서점 주인에게 카드 정보와 카드 반납 방법을 알려주세요."
+      },
+      {
+        "category": "RP",
+        "theme": "RP16",
+        "q_seq": 3,
+        "listen": "RP_016_003.mp3",
+        "question": "Try to recall a difficulty you've experienced involving finances or a time when you needed to find help to resolve your problem for instance has your ATM card ever malfunctioned or have you ever lost your card please describe to me a circumstance involving a bank account or a credit card",
+        "q_id": 16,
+        "question_kr": "재정적인 어려움 또는 문제 해결을 위해 도움을 받아야 했던 때를 떠올려 보세요. 예를 들어 ATM 카드가 고장 났거나 카드를 분실한 적이 있습니까? 은행 계좌나 신용카드와 관련된 상황을 설명해 주세요."
+      }
+    ],
+    "RP17": [
+      {
+        "category": "RP",
+        "theme": "RP17",
+        "q_seq": 1,
+        "listen": "RP_017_001.mp3",
+        "question": "You see a poster advertising a new DVD player and you want to buy it you want to learn all you can about the product so you call the store that is selling it ask several questions about the player",
+        "q_id": 17,
+        "question_kr": "새 DVD 플레이어 광고 포스터를 보고 구매하고 싶어서 제품에 대해 가능한 모든 것을 알아보고 싶어서 판매점에 전화해서 플레이어에 대해 몇 가지 질문을 합니다."
+      },
+      {
+        "category": "RP",
+        "theme": "RP17",
+        "q_seq": 2,
+        "listen": "RP_017_002.mp3",
+        "question": "You buy the DVD player and take it home but you discover that it is broken call the store and tell the sales representative about the problem tell the person what you want the store to do about the broken DVD player",
+        "q_id": 17,
+        "question_kr": "DVD 플레이어를 구매해서 집으로 가져갔는데 고장이 난 것을 발견했습니다. 판매점에 전화해서 문제를 이야기했습니다. 고장난 DVD 플레이어에 대해 판매점에서 어떻게 처리해 주기를 바라는지 이야기해 보세요."
+      },
+      {
+        "category": "RP",
+        "theme": "RP17",
+        "q_seq": 3,
+        "listen": "RP_017_003.mp3",
+        "question": "Can you remember a time when you purchased a product that malfunctioned or was broken talk about an experience in which you were dissatisfied with something you bought describe the item you bought explain what the problem was and then talk about how you resolved the problem",
+        "q_id": 17,
+        "question_kr": "고장 나거나 고장난 제품을 구매했던 적이 있습니까? 구매한 제품에 불만족스러웠던 경험에 대해 이야기해 보세요. 구매한 제품에 대해 설명하고 문제가 무엇이었는지 설명한 후 문제를 어떻게 해결했는지 이야기해 보세요."
+      }
+    ],
+    "RP18": [
+      {
+        "category": "RP",
+        "theme": "RP18",
+        "q_seq": 1,
+        "listen": "RP_018_001.mp3",
+        "question": "A friend of your has found an interesting new website post 3 to four questions to a friend about this website",
+        "q_id": 18,
+        "question_kr": "친구가 흥미로운 새 웹사이트를 발견했습니다. 이 웹사이트에 대해 친구에게 3~4가지 질문을 게시하세요."
+      },
+      {
+        "category": "RP",
+        "theme": "RP18",
+        "q_seq": 2,
+        "listen": "RP_018_002.mp3",
+        "question": "You discover that your internet browser is not working properly when you try to go to this particular website contact the internet hel line and leave a message for a technician that explains the issues that you are experiencing while internet surfing also stress the need for them to help you to solve this problem as soon as possible",
+        "q_id": 18,
+        "question_kr": "인터넷에서 이 특정 웹사이트에 접속하려고 할 때 브라우저가 제대로 작동하지 않습니다. 인터넷 헬프라인에 연락하여 기술자에게 인터넷 서핑 중 발생한 문제를 설명하는 메시지를 남기세요. 또한, 가능한 한 빨리 문제를 해결해 달라고 요청하세요."
+      },
+      {
+        "category": "RP",
+        "theme": "RP18",
+        "q_seq": 3,
+        "listen": "RP_018_003.mp3",
+        "question": "Identify a project that you worked on that required you to do research on the internet discuss what the project involved when you had to do it and how the internet was an important part of completing the project",
+        "q_id": 18,
+        "question_kr": "인터넷 검색을 필요로 했던 프로젝트를 생각해 보세요. 프로젝트가 어떤 과정을 거쳤는지, 그리고 인터넷이 프로젝트 완료에 얼마나 중요한 역할을 했는지 설명하세요."
+      }
+    ],
+    "RP19": [
+      {
+        "category": "RP",
+        "theme": "RP19",
+        "q_seq": 1,
+        "listen": "RP_019_001.mp3",
+        "question": "You decide to buy some clothes you make a telephone call to a shop that sells clothes ask several questions so that you can learn whether they have the sort of clothes you need",
+        "q_id": 19,
+        "question_kr": "옷을 사기로 했습니다. 옷을 파는 가게에 전화를 걸어 필요한 종류의 옷이 있는지 확인하기 위해 몇 가지 질문을 합니다."
+      },
+      {
+        "category": "RP",
+        "theme": "RP19",
+        "q_seq": 2,
+        "listen": "RP_019_002.mp3",
+        "question": "You purchased some clothes at the shop but once you return home you discover that one of the sweaters has a problem you telephone the shop in order to tell them about the problem describe the problem and tell them what you want the shop to do to fix this issue",
+        "q_id": 19,
+        "question_kr": "가게에서 옷을 샀는데 집에 돌아와 보니 스웨터 중 하나에 문제가 있는 것을 발견했습니다. 가게에 전화해서 문제를 설명했습니다. 문제를 설명하고 가게에서 어떻게 해결해 주기를 바라는지 설명하세요."
+      },
+      {
+        "category": "RP",
+        "theme": "RP19",
+        "q_seq": 3,
+        "listen": "RP_019_003.mp3",
+        "question": "Have you ever been placed in a similar situation when you purchased something and later found that it was defective or damaged discuss this situation what did you purchase and what was the problem with it where did you buy it how did this situation become resolved",
+        "q_id": 19,
+        "question_kr": "물건을 구매한 후 나중에 결함이 있거나 손상된 것을 발견한 비슷한 상황을 경험해 본 적이 있습니까? 이 상황에 대해 이야기해 보세요. 무엇을 구매했고 어떤 문제가 있었는지, 어디에서 구매했는지, 이 상황이 어떻게 진행되었는지 설명하세요. 해결됨"
+      }
+    ],
+    "RP20": [
+      {
+        "category": "RP",
+        "theme": "RP20",
+        "q_seq": 1,
+        "listen": "RP_020_001.mp3",
+        "question": "You are interested in a healthy diet someone introduced you to a professional nutritionist who helps people improve their diet contact the nutritionist and ask several questions so that you can learn more about a healthy diet",
+        "q_id": 20,
+        "question_kr": "건강한 식단에 관심이 있습니다. 누군가가 식단 개선을 돕는 전문 영양사를 소개해 주었습니다. 영양사에게 연락하여 몇 가지 질문을 하여 건강한 식단에 대해 더 자세히 알아보세요."
+      },
+      {
+        "category": "RP",
+        "theme": "RP20",
+        "q_seq": 2,
+        "listen": "RP_020_002.mp3",
+        "question": "You discover that you will have to work late on the day of the meeting contact the nutritionist to leave a message which explains the problem then offer two to three alternatives to the issue",
+        "q_id": 20,
+        "question_kr": "회의 당일 야근해야 한다는 것을 알게 되었습니다. 영양사에게 연락하여 문제를 설명하는 메시지를 남기고, 문제에 대한 두세 가지 대안을 제시하세요."
+      },
+      {
+        "category": "RP",
+        "theme": "RP20",
+        "q_seq": 3,
+        "listen": "RP_020_003.mp3",
+        "question": "What caused you to become more interested in a diet or exercise what steps did you take in order to get healthier has your interest grown Through The Years discuss the details of this experience",
+        "q_id": 20,
+        "question_kr": "식단이나 운동에 더 관심을 갖게 된 이유는 무엇입니까? 더 건강해지기 위해 어떤 조치를 취했습니까? 수년간 관심이 커졌습니까? 이 경험에 대해 자세히 이야기해 보세요."
+      }
+    ],
+    "RP21": [
+      {
+        "category": "RP",
+        "theme": "RP21",
+        "q_seq": 1,
+        "listen": "RP_021_001.mp3",
+        "question": "A window in your home has broken and you need it repaired as soon as possible call a repair service describe the problem and ask three or four questions to find out how quickly they can come and what to do",
+        "q_id": 21,
+        "question_kr": "집 창문이 깨져서 최대한 빨리 수리해야 합니다. 수리 서비스에 전화하세요. 문제를 설명하고 세네 가지 질문을 하여 얼마나 빨리 올 수 있는지, 어떻게 해야 하는지 알아보세요."
+      },
+      {
+        "category": "RP",
+        "theme": "RP21",
+        "q_seq": 2,
+        "listen": "RP_021_002.mp3",
+        "question": "The repair service tells you they can't come immediately and will need a few days before they can fix the broken window explain why it's urgent to repair the window sooner and suggest two or three possible solutions",
+        "q_id": 21,
+        "question_kr": "수리 서비스에서 즉시 올 수 없으며 깨진 창문을 고치려면 며칠이 걸린다고 합니다. 왜 창문을 빨리 수리해야 하는지 설명하고 두세 가지 가능한 해결책을 제시하세요."
+      },
+      {
+        "category": "RP",
+        "theme": "RP21",
+        "q_seq": 3,
+        "listen": "RP_021_003.mp3",
+        "question": "Have you ever had a problem in your home such as something broken or needing urgent repair describe the issue what you did to resolve it and how it all turned out include any lessons you learned from The Experience",
+        "q_id": 21,
+        "question_kr": "집에서 무언가가 깨지거나 수리해야 하는 등의 문제가 발생한 적이 있습니까? 긴급 수리 문제를 설명하기 위해 수행한 작업과 모든 결과가 어떻게 되었는지, 그 경험에서 얻은 교훈이 있는지 포함합니다."
+      }
+    ],
+    "RP22": [
+      {
+        "category": "RP",
+        "theme": "RP22",
+        "q_seq": 1,
+        "listen": "RP_022_001.mp3",
+        "question": "You are planning a vacation with a friend call the travel agency and describe the kind of vacation you and your friend are planning then ask three or four questions to complete the plans for this [Music] vacation",
+        "q_id": 22,
+        "question_kr": "친구와 휴가를 계획하고 있습니다. 여행사에 전화해서 친구와 함께 어떤 휴가를 계획하고 있는지 설명하고, 이 [음악] 휴가 계획을 완성하기 위해 세 가지 또는 네 가지 질문을 하세요."
+      },
+      {
+        "category": "RP",
+        "theme": "RP22",
+        "q_seq": 2,
+        "listen": "RP_022_002.mp3",
+        "question": "You had planned a vacation with a friend but something urgent has come up and you won't be able to go call your friend explain the situation and offer two or three alternative solutions to make it up to them",
+        "q_id": 22,
+        "question_kr": "친구와 휴가를 계획했지만 급한 일이 생겨서 친구에게 전화할 수 없게 되었습니다. 상황을 설명하고 보상할 수 있는 두세 가지 대안을 제시하세요."
+      },
+      {
+        "category": "RP",
+        "theme": "RP22",
+        "q_seq": 3,
+        "listen": "RP_022_003.mp3",
+        "question": "Have you ever experienced missing an important event due to unexpected circumstances or describe a time when you couldn't keep a promise to a friend or family member explain the reason and what you did to handle the situation",
+        "q_id": 22,
+        "question_kr": "예상치 못한 상황으로 인해 중요한 행사에 참석하지 못했거나 친구나 가족과의 약속을 지키지 못했던 적이 있습니까? 그 이유와 상황을 해결하기 위해 무엇을 했는지 설명하세요."
+      }
+    ],
+    "RP23": [
+      {
+        "category": "RP",
+        "theme": "RP23",
+        "q_seq": 1,
+        "listen": "RP_023_001.mp3",
+        "question": "You are at the library looking for some books ask the librarian a few questions about the book you want",
+        "q_id": 23,
+        "question_kr": "도서관에서 책을 찾고 있습니다. 사서에게 원하는 책에 대해 몇 가지 질문을 하세요."
+      },
+      {
+        "category": "RP",
+        "theme": "RP23",
+        "q_seq": 2,
+        "listen": "RP_023_002.mp3",
+        "question": "The library said the book you're looking for is not currently available please provide two or three possible solutions for this issue",
+        "q_id": 23,
+        "question_kr": "도서관에서 찾고 있는 책이 현재 없다고 합니다. 이 문제에 대한 두세 가지 가능한 해결책을 제시하세요."
+      },
+      {
+        "category": "RP",
+        "theme": "RP23",
+        "q_seq": 3,
+        "listen": "RP_023_003.mp3",
+        "question": "Have you ever been in a situation where something you were looking for was not available what happened and what did you do please tell me everything in detail",
+        "q_id": 23,
+        "question_kr": "찾고 있던 책을 구할 수 없었던 적이 있습니까? 무슨 일이 있었고 어떻게 했습니까? 모든 것을 자세히 설명해 주세요."
+      }
+    ],
+    "RP24": [
+      {
+        "category": "RP",
+        "theme": "RP24",
+        "q_seq": 1,
+        "listen": "RP_024_001.mp3",
+        "question": "You're planning an international trip and need more information about the destination contact a travel agency and ask three or four questions about flight options visa requirements and recommended sightseeing spots",
+        "q_id": 24,
+        "question_kr": "해외 여행을 계획하고 있는데 목적지에 대한 자세한 정보를 얻으려면 여행사에 연락하여 항공편 옵션, 비자 요건 및 추천 관광지에 대해 서너 가지 질문해 보세요."
+      },
+      {
+        "category": "RP",
+        "theme": "RP24",
+        "q_seq": 2,
+        "listen": "RP_024_002.mp3",
+        "question": "You're on an international trip and have gotten lost approach a police officer explain your situation and suggest two or three possible solutions to find your way",
+        "q_id": 24,
+        "question_kr": "해외 여행 중 길을 잃었습니다. 경찰관에게 다가가 상황을 설명하고 길을 찾을 수 있는 두세 가지 가능한 해결책을 제시해 보세요."
+      },
+      {
+        "category": "RP",
+        "theme": "RP24",
+        "q_seq": 3,
+        "listen": "RP_024_003.mp3",
+        "question": "Have you ever traveled abroad and experienced something memorable describe where you went what stood out about the trip and how it impacted you mention any unique cultural experiences people you met or challenges you faced that made the trip Unforgettable",
+        "q_id": 24,
+        "question_kr": "해외 여행을 가서 기억에 남는 경험을 한 적이 있습니까? 어디로 갔는지, 그 여행에서 무엇이 가장 인상 깊었는지, 어떤 영향을 미쳤는지 설명하세요. 특별한 문화적 경험, 만난 사람들, 또는 여행을 잊지 못하게 만든 어려움에 대해 언급하세요."
+      }
+    ],
+    "RP25": [
+      {
+        "category": "RP",
+        "theme": "RP25",
+        "q_seq": 1,
+        "listen": "RP_025_001.mp3",
+        "question": "You're on your way to a store you've never visited before and feel a bit lost stop by a nearby store and ask three or four questions to get directions to the store you're trying to find you might ask about the best route any landmarks to look for or if the store is within walking distance",
+        "q_id": 25,
+        "question_kr": "전에 가본 적이 없는 가게에 가는 길에 길을 잃었습니다. 근처 가게에 들러 서너 가지 질문을 하여 찾으려는 가게까지 가는 길을 물어보세요. 가장 좋은 경로, 찾아야 할 랜드마크, 또는 가게가 걸어갈 수 있는 거리에 있는지 물어보세요."
+      },
+      {
+        "category": "RP",
+        "theme": "RP25",
+        "q_seq": 2,
+        "listen": "RP_025_002.mp3",
+        "question": "You recently went shopping but after you left you realized that you left an item you purchased behind at the store call the store explain what happened and ask three or four questions about how to retrieve your item",
+        "q_id": 25,
+        "question_kr": "최근 쇼핑을 갔는데, 가게에 물건을 두고 온 것을 알게 되었습니다. 가게에 전화하여 상황을 설명하고 물건을 찾는 방법에 대해 서너 가지 질문해 보세요."
+      },
+      {
+        "category": "RP",
+        "theme": "RP25",
+        "q_seq": 3,
+        "listen": "RP_025_003.mp3",
+        "question": "Have you ever left something important behind at a store restaurant or another place describe what happened how you really realized it was missing and what steps you took to get it back explain why the experience was memorable and how it turned out in the end",
+        "q_id": 25,
+        "question_kr": "가게, 식당 또는 다른 장소에 중요한 물건을 두고 온 적이 있습니까? 무슨 일이 있었는지 설명하세요. 정말로 그것이 없어졌다는 것을 깨달았고, 그것을 되찾기 위해 어떤 조치를 취했는지 그 경험이 왜 기억에 남았는지, 그리고 결국 어떻게 되었는지 설명하세요."
+      }
+    ],
+    "RP26": [
+      {
+        "category": "RP",
+        "theme": "RP26",
+        "q_seq": 1,
+        "listen": "RP_026_001.mp3",
+        "question": "You recently moved to a new neighborhood and want to get to know your neighbor better call one of your neighbors and ask three or four questions about his or her profession",
+        "q_id": 26,
+        "question_kr": "최근 새로운 동네로 이사했는데 이웃을 더 잘 알고 싶습니다. 이웃 중 한 명에게 전화해서 직업에 대해 서너 가지 질문을 하세요."
+      },
+      {
+        "category": "RP",
+        "theme": "RP26",
+        "q_seq": 2,
+        "listen": "RP_026_002.mp3",
+        "question": "While you were talking with your neighbor something unexpected came up reschedule your meeting time and offer two or three alternative options",
+        "q_id": 26,
+        "question_kr": "이웃과 이야기하는 동안 예상치 못한 일이 생겼습니다. 만남 시간을 조정하고 두세 가지 대안을 제시하세요."
+      },
+      {
+        "category": "RP",
+        "theme": "RP26",
+        "q_seq": 3,
+        "listen": "RP_026_003.mp3",
+        "question": "Have you ever experienced a situation where you were supposed to meet a friend family member or someone else but something came up what was the situation how did you handle it and how did it turn out in the end",
+        "q_id": 26,
+        "question_kr": "친구, 가족 또는 다른 사람을 만나기로 했는데 무슨 일이 생긴 적이 있습니까? 무슨 상황이었습니까? 어떻게 처리했고 결국 어떻게 되었습니까?"
+      }
+    ],
+    "RP27": [
+      {
+        "category": "RP",
+        "theme": "RP27",
+        "q_seq": 1,
+        "listen": "RP_027_001.mp3",
+        "question": "You were given an opportunity to interview a celebrity in your field think of two or three questions you'd like to ask to know more about their success or any advice",
+        "q_id": 27,
+        "question_kr": "같은 분야의 유명인을 인터뷰할 기회가 있었습니다. 그들의 성공이나 조언에 대해 더 자세히 알고 싶은 두세 가지 질문을 생각해 보세요."
+      },
+      {
+        "category": "RP",
+        "theme": "RP27",
+        "q_seq": 2,
+        "listen": "RP_027_002.mp3",
+        "question": "You're reading a magazine that published your recent interview with a famous person but you notice an error in the article contact the magazine editor explain the mistake and propose two or three solutions to correct it",
+        "q_id": 27,
+        "question_kr": "유명인과의 최근 인터뷰가 실린 잡지를 읽고 있는데 기사에 오류가 있습니다. 잡지 편집자에게 연락하세요. 오류를 설명하고 수정을 위한 두세 가지 해결책을 제안하세요."
+      },
+      {
+        "category": "RP",
+        "theme": "RP27",
+        "q_seq": 3,
+        "listen": "RP_027_003.mp3",
+        "question": "Have you ever met a celebrity in real life describe the experience in detail including who you met what you talked about and how it impacted you explain why this encounter was memorable and if it influenced your goals or perspective",
+        "q_id": 27,
+        "question_kr": "실제로 유명인을 만난 적이 있습니까? 누구를 포함하여 그 경험을 자세히 설명하세요. 만난 사람과 나눈 대화 내용과 그 내용이 당신에게 어떤 영향을 미쳤는지 설명하세요. 이 만남이 기억에 남는 이유와 목표 또는 관점에 영향을 미쳤는지 설명하세요."
+      }
+    ],
+    "RP28": [
+      {
+        "category": "RP",
+        "theme": "RP28",
+        "q_seq": 1,
+        "listen": "RP_028_001.mp3",
+        "question": "You're attending a festival and need to find a place to park approach a parking attendant and ask two or three questions about the parking locations",
+        "q_id": 28,
+        "question_kr": "축제에 참석하여 주차할 곳을 찾아야 합니다. 주차 관리원에게 가서 주차 위치에 대해 두세 가지 질문을 하세요."
+      },
+      {
+        "category": "RP",
+        "theme": "RP28",
+        "q_seq": 2,
+        "listen": "RP_028_002.mp3",
+        "question": "You arrived at the festival but found out that all the parking lots are full approach the parking attendant explain the situation politely and suggest two or three alternatives to resolve the issue",
+        "q_id": 28,
+        "question_kr": "축제에 도착했지만 모든 주차장이 만차인 것을 알게 되었습니다. 주차 관리원에게 가서 상황을 정중하게 설명하고 문제 해결을 위한 두세 가지 대안을 제시하세요."
+      },
+      {
+        "category": "RP",
+        "theme": "RP28",
+        "q_seq": 3,
+        "listen": "RP_028_003.mp3",
+        "question": "Have you ever experienced difficulty finding parking at an event or Festival describe what happened the steps you took to resolve it and how the situation turned out in the end",
+        "q_id": 28,
+        "question_kr": "행사나 축제에서 주차 공간을 찾는 데 어려움을 겪은 적이 있습니까? 무슨 일이 있었는지, 문제를 해결하기 위해 취한 조치와 최종적으로 상황이 어떻게 되었는지 설명하세요."
+      }
+    ],
+    "RP29": [
+      {
+        "category": "RP",
+        "theme": "RP29",
+        "q_seq": 1,
+        "listen": "RP_029_001.mp3",
+        "question": "Imagine you lost an item in a taxi call the locations lost and found our customer service desk and ask three or four questions about the process for retrieving lost items",
+        "q_id": 29,
+        "question_kr": "택시에서 물건을 잃어버렸다고 가정해 보세요. 분실물센터에 전화해서 분실물 찾는 절차에 대해 서너 가지 질문해 보세요."
+      },
+      {
+        "category": "RP",
+        "theme": "RP29",
+        "q_seq": 2,
+        "listen": "RP_029_002.mp3",
+        "question": "You left a personal item in a taxi contact the taxi company explain the situation and suggest two or three ways to retrieve the item",
+        "q_id": 29,
+        "question_kr": "택시에 개인 소지품을 두고 내렸다면 택시 회사에 연락하여 상황을 설명하고 물건을 찾는 두세 가지 방법을 제안해 보세요."
+      },
+      {
+        "category": "RP",
+        "theme": "RP29",
+        "q_seq": 3,
+        "listen": "RP_029_003.mp3",
+        "question": "Have you ever lost something torant and managed to retrieve it describe what happened where you lost the item and the steps you took to get it back explain why this experience was memorable and how it affected your life",
+        "q_id": 29,
+        "question_kr": "물건을 잃어버렸다가 다시 찾은 적이 있나요? 잃어버린 장소와 되찾기 위해 취한 조치를 설명해 보세요. 이 경험이 왜 기억에 남고 삶에 어떤 영향을 미쳤는지 설명해 보세요."
+      }
+    ],
+    "RP30": [
+      {
+        "category": "RP",
+        "theme": "RP30",
+        "q_seq": 1,
+        "listen": "RP_030_001.mp3",
+        "question": "I'd like to give you a situation and ask you to act it out you heard about a new restaurant in your neighborhood and want to find out what dishes they offer call call the restaurant and ask three or four questions to gather information about the restaurant and its menu",
+        "q_id": 30,
+        "question_kr": "상황을 하나 제시하고 실제 상황으로 만들어 보세요. 동네에 새로운 식당이 생겼다는 소식을 듣고 어떤 메뉴를 제공하는지 알아보고 싶습니다. 식당에 전화해서 식당과 메뉴에 대한 정보를 얻기 위해 서너 가지 질문을 해 보세요."
+      },
+      {
+        "category": "RP",
+        "theme": "RP30",
+        "q_seq": 2,
+        "listen": "RP_030_002.mp3",
+        "question": "I'm sorry but there's a problem that you need to resolve you have been waiting for your food for a long time but your order has not arrived explain the situation to the waiter and suggest two or three possible solutions to resolve the issue",
+        "q_id": 30,
+        "question_kr": "죄송하지만 해결해야 할 문제가 있습니다. 음식을 오랫동안 기다렸지만 주문한 음식이 도착하지 않았습니다. 웨이터에게 상황을 설명하고 문제 해결을 위한 두세 가지 가능한 해결책을 제안해 보세요."
+      },
+      {
+        "category": "RP",
+        "theme": "RP30",
+        "q_seq": 3,
+        "listen": "RP_030_003.mp3",
+        "question": "That's the end of the situation have you ever had a problem at a restaurant what was the issue and how did you resolve it provide as many details as possible",
+        "q_id": 30,
+        "question_kr": "상황이 끝났습니다. 이런 경험을 한 적이 있나요? 식당에서 발생한 문제. 무엇이 문제였고 어떻게 해결하셨나요? 가능한 한 자세히 설명해 주세요."
+      }
+    ],
+    "RP31": [
+      {
+        "category": "RP",
+        "theme": "RP31",
+        "q_seq": 1,
+        "listen": "RP_031_001.mp3",
+        "question": "I'd like to give you a situation and ask you to act it out you see a sign at your favorite store that says that they are having a big sale go to the store and ask ask three or four questions to get as much information as possible about the sale",
+        "q_id": 31,
+        "question_kr": "한 가지 상황을 제시하고 실제 상황으로 표현해 보세요. 좋아하는 가게에 큰 세일 중이라는 안내문을 보고 가게에 가서 물어보세요. 세일에 대한 정보를 최대한 많이 얻기 위해 세 가지 또는 네 가지 질문을 하세요."
+      },
+      {
+        "category": "RP",
+        "theme": "RP31",
+        "q_seq": 2,
+        "listen": "RP_031_002.mp3",
+        "question": "I'm sorry but there's a problem that you need to resolve after arriving home with the clothes you purchased you realize that you were not charged the sale price contact the store explain the situation and suggest two or three possible solutions to resolve the issue",
+        "q_id": 31,
+        "question_kr": "죄송하지만 해결해야 할 문제가 있습니다. 구매한 옷을 가지고 집에 도착한 후 세일 가격이 청구되지 않았다는 것을 알게 되었습니다. 가게에 연락하여 상황을 설명하고 문제 해결을 위한 두세 가지 가능한 해결책을 제시하세요."
+      },
+      {
+        "category": "RP",
+        "theme": "RP31",
+        "q_seq": 3,
+        "listen": "RP_031_003.mp3",
+        "question": "That's the end of the situation think back to a time when you bought something and encountered a problem what did you purchase and what went wrong how did you handle the situation describe the steps you took to resolve the issue",
+        "q_id": 31,
+        "question_kr": "상황은 이것으로 끝입니다. 물건을 샀는데 문제가 발생했던 때를 떠올려 보세요. 무엇을 샀고 무엇이 잘못되었나요? 상황을 어떻게 처리하셨나요? 문제 해결을 위해 취한 조치를 설명하세요."
+      }
+    ],
+    "RP32": [
+      {
+        "category": "RP",
+        "theme": "RP32",
+        "q_seq": 1,
+        "listen": "RP_032_001.mp3",
+        "question": "I'd like to give you a situation and ask you to act it out one of your relatives is going on vacation and their house will be empty you have agreed to take care of his or her duties at home while they are gone on the trip make a call to your relatives and ask three or four questions about what you have to do for them",
+        "q_id": 32,
+        "question_kr": "한 가지 상황을 제시하고 실제 상황으로 표현해 보세요. 친척 중 한 명이 휴가를 가는데 집이 비어 있을 것입니다. 친척이 휴가를 가는 동안 집안일을 하기로 약속했습니다. 친척에게 전화를 걸어보세요. 친척들에게 당신이 그들을 위해 무엇을 해야 하는지에 대해 서너 가지 질문을 하세요."
+      },
+      {
+        "category": "RP",
+        "theme": "RP32",
+        "q_seq": 2,
+        "listen": "RP_032_002.mp3",
+        "question": "I'm sorry but there is a problem that you need to resolve you just arrived at your relative's home but you can't get into the house because the door is locked and you can't find the key contact your relatives and leave a message explaining the situation and offer two or three ways to solve the problem",
+        "q_id": 32,
+        "question_kr": "죄송하지만 해결해야 할 문제가 있습니다. 친척 집에 막 도착했는데 문이 잠겨 있고 열쇠를 찾을 수 없어서 집에 들어갈 수 없습니다. 친척들에게 연락하여 상황을 설명하고 문제 해결 방법을 두세 가지 제시하세요."
+      },
+      {
+        "category": "RP",
+        "theme": "RP32",
+        "q_seq": 3,
+        "listen": "RP_032_003.mp3",
+        "question": "That's the end of the situation tell me a memorable experience that you couldn't keep a promise to your family or friend or had to cancel a plan what happened what was the reason you couldn't keep a promise how how did you deal with the situation",
+        "q_id": 32,
+        "question_kr": "상황이 끝났습니다. 가족이나 친구와의 약속을 지키지 못했거나 계획을 취소해야 했던 기억에 남는 경험을 말씀해 주세요. 무슨 일이 있었나요? 약속을 지킬 수 없었던 이유는 무엇이었나요? 어떻게 그 상황을 해결했나요?"
+      }
+    ],
+    "RP33": [
+      {
+        "category": "RP",
+        "theme": "RP33",
+        "q_seq": 1,
+        "listen": "RP_033_001.mp3",
+        "question": "I'd like to give you a situation and ask you to act it out assume that you want to go jogging with your friend call your friend and ask three or four questions to make a plan for jogging",
+        "q_id": 33,
+        "question_kr": "상황을 하나 주고 실제 상황으로 만들어 보도록 하겠습니다. 친구와 조깅을 하러 가고 싶다고 가정해 보세요. 친구에게 전화해서 서너 가지 질문을 해서 조깅 계획을 세우세요."
+      },
+      {
+        "category": "RP",
+        "theme": "RP33",
+        "q_seq": 2,
+        "listen": "RP_033_002.mp3",
+        "question": "I'm sorry but there is a problem that you need to resolve you were supposed to meet your friend tomorrow but something unexpected happened so you will not be able to make it on time call your friend explain the situation and offer two or three Alternatives about this matter",
+        "q_id": 33,
+        "question_kr": "죄송하지만 해결해야 할 문제가 있습니다. 내일 친구를 만나기로 했는데 예상치 못한 일이 생겨서 제 시간에 갈 수 없을 것 같습니다. 친구에게 전화해서 상황을 설명하고 이 문제에 대한 두세 가지 대안 제안하세요."
+      },
+      {
+        "category": "RP",
+        "theme": "RP33",
+        "q_seq": 3,
+        "listen": "RP_033_003.mp3",
+        "question": "That's the end of the situation tell me about a time when you have had a memorable or interesting experience while jogging what happened who were you with what made it's so special provide as many details as possible",
+        "q_id": 33,
+        "question_kr": "이제 상황이 끝났습니다. 조깅을 하면서 기억에 남거나 흥미로운 경험을 한 적이 있나요? 무슨 일이 있었는지, 누구와 함께였는지, 무엇이 그 경험을 특별하게 만들었는지, 가능한 한 자세히 설명해 주세요."
+      }
+    ],
+    "Unknown": [
+      {
+        "category": "RP",
+        "theme": "",
+        "q_seq": 0,
+        "listen": "",
+        "question": "",
+        "q_id": 0,
+        "question_kr": ""
+      }
+    ]
+  }
+}
