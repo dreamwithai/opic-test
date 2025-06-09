@@ -1,7 +1,7 @@
 'use client'
 
 import Link from 'next/link'
-import { FileText, Upload, BarChart3, Settings, Database } from 'lucide-react'
+import { FileText, Upload, BarChart3, Settings, Database, Mic } from 'lucide-react'
 
 export default function AdminPage() {
   const adminFeatures = [
@@ -32,6 +32,13 @@ export default function AdminPage() {
       href: '/admin/backup',
       icon: Database,
       color: 'text-orange-600',
+    },
+    {
+      title: 'STT 기능 테스트',
+      description: '모바일 STT 기능을 종합적으로 테스트합니다',
+      href: '/admin/stt-test',
+      icon: Mic,
+      color: 'text-red-600',
     },
     {
       title: '설정',
