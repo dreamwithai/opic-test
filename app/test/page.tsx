@@ -609,55 +609,57 @@ export default function TestPage() {
           <p className="text-gray-600 font-medium mb-8">문제를 듣고 답변을 녹음하세요</p>
 
           {/* Question info */}
-          <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6">
-            <div className="flex items-center gap-2 mb-2">
-              <span className="text-blue-600 font-semibold">📋 선택된 문제 정보</span>
+          {process.env.NODE_ENV === 'development' && (
+            <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6">
+              <div className="flex items-center gap-2 mb-2">
+                <span className="text-blue-600 font-semibold">📋 선택된 문제 정보</span>
+              </div>
+              <div className="text-sm text-gray-700 space-y-1">
+                {selectedCategory === 'S' ? (
+                  <div>
+                    <div>
+                      <span className="font-medium">선택주제:</span> {getTheme(questions[0])} 
+                      <span className="text-gray-500 ml-2">(총 {totalQuestions}개 문제)</span>
+                    </div>
+                    {currentQuestion && (
+                      <div className="text-xs text-gray-600 mt-1">
+                        현재: Q{currentQuestion.q_id}-{currentQuestion.q_seq} | 
+                        유형: {currentQuestion.type || currentQuestion.Type} | 
+                        파일: {currentQuestion.listen}
+                      </div>
+                    )}
+                  </div>
+                ) : selectedCategory === 'C' ? (
+                  <div>
+                    <div>
+                      <span className="font-medium">돌발주제:</span> {getTheme(questions[0])} 
+                      <span className="text-gray-500 ml-2">(총 {totalQuestions}개 문제)</span>
+                    </div>
+                    {currentQuestion && (
+                      <div className="text-xs text-gray-600 mt-1">
+                        현재: Q{currentQuestion.q_id}-{currentQuestion.q_seq} | 
+                        유형: {currentQuestion.type || currentQuestion.Type} | 
+                        파일: {currentQuestion.listen}
+                      </div>
+                    )}
+                  </div>
+                ) : (
+                  <div>
+                    <div>
+                      <span className="font-medium">{selectedType}:</span> 총 {totalQuestions}개 문제
+                    </div>
+                    {currentQuestion && (
+                      <div className="text-xs text-gray-600 mt-1">
+                        현재: Q{currentQuestion.q_id}-{currentQuestion.q_seq} | 
+                        테마: {getTheme(currentQuestion)} | 
+                        파일: {currentQuestion.listen}
+                      </div>
+                    )}
+                  </div>
+                )}
+              </div>
             </div>
-            <div className="text-sm text-gray-700 space-y-1">
-              {selectedCategory === 'S' ? (
-                <div>
-                  <div>
-                    <span className="font-medium">선택주제:</span> {getTheme(questions[0])} 
-                    <span className="text-gray-500 ml-2">(총 {totalQuestions}개 문제)</span>
-                  </div>
-                  {currentQuestion && (
-                    <div className="text-xs text-gray-600 mt-1">
-                      현재: Q{currentQuestion.q_id}-{currentQuestion.q_seq} | 
-                      유형: {currentQuestion.type || currentQuestion.Type} | 
-                      파일: {currentQuestion.listen}
-                    </div>
-                  )}
-                </div>
-              ) : selectedCategory === 'C' ? (
-                <div>
-                  <div>
-                    <span className="font-medium">돌발주제:</span> {getTheme(questions[0])} 
-                    <span className="text-gray-500 ml-2">(총 {totalQuestions}개 문제)</span>
-                  </div>
-                  {currentQuestion && (
-                    <div className="text-xs text-gray-600 mt-1">
-                      현재: Q{currentQuestion.q_id}-{currentQuestion.q_seq} | 
-                      유형: {currentQuestion.type || currentQuestion.Type} | 
-                      파일: {currentQuestion.listen}
-                    </div>
-                  )}
-                </div>
-              ) : (
-                <div>
-                  <div>
-                    <span className="font-medium">{selectedType}:</span> 총 {totalQuestions}개 문제
-                  </div>
-                  {currentQuestion && (
-                    <div className="text-xs text-gray-600 mt-1">
-                      현재: Q{currentQuestion.q_id}-{currentQuestion.q_seq} | 
-                      테마: {getTheme(currentQuestion)} | 
-                      파일: {currentQuestion.listen}
-                    </div>
-                  )}
-                </div>
-              )}
-            </div>
-          </div>
+          )}
 
           {/* Question listening section */}
           <div className="mb-8">
@@ -670,7 +672,7 @@ export default function TestPage() {
                   {currentQuestionIndex + 1}/{totalQuestions}
                   <span className="text-2xl">→</span>
                 </div>
-                <p className="text-gray-600 font-medium mb-6">
+                <p className="text-gray-600 text-sm mb-6">
                   선택한 유형의 질문을 듣고 답변을 준비하세요.
                 </p>
                 
@@ -726,10 +728,6 @@ export default function TestPage() {
               {showQuestionDetails && (
                 <div className="border border-t-0 border-gray-200 rounded-b-lg p-4 bg-white">
                   <div className="space-y-4">
-                    <div className="text-xs text-gray-500">
-                      카테고리: {currentQuestion.category} | 
-                      테마: {getTheme(currentQuestion)}
-                    </div>
                     <div className="space-y-3">
                       <div>
                         <p className="text-gray-800 font-medium text-sm">
@@ -904,7 +902,7 @@ export default function TestPage() {
                       {sttText}
                     </p>
                   ) : (
-                    <p className="text-gray-400 italic">
+                    <p className="text-gray-400 italic text-xs">
                       🎤 아직 인식된 텍스트가 없습니다. 녹음을 시작해주세요.
                     </p>
                   )}
