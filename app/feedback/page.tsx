@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { useRouter, useSearchParams } from 'next/navigation'
+import { supabase } from '@/lib/supabase'
 
 // 샘플 질문 데이터
 const sampleQuestions = [
@@ -89,9 +90,74 @@ export default function FeedbackPage() {
     qseq: parseInt(currentQSeq)
   }
 
-  const handleSave = () => {
-    alert('피드백이 저장되었습니다.')
-  }
+  const [saveResult, setSaveResult] = useState('');
+
+  const handleSave = async () => {
+    setSaveResult('');
+    try {
+      const member = JSON.parse(localStorage.getItem('member') || '{}');
+      if (!member.id) {
+        setSaveResult('❌ 로그인 정보가 없습니다.');
+        return;
+      }
+
+      // localStorage에서 모든 답변 가져오기
+      const storedAnswers = JSON.parse(localStorage.getItem('testAnswers') || '[]');
+      if (storedAnswers.length === 0) {
+        setSaveResult('❌ 저장할 답변이 없습니다.');
+        return;
+      }
+
+      // 첫 번째 답변/피드백 일부 추출 (미리보기용)
+      const firstAnswer = storedAnswers[0]?.answer || '';
+      const firstFeedback = storedAnswers[0]?.feedback || '';
+
+      // 1. test_session에 insert
+      const { data: sessionData, error: sessionError } = await supabase.from('test_session').insert([
+        {
+          member_id: member.id,
+          type: selectedType,
+          theme: storedAnswers[0]?.theme || currentTheme,
+          level: selectedLevel,
+          first_answer: firstAnswer,
+          first_feedback: typeof firstFeedback === 'string' ? firstFeedback : JSON.stringify(firstFeedback)
+        }
+      ]).select('id').single();
+      if (sessionError || !sessionData) {
+        setSaveResult('❌ 시험 세트 저장 실패: ' + (sessionError?.message || '오류'));
+        return;
+      }
+      const sessionId = sessionData.id;
+
+      // 2. test_answers에 insert (session_id로 연결)
+      const answersToInsert = storedAnswers
+        .filter((answer: any) => answer && answer.answer)
+        .map((answer: any) => ({
+          session_id: sessionId,
+          q_id: answer.qId || 0,
+          q_seq: answer.qSeq || 0,
+          answer_text: answer.answer,
+          answer_url: answer.answer_url || null, // 녹음파일 등
+          feedback: answer.feedback ? (typeof answer.feedback === 'string' ? answer.feedback : JSON.stringify(answer.feedback)) : null
+        }));
+      if (answersToInsert.length === 0) {
+        setSaveResult('❌ 저장할 유효한 답변이 없습니다.');
+        return;
+      }
+      const { error: answersError } = await supabase.from('test_answers').insert(answersToInsert);
+      if (answersError) {
+        setSaveResult('❌ 답변 저장 실패: ' + answersError.message);
+        return;
+      }
+
+      setSaveResult(`✅ 시험 세트 및 ${answersToInsert.length}개 답변이 모두 저장되었습니다.`);
+      localStorage.removeItem('testAnswers');
+      router.push('/mypage');
+    } catch (e) {
+      console.error('Save error:', e);
+      setSaveResult('❌ 저장 중 오류 발생: ' + (e instanceof Error ? e.message : '알 수 없는 오류'));
+    }
+  };
 
   const handleNextQuestion = () => {
     // URL 파라미터에서 총 문제 수 확인
@@ -217,23 +283,6 @@ export default function FeedbackPage() {
 
   return (
     <div className="min-h-screen bg-white font-sans" style={{ fontFamily: "'Noto Sans KR', 'Malgun Gothic', 'Apple SD Gothic Neo', sans-serif" }}>
-      {/* Header */}
-      <header className="bg-white border-b border-gray-200">
-        <div className="container mx-auto px-4 py-2">
-          <nav className="flex justify-between items-center">
-            <Link href="/">
-              <h1 className="text-lg font-bold text-blue-600 cursor-pointer">OPIc 모의테스트</h1>
-            </Link>
-            <div className="flex items-center space-x-4">
-              <Link href="/" className="text-gray-600 hover:text-gray-800 font-medium text-xs">홈</Link>
-              <button className="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1.5 rounded-md font-medium transition-colors text-xs">
-                마이페이지
-              </button>
-            </div>
-          </nav>
-        </div>
-      </header>
-
       {/* Content */}
       <div className="container mx-auto px-4 py-4">
         <div className="max-w-6xl mx-auto">
@@ -353,7 +402,7 @@ export default function FeedbackPage() {
               onClick={handleSave}
               className="flex-1 bg-green-500 hover:bg-green-600 text-white px-4 py-3 rounded-lg font-medium transition-colors text-center leading-tight"
             >
-              <span className="block sm:inline">저장 및<br className="sm:hidden" /> 응시 리스트보기</span>
+              <span className="block sm:inline">저장 및<br className="sm:hidden" /> 응시 리스트 보기</span>
             </button>
             <button 
               onClick={handleNextQuestion}
@@ -362,6 +411,9 @@ export default function FeedbackPage() {
               <span className="block sm:inline">{isLastQuestion ? '다른 문제 풀기' : '다음 문제 풀기'}</span>
             </button>
           </div>
+          {saveResult && (
+            <div className="text-center mt-4 font-semibold" style={{ color: saveResult.startsWith('✅') ? 'green' : 'red' }}>{saveResult}</div>
+          )}
         </div>
       </div>
     </div>

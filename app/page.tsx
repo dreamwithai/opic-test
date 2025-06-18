@@ -1,11 +1,13 @@
 'use client'
 
 import Link from 'next/link'
-import { useState, useRef } from 'react'
+import { useState, useRef, useEffect } from 'react'
+import { supabase } from '@/lib/supabase'
 
 export default function Home() {
   const [isFormOpen, setIsFormOpen] = useState(false)
   const [showModal, setShowModal] = useState(false)
+  const [surveyDone, setSurveyDone] = useState<boolean | null>(null)
   const surveyRef = useRef<HTMLDivElement>(null)
   const [formData, setFormData] = useState({
     experience: '',
@@ -14,6 +16,54 @@ export default function Home() {
     schedule: '',
     agreement: ''
   })
+  const [modalMessage, setModalMessage] = useState('');
+
+  // 설문 완료 여부 체크
+  useEffect(() => {
+    const checkSurvey = async () => {
+      const member = JSON.parse(localStorage.getItem('member') || '{}')
+      if (!member.id) {
+        setSurveyDone(false) // 미로그인 시에도 설문 영역 노출
+        return
+      }
+      const { data } = await supabase
+        .from('member_survey')
+        .select('id')
+        .eq('member_id', member.id)
+        .order('created_at', { ascending: false })
+        .limit(1)
+        .maybeSingle()
+      setSurveyDone(!!data)
+    }
+    checkSurvey()
+  }, [])
+
+  // 설문 제출 핸들러
+  const handleSurveySubmit = async () => {
+    if (!validateForm()) return
+    const member = JSON.parse(localStorage.getItem('member') || '{}')
+    if (!member.id) {
+      alert('로그인 후 이용해 주세요.')
+      return
+    }
+    const { error } = await supabase.from('member_survey').insert([
+      {
+        member_id: member.id,
+        opic_experience: formData.experience,
+        current_level: formData.level,
+        opic_purpose: formData.purpose,
+        opic_plan: formData.schedule,
+        agree_terms: formData.agreement === '동의함',
+      }
+    ])
+    if (!error) {
+      setSurveyDone(true)
+      setIsFormOpen(false)
+      alert('설문이 저장되었습니다!')
+    } else {
+      alert('설문 저장에 실패했습니다. 다시 시도해 주세요.')
+    }
+  }
 
   const handleRadioChange = (name: string, value: string) => {
     setFormData(prev => ({
@@ -41,12 +91,52 @@ export default function Home() {
     return true
   }
 
-  const handleLevelClick = (e: React.MouseEvent, level: string) => {
-    if (!validateForm()) {
-      e.preventDefault()
-      return false
+  // 목표레벨 선택 버튼 클릭 시 설문 저장 및 이동
+  const handleLevelClick = async (e: React.MouseEvent, level: string) => {
+    if (surveyDone === false) {
+      // 1) 필수 항목 체크
+      const { experience, level: lv, purpose, schedule } = formData;
+      if (!experience || !lv || purpose.length === 0 || !schedule) {
+        setModalMessage('기초설문 이후 테스트 진행가능합니다.');
+        setShowModal(true);
+        e.preventDefault();
+        return false;
+      }
+      // 2) 동의여부 체크
+      if (formData.agreement !== '동의함') {
+        setModalMessage('이용 동의 후 테스트 진행가능합니다.');
+        setShowModal(true);
+        e.preventDefault();
+        return false;
+      }
+      const member = JSON.parse(localStorage.getItem('member') || '{}');
+      if (!member.id) {
+        alert('로그인 후 이용해 주세요.');
+        e.preventDefault();
+        return false;
+      }
+      const { error } = await supabase.from('member_survey').insert([
+        {
+          member_id: member.id,
+          opic_experience: formData.experience,
+          current_level: formData.level,
+          opic_purpose: formData.purpose,
+          opic_plan: formData.schedule,
+          agree_terms: formData.agreement === '동의함',
+        }
+      ]);
+      if (!error) {
+        setSurveyDone(true);
+        // 설문 저장 후 해당 레벨로 이동
+        window.location.href = `/question-type?level=${encodeURIComponent(level)}`;
+      } else {
+        alert('설문 저장에 실패했습니다. 다시 시도해 주세요.');
+        e.preventDefault();
+        return false;
+      }
     }
-  }
+    // 설문 완료 상태면 기존대로 바로 이동 (Link의 href 동작)
+  };
 
   const closeModal = () => {
     setShowModal(false)
@@ -68,22 +158,6 @@ export default function Home() {
 
   return (
     <div className="min-h-screen bg-white font-sans" style={{ fontFamily: "'Noto Sans KR', 'Malgun Gothic', 'Apple SD Gothic Neo', sans-serif" }}>
-      {/* Header */}
-      <header className="bg-white border-b border-gray-200">
-        <div className="container mx-auto px-4 py-4">
-          <nav className="flex justify-between items-center">
-            <h1 className="text-xl font-bold text-blue-600">OPIc 모의테스트</h1>
-            <div className="flex items-center space-x-6">
-              <a href="#" className="text-gray-600 hover:text-gray-800 font-medium text-sm">홈</a>
-              <a href="#" className="text-gray-600 hover:text-gray-800 font-medium text-sm">로그인</a>
-              <button className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-medium transition-colors text-sm">
-                가입하기
-              </button>
-            </div>
-          </nav>
-        </div>
-      </header>
-
       {/* Hero Section */}
       <section className="container mx-auto px-4 py-8">
         <div className="rounded-2xl text-white p-8 md:p-12 mb-8 max-w-4xl mx-auto" style={{ backgroundColor: '#063ff9' }}>
@@ -192,305 +266,307 @@ export default function Home() {
       </section>
 
       {/* Survey Section */}
-      <section className="container mx-auto px-4 py-8" ref={surveyRef}>
-        <div className="max-w-4xl mx-auto">
-          <div className="border border-gray-300 rounded-lg">
-            <button 
-              onClick={() => setIsFormOpen(!isFormOpen)}
-              className="w-full flex justify-between items-center p-4 text-left hover:bg-gray-50 transition-colors"
-            >
-              <div>
-                <h3 className="text-xl font-bold text-gray-800 mb-1">기초설문/이용동의</h3>
-                <p className="text-sm text-gray-600">*서비스 이용 필수설문으로 눌러서 선택하세요</p>
-              </div>
-              <div className={`transform transition-transform ${isFormOpen ? 'rotate-180' : ''}`}>
-                <svg className="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                </svg>
-              </div>
-            </button>
-            
-            {isFormOpen && (
-              <div className="border-t border-gray-300 p-6 space-y-6">
-                {/* 오픽 응시경험 */}
+      {surveyDone !== true && (
+        <section className="container mx-auto px-4 py-8" ref={surveyRef}>
+          <div className="max-w-4xl mx-auto">
+            <div className="border border-gray-300 rounded-lg">
+              <button 
+                onClick={() => setIsFormOpen(!isFormOpen)}
+                className="w-full flex justify-between items-center p-4 text-left hover:bg-gray-50 transition-colors"
+              >
                 <div>
-                  <h4 className="font-medium text-gray-800 mb-3">(필수)오픽 응시경험이 있으신가요?</h4>
-                  <div className="flex flex-wrap gap-4">
-                    <label className="flex items-center space-x-2">
-                      <input 
-                        type="radio" 
-                        name="experience" 
-                        value="미응시"
-                        checked={formData.experience === '미응시'}
-                        onChange={(e) => handleRadioChange('experience', e.target.value)}
-                        className="form-radio" 
-                      />
-                      <span className="text-sm">미응시</span>
-                    </label>
-                    <label className="flex items-center space-x-2">
-                      <input 
-                        type="radio" 
-                        name="experience" 
-                        value="1회"
-                        checked={formData.experience === '1회'}
-                        onChange={(e) => handleRadioChange('experience', e.target.value)}
-                        className="form-radio" 
-                      />
-                      <span className="text-sm">1회</span>
-                    </label>
-                    <label className="flex items-center space-x-2">
-                      <input 
-                        type="radio" 
-                        name="experience" 
-                        value="2회"
-                        checked={formData.experience === '2회'}
-                        onChange={(e) => handleRadioChange('experience', e.target.value)}
-                        className="form-radio" 
-                      />
-                      <span className="text-sm">2회</span>
-                    </label>
-                    <label className="flex items-center space-x-2">
-                      <input 
-                        type="radio" 
-                        name="experience" 
-                        value="3회이상"
-                        checked={formData.experience === '3회이상'}
-                        onChange={(e) => handleRadioChange('experience', e.target.value)}
-                        className="form-radio" 
-                      />
-                      <span className="text-sm">3회이상</span>
-                    </label>
-                  </div>
+                  <h3 className="text-xl font-bold text-gray-800 mb-1">기초설문/이용동의</h3>
+                  <p className="text-sm text-gray-600">*서비스 이용 필수설문으로 눌러서 선택하세요</p>
                 </div>
+                <div className={`transform transition-transform ${isFormOpen ? 'rotate-180' : ''}`}>
+                  <svg className="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                  </svg>
+                </div>
+              </button>
+              
+              {isFormOpen && (
+                <div className="border-t border-gray-300 p-6 space-y-6">
+                  {/* 오픽 응시경험 */}
+                  <div>
+                    <h4 className="font-medium text-gray-800 mb-3">(필수)오픽 응시경험이 있으신가요?</h4>
+                    <div className="flex flex-wrap gap-4">
+                      <label className="flex items-center space-x-2">
+                        <input 
+                          type="radio" 
+                          name="experience" 
+                          value="미응시"
+                          checked={formData.experience === '미응시'}
+                          onChange={(e) => handleRadioChange('experience', e.target.value)}
+                          className="form-radio" 
+                        />
+                        <span className="text-sm">미응시</span>
+                      </label>
+                      <label className="flex items-center space-x-2">
+                        <input 
+                          type="radio" 
+                          name="experience" 
+                          value="1회"
+                          checked={formData.experience === '1회'}
+                          onChange={(e) => handleRadioChange('experience', e.target.value)}
+                          className="form-radio" 
+                        />
+                        <span className="text-sm">1회</span>
+                      </label>
+                      <label className="flex items-center space-x-2">
+                        <input 
+                          type="radio" 
+                          name="experience" 
+                          value="2회"
+                          checked={formData.experience === '2회'}
+                          onChange={(e) => handleRadioChange('experience', e.target.value)}
+                          className="form-radio" 
+                        />
+                        <span className="text-sm">2회</span>
+                      </label>
+                      <label className="flex items-center space-x-2">
+                        <input 
+                          type="radio" 
+                          name="experience" 
+                          value="3회이상"
+                          checked={formData.experience === '3회이상'}
+                          onChange={(e) => handleRadioChange('experience', e.target.value)}
+                          className="form-radio" 
+                        />
+                        <span className="text-sm">3회이상</span>
+                      </label>
+                    </div>
+                  </div>
 
-                {/* 현재 등급 */}
-                <div>
-                  <h4 className="font-medium text-gray-800 mb-3">(필수)현재 등급을 알려주세요.</h4>
-                  <div className="flex flex-wrap gap-4">
-                    <label className="flex items-center space-x-2">
-                      <input 
-                        type="radio" 
-                        name="level" 
-                        value="없음(미응시)"
-                        checked={formData.level === '없음(미응시)'}
-                        onChange={(e) => handleRadioChange('level', e.target.value)}
-                        className="form-radio" 
-                      />
-                      <span className="text-sm">없음(미응시)</span>
-                    </label>
-                    <label className="flex items-center space-x-2">
-                      <input 
-                        type="radio" 
-                        name="level" 
-                        value="NH이하"
-                        checked={formData.level === 'NH이하'}
-                        onChange={(e) => handleRadioChange('level', e.target.value)}
-                        className="form-radio" 
-                      />
-                      <span className="text-sm">NH이하</span>
-                    </label>
-                    <label className="flex items-center space-x-2">
-                      <input 
-                        type="radio" 
-                        name="level" 
-                        value="IM1"
-                        checked={formData.level === 'IM1'}
-                        onChange={(e) => handleRadioChange('level', e.target.value)}
-                        className="form-radio" 
-                      />
-                      <span className="text-sm">IM1</span>
-                    </label>
-                    <label className="flex items-center space-x-2">
-                      <input 
-                        type="radio" 
-                        name="level" 
-                        value="IM2"
-                        checked={formData.level === 'IM2'}
-                        onChange={(e) => handleRadioChange('level', e.target.value)}
-                        className="form-radio" 
-                      />
-                      <span className="text-sm">IM2</span>
-                    </label>
-                    <label className="flex items-center space-x-2">
-                      <input 
-                        type="radio" 
-                        name="level" 
-                        value="IM3"
-                        checked={formData.level === 'IM3'}
-                        onChange={(e) => handleRadioChange('level', e.target.value)}
-                        className="form-radio" 
-                      />
-                      <span className="text-sm">IM3</span>
-                    </label>
-                    <label className="flex items-center space-x-2">
-                      <input 
-                        type="radio" 
-                        name="level" 
-                        value="IH"
-                        checked={formData.level === 'IH'}
-                        onChange={(e) => handleRadioChange('level', e.target.value)}
-                        className="form-radio" 
-                      />
-                      <span className="text-sm">IH</span>
-                    </label>
-                    <label className="flex items-center space-x-2">
-                      <input 
-                        type="radio" 
-                        name="level" 
-                        value="AL"
-                        checked={formData.level === 'AL'}
-                        onChange={(e) => handleRadioChange('level', e.target.value)}
-                        className="form-radio" 
-                      />
-                      <span className="text-sm">AL</span>
-                    </label>
+                  {/* 현재 등급 */}
+                  <div>
+                    <h4 className="font-medium text-gray-800 mb-3">(필수)현재 등급을 알려주세요.</h4>
+                    <div className="flex flex-wrap gap-4">
+                      <label className="flex items-center space-x-2">
+                        <input 
+                          type="radio" 
+                          name="level" 
+                          value="없음(미응시)"
+                          checked={formData.level === '없음(미응시)'}
+                          onChange={(e) => handleRadioChange('level', e.target.value)}
+                          className="form-radio" 
+                        />
+                        <span className="text-sm">없음(미응시)</span>
+                      </label>
+                      <label className="flex items-center space-x-2">
+                        <input 
+                          type="radio" 
+                          name="level" 
+                          value="NH이하"
+                          checked={formData.level === 'NH이하'}
+                          onChange={(e) => handleRadioChange('level', e.target.value)}
+                          className="form-radio" 
+                        />
+                        <span className="text-sm">NH이하</span>
+                      </label>
+                      <label className="flex items-center space-x-2">
+                        <input 
+                          type="radio" 
+                          name="level" 
+                          value="IM1"
+                          checked={formData.level === 'IM1'}
+                          onChange={(e) => handleRadioChange('level', e.target.value)}
+                          className="form-radio" 
+                        />
+                        <span className="text-sm">IM1</span>
+                      </label>
+                      <label className="flex items-center space-x-2">
+                        <input 
+                          type="radio" 
+                          name="level" 
+                          value="IM2"
+                          checked={formData.level === 'IM2'}
+                          onChange={(e) => handleRadioChange('level', e.target.value)}
+                          className="form-radio" 
+                        />
+                        <span className="text-sm">IM2</span>
+                      </label>
+                      <label className="flex items-center space-x-2">
+                        <input 
+                          type="radio" 
+                          name="level" 
+                          value="IM3"
+                          checked={formData.level === 'IM3'}
+                          onChange={(e) => handleRadioChange('level', e.target.value)}
+                          className="form-radio" 
+                        />
+                        <span className="text-sm">IM3</span>
+                      </label>
+                      <label className="flex items-center space-x-2">
+                        <input 
+                          type="radio" 
+                          name="level" 
+                          value="IH"
+                          checked={formData.level === 'IH'}
+                          onChange={(e) => handleRadioChange('level', e.target.value)}
+                          className="form-radio" 
+                        />
+                        <span className="text-sm">IH</span>
+                      </label>
+                      <label className="flex items-center space-x-2">
+                        <input 
+                          type="radio" 
+                          name="level" 
+                          value="AL"
+                          checked={formData.level === 'AL'}
+                          onChange={(e) => handleRadioChange('level', e.target.value)}
+                          className="form-radio" 
+                        />
+                        <span className="text-sm">AL</span>
+                      </label>
+                    </div>
                   </div>
-                </div>
 
-                {/* 오픽응시 목적 */}
-                <div>
-                  <h4 className="font-medium text-gray-800 mb-3">(필수)오픽응시 목적은? (복수 선택 가능)</h4>
-                  <div className="flex flex-wrap gap-4">
-                    <label className="flex items-center space-x-2">
-                      <input 
-                        type="checkbox" 
-                        checked={formData.purpose.includes('취업준비')}
-                        onChange={() => handleCheckboxChange('취업준비')}
-                        className="form-checkbox" 
-                      />
-                      <span className="text-sm">취업준비</span>
-                    </label>
-                    <label className="flex items-center space-x-2">
-                      <input 
-                        type="checkbox" 
-                        checked={formData.purpose.includes('이직준비')}
-                        onChange={() => handleCheckboxChange('이직준비')}
-                        className="form-checkbox" 
-                      />
-                      <span className="text-sm">이직준비</span>
-                    </label>
-                    <label className="flex items-center space-x-2">
-                      <input 
-                        type="checkbox" 
-                        checked={formData.purpose.includes('승진 및 직장 여가기준 충족')}
-                        onChange={() => handleCheckboxChange('승진 및 직장 여가기준 충족')}
-                        className="form-checkbox" 
-                      />
-                      <span className="text-sm">승진 및 직장 여가기준 충족</span>
-                    </label>
-                    <label className="flex items-center space-x-2">
-                      <input 
-                        type="checkbox" 
-                        checked={formData.purpose.includes('자기계발 및 성장')}
-                        onChange={() => handleCheckboxChange('자기계발 및 성장')}
-                        className="form-checkbox" 
-                      />
-                      <span className="text-sm">자기계발 및 성장</span>
-                    </label>
+                  {/* 오픽응시 목적 */}
+                  <div>
+                    <h4 className="font-medium text-gray-800 mb-3">(필수)오픽응시 목적은? (복수 선택 가능)</h4>
+                    <div className="flex flex-wrap gap-4">
+                      <label className="flex items-center space-x-2">
+                        <input 
+                          type="checkbox" 
+                          checked={formData.purpose.includes('취업준비')}
+                          onChange={() => handleCheckboxChange('취업준비')}
+                          className="form-checkbox" 
+                        />
+                        <span className="text-sm">취업준비</span>
+                      </label>
+                      <label className="flex items-center space-x-2">
+                        <input 
+                          type="checkbox" 
+                          checked={formData.purpose.includes('이직준비')}
+                          onChange={() => handleCheckboxChange('이직준비')}
+                          className="form-checkbox" 
+                        />
+                        <span className="text-sm">이직준비</span>
+                      </label>
+                      <label className="flex items-center space-x-2">
+                        <input 
+                          type="checkbox" 
+                          checked={formData.purpose.includes('승진 및 직장 여가기준 충족')}
+                          onChange={() => handleCheckboxChange('승진 및 직장 여가기준 충족')}
+                          className="form-checkbox" 
+                        />
+                        <span className="text-sm">승진 및 직장 여가기준 충족</span>
+                      </label>
+                      <label className="flex items-center space-x-2">
+                        <input 
+                          type="checkbox" 
+                          checked={formData.purpose.includes('자기계발 및 성장')}
+                          onChange={() => handleCheckboxChange('자기계발 및 성장')}
+                          className="form-checkbox" 
+                        />
+                        <span className="text-sm">자기계발 및 성장</span>
+                      </label>
+                    </div>
                   </div>
-                </div>
 
-                {/* 예정일 */}
-                <div>
-                  <h4 className="font-medium text-gray-800 mb-3">(필수)오픽 응시 예정일은 언제인가요?</h4>
-                  <div className="flex flex-wrap gap-4">
-                    <label className="flex items-center space-x-2">
-                      <input 
-                        type="radio" 
-                        name="schedule" 
-                        value="1주일이내"
-                        checked={formData.schedule === '1주일이내'}
-                        onChange={(e) => handleRadioChange('schedule', e.target.value)}
-                        className="form-radio" 
-                      />
-                      <span className="text-sm">1주일이내</span>
-                    </label>
-                    <label className="flex items-center space-x-2">
-                      <input 
-                        type="radio" 
-                        name="schedule" 
-                        value="1개월이내"
-                        checked={formData.schedule === '1개월이내'}
-                        onChange={(e) => handleRadioChange('schedule', e.target.value)}
-                        className="form-radio" 
-                      />
-                      <span className="text-sm">1개월이내</span>
-                    </label>
-                    <label className="flex items-center space-x-2">
-                      <input 
-                        type="radio" 
-                        name="schedule" 
-                        value="3개월이내"
-                        checked={formData.schedule === '3개월이내'}
-                        onChange={(e) => handleRadioChange('schedule', e.target.value)}
-                        className="form-radio" 
-                      />
-                      <span className="text-sm">3개월이내</span>
-                    </label>
-                    <label className="flex items-center space-x-2">
-                      <input 
-                        type="radio" 
-                        name="schedule" 
-                        value="6개월이내"
-                        checked={formData.schedule === '6개월이내'}
-                        onChange={(e) => handleRadioChange('schedule', e.target.value)}
-                        className="form-radio" 
-                      />
-                      <span className="text-sm">6개월이내</span>
-                    </label>
-                    <label className="flex items-center space-x-2">
-                      <input 
-                        type="radio" 
-                        name="schedule" 
-                        value="날짜 미정"
-                        checked={formData.schedule === '날짜 미정'}
-                        onChange={(e) => handleRadioChange('schedule', e.target.value)}
-                        className="form-radio" 
-                      />
-                      <span className="text-sm">날짜 미정</span>
-                    </label>
+                  {/* 예정일 */}
+                  <div>
+                    <h4 className="font-medium text-gray-800 mb-3">(필수)오픽 응시 예정일은 언제인가요?</h4>
+                    <div className="flex flex-wrap gap-4">
+                      <label className="flex items-center space-x-2">
+                        <input 
+                          type="radio" 
+                          name="schedule" 
+                          value="1주일이내"
+                          checked={formData.schedule === '1주일이내'}
+                          onChange={(e) => handleRadioChange('schedule', e.target.value)}
+                          className="form-radio" 
+                        />
+                        <span className="text-sm">1주일이내</span>
+                      </label>
+                      <label className="flex items-center space-x-2">
+                        <input 
+                          type="radio" 
+                          name="schedule" 
+                          value="1개월이내"
+                          checked={formData.schedule === '1개월이내'}
+                          onChange={(e) => handleRadioChange('schedule', e.target.value)}
+                          className="form-radio" 
+                        />
+                        <span className="text-sm">1개월이내</span>
+                      </label>
+                      <label className="flex items-center space-x-2">
+                        <input 
+                          type="radio" 
+                          name="schedule" 
+                          value="3개월이내"
+                          checked={formData.schedule === '3개월이내'}
+                          onChange={(e) => handleRadioChange('schedule', e.target.value)}
+                          className="form-radio" 
+                        />
+                        <span className="text-sm">3개월이내</span>
+                      </label>
+                      <label className="flex items-center space-x-2">
+                        <input 
+                          type="radio" 
+                          name="schedule" 
+                          value="6개월이내"
+                          checked={formData.schedule === '6개월이내'}
+                          onChange={(e) => handleRadioChange('schedule', e.target.value)}
+                          className="form-radio" 
+                        />
+                        <span className="text-sm">6개월이내</span>
+                      </label>
+                      <label className="flex items-center space-x-2">
+                        <input 
+                          type="radio" 
+                          name="schedule" 
+                          value="날짜 미정"
+                          checked={formData.schedule === '날짜 미정'}
+                          onChange={(e) => handleRadioChange('schedule', e.target.value)}
+                          className="form-radio" 
+                        />
+                        <span className="text-sm">날짜 미정</span>
+                      </label>
+                    </div>
                   </div>
-                </div>
 
-                {/* 이용 동의 안내 */}
-                <div className="border-t pt-6">
-                  <h4 className="font-medium text-gray-800 mb-3">(필수)이용 동의 안내</h4>
-                  <div className="bg-gray-50 p-4 rounded-lg text-sm text-gray-700 mb-4">
-                    <p className="mb-2">4시간오픽 모의고사 서비스를 원활히 제공하고, 응답자의 데이터를 안전하게 활용하기 위해 아래 내용을 안내드립니다.</p>
-                    <p className="mb-2">사용자의 답변(음성/텍스트) 및 설문 결과는 서비스 품질 개선 및 통계 분석 목적으로 활용될 수 있습니다.</p>
-                    <p className="mb-2">서비스 이용을 위해 위 내용을 이해하고 동의해주셔야 모의고사를 이용하실 수 있습니다.</p>
-                    <p>이에 동의하십니까?</p>
-                  </div>
-                  <div className="space-y-2">
-                    <label className="flex items-center space-x-2">
-                      <input 
-                        type="radio" 
-                        name="agreement" 
-                        value="동의함"
-                        checked={formData.agreement === '동의함'}
-                        onChange={(e) => handleRadioChange('agreement', e.target.value)}
-                        className="form-radio" 
-                      />
-                      <span className="text-sm">동의함 (필수)</span>
-                    </label>
-                    <label className="flex items-center space-x-2">
-                      <input 
-                        type="radio" 
-                        name="agreement" 
-                        value="동의하지 않음"
-                        checked={formData.agreement === '동의하지 않음'}
-                        onChange={(e) => handleRadioChange('agreement', e.target.value)}
-                        className="form-radio" 
-                      />
-                      <span className="text-sm">동의하지 않음 (서비스 이용불가)</span>
-                    </label>
+                  {/* 이용 동의 안내 */}
+                  <div className="border-t pt-6">
+                    <h4 className="font-medium text-gray-800 mb-3">(필수)이용 동의 안내</h4>
+                    <div className="bg-gray-50 p-4 rounded-lg text-sm text-gray-700 mb-4">
+                      <p className="mb-2">4시간오픽 모의고사 서비스를 원활히 제공하고, 응답자의 데이터를 안전하게 활용하기 위해 아래 내용을 안내드립니다.</p>
+                      <p className="mb-2">사용자의 답변(음성/텍스트) 및 설문 결과는 서비스 품질 개선 및 통계 분석 목적으로 활용될 수 있습니다.</p>
+                      <p className="mb-2">서비스 이용을 위해 위 내용을 이해하고 동의해주셔야 모의고사를 이용하실 수 있습니다.</p>
+                      <p>이에 동의하십니까?</p>
+                    </div>
+                    <div className="space-y-2">
+                      <label className="flex items-center space-x-2">
+                        <input 
+                          type="radio" 
+                          name="agreement" 
+                          value="동의함"
+                          checked={formData.agreement === '동의함'}
+                          onChange={(e) => handleRadioChange('agreement', e.target.value)}
+                          className="form-radio" 
+                        />
+                        <span className="text-sm">동의함 (필수)</span>
+                      </label>
+                      <label className="flex items-center space-x-2">
+                        <input 
+                          type="radio" 
+                          name="agreement" 
+                          value="동의하지 않음"
+                          checked={formData.agreement === '동의하지 않음'}
+                          onChange={(e) => handleRadioChange('agreement', e.target.value)}
+                          className="form-radio" 
+                        />
+                        <span className="text-sm">동의하지 않음 (서비스 이용불가)</span>
+                      </label>
+                    </div>
                   </div>
                 </div>
-              </div>
-            )}
+              )}
+            </div>
           </div>
-        </div>
-      </section>
+        </section>
+      )}
 
       {/* Level Selection Section */}
       <section className="bg-white py-8">
@@ -499,13 +575,10 @@ export default function Home() {
             <h3 className="text-3xl font-bold text-gray-800 mb-6">목표레벨선택</h3>
             
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              <Link href="/question-type?level=IM2">
+              <Link href="/question-type?level=IM2" onClick={e => handleLevelClick(e, 'IM2')}>
                 <div 
                   className="rounded-xl p-6 cursor-pointer transition-colors h-full"
                   style={{ backgroundColor: '#063ff9' }}
-                  onClick={(e) => handleLevelClick(e, 'IM2')}
-                  onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#0538e6'}
-                  onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#063ff9'}
                 >
                   <div className="mb-4">
                     <h4 className="text-4xl font-bold mb-2 text-white">IM2 <span className="text-lg font-medium">선택</span></h4>
@@ -516,13 +589,10 @@ export default function Home() {
                 </div>
               </Link>
 
-              <Link href="/question-type?level=IH">
+              <Link href="/question-type?level=IH" onClick={e => handleLevelClick(e, 'IH')}>
                 <div 
                   className="rounded-xl p-6 cursor-pointer transition-colors h-full"
                   style={{ backgroundColor: '#063ff9' }}
-                  onClick={(e) => handleLevelClick(e, 'IH')}
-                  onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#0538e6'}
-                  onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#063ff9'}
                 >
                   <div className="mb-4">
                     <h4 className="text-4xl font-bold mb-2 text-white">IH <span className="text-lg font-medium">선택</span></h4>
@@ -534,13 +604,10 @@ export default function Home() {
                 </div>
               </Link>
 
-              <Link href="/question-type?level=AL">
+              <Link href="/question-type?level=AL" onClick={e => handleLevelClick(e, 'AL')}>
                 <div 
                   className="rounded-xl p-6 cursor-pointer transition-colors h-full"
                   style={{ backgroundColor: '#063ff9' }}
-                  onClick={(e) => handleLevelClick(e, 'AL')}
-                  onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#0538e6'}
-                  onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#063ff9'}
                 >
                   <div className="mb-4">
                     <h4 className="text-4xl font-bold mb-2 text-white">AL <span className="text-lg font-medium">선택</span></h4>
@@ -607,7 +674,7 @@ export default function Home() {
                 </div>
               </div>
               <h3 className="text-lg font-semibold text-gray-900 mb-2">설문 작성 필요</h3>
-              <p className="text-gray-600 mb-6">기초설문이후 테스트 진행가능합니다.</p>
+              <p className="text-gray-600 mb-6">{modalMessage}</p>
               <div className="flex justify-center space-x-3">
                 <button
                   onClick={closeModal}

@@ -563,23 +563,6 @@ export default function TestPage() {
 
   return (
     <div className="min-h-screen bg-white font-sans" style={{ fontFamily: "'Noto Sans KR', 'Malgun Gothic', 'Apple SD Gothic Neo', sans-serif" }}>
-      {/* Header */}
-      <header className="bg-white border-b border-gray-200">
-        <div className="container mx-auto px-4 py-2">
-          <nav className="flex justify-between items-center">
-            <Link href="/">
-              <h1 className="text-lg font-bold text-blue-600 cursor-pointer">OPIc 모의테스트</h1>
-            </Link>
-            <div className="flex items-center space-x-4">
-              <Link href="/" className="text-gray-600 hover:text-gray-800 font-medium text-xs">홈</Link>
-              <button className="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1.5 rounded-md font-medium transition-colors text-xs">
-                마이페이지
-              </button>
-            </div>
-          </nav>
-        </div>
-      </header>
-
       {/* Content */}
       <div className="container mx-auto px-4 py-4">
         <div className="max-w-4xl mx-auto">

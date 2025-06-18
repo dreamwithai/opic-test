@@ -205,25 +205,8 @@ export default function CSVConverterPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      {/* Header */}
-      <header className="bg-white shadow-sm border-b">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center py-6">
-            <Link href="/admin" className="mr-4">
-              <button className="flex items-center text-gray-600 hover:text-gray-900">
-                <ArrowLeft className="w-5 h-5 mr-2" />
-                어드민으로 돌아가기
-              </button>
-            </Link>
-            <div>
-              <h1 className="text-3xl font-bold text-gray-900">CSV → JSON 변환기 (개선판)</h1>
-              <p className="text-gray-600 mt-1">RFC 4180 표준 지원으로 쉼표가 포함된 텍스트도 정확하게 파싱</p>
-            </div>
-          </div>
-        </div>
-      </header>
-
+    <div className="min-h-screen bg-gray-50 font-sans" style={{ fontFamily: "'Noto Sans KR', 'Malgun Gothic', 'Apple SD Gothic Neo', 'sans-serif'" }}>
+      {/* Main Content */}
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
           {/* Left Column - Upload & Mapping */}

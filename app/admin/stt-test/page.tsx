@@ -274,27 +274,8 @@ export default function STTTestPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 font-sans">
-      {/* Header */}
-      <header className="bg-white border-b border-gray-200 sticky top-0 z-50">
-        <div className="container mx-auto px-4 py-3">
-          <div className="flex justify-between items-center">
-            <div className="flex items-center gap-4">
-              <Link href="/admin" className="text-blue-600 hover:text-blue-800">
-                ← Admin
-              </Link>
-              <h1 className="text-xl font-bold text-gray-800">STT 기능 테스트</h1>
-            </div>
-            <div className="flex items-center gap-2">
-              <div className={`w-3 h-3 rounded-full ${isSTTActive ? 'bg-green-500 animate-pulse' : 'bg-gray-400'}`}></div>
-              <span className="text-sm text-gray-600">
-                {isSTTActive ? 'STT 활성' : 'STT 비활성'}
-              </span>
-            </div>
-          </div>
-        </div>
-      </header>
-
+    <div className="min-h-screen bg-gray-50 font-sans" style={{ fontFamily: "'Noto Sans KR', 'Malgun Gothic', 'Apple SD Gothic Neo', sans-serif" }}>
+      {/* Main Content */}
       <div className="container mx-auto px-4 py-6 max-w-6xl">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           {/* 디바이스 정보 */}

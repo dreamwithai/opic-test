@@ -1,44 +1,37 @@
 'use client'
 
 import Link from 'next/link'
-import { FileText, Upload, BarChart3, Settings, Database, Mic } from 'lucide-react'
+import { Settings } from 'lucide-react'
+import { useEffect } from 'react'
+import { useRouter } from 'next/navigation'
 
 export default function AdminPage() {
+  const router = useRouter()
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const isAdmin = localStorage.getItem('isAdmin')
+      if (isAdmin !== 'true') {
+        alert('관리자만 접근 가능합니다.')
+        router.replace('/login')
+      }
+    }
+  }, [])
+
+  // 회원등록, 오디오파일 업로드, 설정만 노출
   const adminFeatures = [
     {
-      title: 'CSV → JSON 변환기',
-      description: 'CSV 파일을 OPIc JSON 형태로 변환합니다',
-      href: '/admin/csv-converter',
-      icon: Upload,
+      title: '회원등록',
+      description: '관리자/일반회원 등록 및 관리',
+      href: '/admin/auth-test',
+      icon: undefined,
       color: 'text-blue-600',
     },
     {
-      title: '문제 관리',
-      description: '기존 문제를 편집하고 관리합니다',
-      href: '/admin/questions',
-      icon: FileText,
+      title: '오디오파일 업로드',
+      description: '오픽 음성 파일을 업로드합니다',
+      href: '/admin/upload',
+      icon: undefined,
       color: 'text-green-600',
-    },
-    {
-      title: '통계',
-      description: '문제별, 테마별 통계를 확인합니다',
-      href: '/admin/statistics',
-      icon: BarChart3,
-      color: 'text-purple-600',
-    },
-    {
-      title: '데이터 백업',
-      description: 'JSON 파일을 백업하고 복원합니다',
-      href: '/admin/backup',
-      icon: Database,
-      color: 'text-orange-600',
-    },
-    {
-      title: 'STT 기능 테스트',
-      description: '모바일 STT 기능을 종합적으로 테스트합니다',
-      href: '/admin/stt-test',
-      icon: Mic,
-      color: 'text-red-600',
     },
     {
       title: '설정',
@@ -50,24 +43,7 @@ export default function AdminPage() {
   ]
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      {/* Header */}
-      <header className="bg-white shadow-sm border-b">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center py-6">
-            <div>
-              <h1 className="text-3xl font-bold text-gray-900">OPIc Admin</h1>
-              <p className="text-gray-600 mt-1">문제 데이터 관리 시스템</p>
-            </div>
-            <Link href="/">
-              <button className="px-4 py-2 border border-gray-300 rounded-md text-gray-700 bg-white hover:bg-gray-50 transition-colors">
-                메인으로 돌아가기
-              </button>
-            </Link>
-          </div>
-        </div>
-      </header>
-
+    <div className="min-h-screen bg-gray-50 font-sans" style={{ fontFamily: "'Noto Sans KR', 'Malgun Gothic', 'Apple SD Gothic Neo', sans-serif" }}>
       {/* Main Content */}
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -77,7 +53,7 @@ export default function AdminPage() {
               <Link key={feature.href} href={feature.href}>
                 <div className="bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow cursor-pointer h-full p-6">
                   <div className="flex items-center space-x-3 mb-4">
-                    <IconComponent className={`w-8 h-8 ${feature.color}`} />
+                    {IconComponent && <IconComponent className={`w-8 h-8 ${feature.color}`} />}
                     <h3 className="text-xl font-semibold text-gray-900">{feature.title}</h3>
                   </div>
                   <p className="text-gray-600 mb-6">

@@ -8,13 +8,6 @@ const nextConfig = {
     buildActivity: false,
   },
   
-  // 로그 레벨 설정
-  logging: {
-    fetches: {
-      fullUrl: false,
-    },
-  },
-  
   // 성능 최적화
   experimental: {
     optimizePackageImports: ['lucide-react'],

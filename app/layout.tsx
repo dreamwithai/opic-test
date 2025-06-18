@@ -1,6 +1,7 @@
 import React from 'react'
 import './globals.css'
 import type { Metadata } from 'next'
+import LoginInfoHeader from './components/LoginInfoHeader'
 
 export const metadata: Metadata = {
   title: 'OPIc 모의테스트',
@@ -42,7 +43,10 @@ export default function RootLayout({
       <head>
         <meta charSet="utf-8" />
       </head>
-      <body>{children}</body>
+      <body>
+        <LoginInfoHeader />
+        {children}
+      </body>
     </html>
   )
 } 
