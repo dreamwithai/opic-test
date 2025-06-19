@@ -16,9 +16,7 @@ export default function LoginInfoHeader() {
         <h1 className="text-lg font-bold text-blue-600 cursor-pointer font-sans">
           <Link href="/">OPIc 모의테스트</Link>
         </h1>
-        {member === null ? (
-          <span style={{ color: '#888', fontSize: 15 }}>로딩중...</span>
-        ) : member?.name ? (
+        {member?.name ? (
           <span style={{ color: "#2563eb", fontWeight: 500, fontSize: 15, display: 'flex', alignItems: 'center' }}>
             {member.name.length > 6 ? `${member.name.slice(0, 6)}...` : member.name} 님
             <span style={{ marginLeft: 16 }}>
@@ -32,7 +30,7 @@ export default function LoginInfoHeader() {
               </button>
             </Link>
           </span>
-        ) : (
+        ) : member === null ? null : (
           <span style={{ color: "#888", fontSize: 15 }}>
             <Link href="/login" style={{ textDecoration: 'underline', cursor: 'pointer' }}>
               로그인
