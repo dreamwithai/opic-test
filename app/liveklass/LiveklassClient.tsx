@@ -119,7 +119,8 @@ export default function LiveklassClient() {
         }, '*');
       }
       
-      window.location.replace('/');
+      setLoading(false); // 로그인 성공 시 로딩 해제
+      // window.location.replace('/'); // 일단 주석 처리
     } catch (err) {
       setError('로그인 처리 중 오류가 발생했습니다.');
       setLoading(false);
