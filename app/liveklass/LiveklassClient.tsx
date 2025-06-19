@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { supabase } from '@/lib/supabase';
 import { useUserStore } from '../components/useUserStore';
 
@@ -7,6 +7,51 @@ export default function LiveklassClient() {
   const { setMember } = useUserStore();
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  // Height 전송 함수
+  const sendHeight = () => {
+    if (containerRef.current && window.parent !== window) {
+      const height = containerRef.current.scrollHeight;
+      window.parent.postMessage({
+        type: 'setHeight',
+        height: height
+      }, '*');
+    }
+  };
+
+  // 초기 height 전송 및 resize 이벤트 리스너
+  useEffect(() => {
+    // 초기 height 전송
+    setTimeout(sendHeight, 100);
+
+    // resize 이벤트 리스너
+    const handleResize = () => {
+      sendHeight();
+    };
+
+    window.addEventListener('resize', handleResize);
+    
+    // MutationObserver로 DOM 변경 감지
+    const observer = new MutationObserver(sendHeight);
+    if (containerRef.current) {
+      observer.observe(containerRef.current, {
+        childList: true,
+        subtree: true,
+        attributes: true
+      });
+    }
+
+    return () => {
+      window.removeEventListener('resize', handleResize);
+      observer.disconnect();
+    };
+  }, []);
+
+  // 상태 변경 시 height 재계산
+  useEffect(() => {
+    sendHeight();
+  }, [loading, error]);
 
   useEffect(() => {
     function handleMessage(event: MessageEvent) {
@@ -22,6 +67,13 @@ export default function LiveklassClient() {
         'https://localhost:3001',
       ];
       if (!allowedOrigins.some(origin => event.origin.startsWith(origin))) return;
+      
+      // Height 요청 처리
+      if (event.data?.type === 'requestHeight') {
+        sendHeight();
+        return;
+      }
+
       if (event.data && event.data.type === 'auth' && event.data.token) {
         try {
           const parts = event.data.token.split('.');
@@ -61,6 +113,14 @@ export default function LiveklassClient() {
       } else {
         localStorage.setItem('isAdmin', 'false');
       }
+      
+      // 로그인 성공 메시지 전송
+      if (window.parent !== window) {
+        window.parent.postMessage({
+          type: 'loginSuccess'
+        }, '*');
+      }
+      
       window.location.replace('/');
     } catch (err) {
       setError('로그인 처리 중 오류가 발생했습니다.');
@@ -69,7 +129,7 @@ export default function LiveklassClient() {
   };
 
   return (
-    <div style={{textAlign:'center',marginTop:100,fontSize:22}}>
+    <div ref={containerRef} style={{textAlign:'center',marginTop:100,fontSize:22,minHeight:200}}>
       {loading ? '자동 로그인 중...' : error ? error : 'Liveklass 인증 대기 중...'}
     </div>
   );
