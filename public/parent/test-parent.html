@@ -114,19 +114,24 @@
         }
         
         // JWT 토큰 전송
-        function sendAuthToken() {
+        async function sendAuthToken() {
             const userId = document.getElementById('userId').value.trim();
-            
             if (!userId) {
                 alert('사용자 ID를 입력해주세요!');
                 return;
             }
-            
-            // 입력받은 정보로 JWT 토큰 생성
-            const payload = { userId: userId };
-            
-            const token = createSimpleJWT(payload);
-            
+            // API 호출로 JWT 발급
+            const res = await fetch('/api/generate-jwt', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ userId })
+            });
+            const data = await res.json();
+            if (!data.token) {
+                alert('JWT 발급 실패: ' + (data.error || 'Unknown error'));
+                return;
+            }
+            const token = data.token;
             const iframe = document.getElementById('testIframe');
             iframe.contentWindow.postMessage({
                 type: 'auth',

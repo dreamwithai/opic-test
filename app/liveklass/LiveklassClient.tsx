@@ -2,6 +2,7 @@
 import { useEffect, useState, useRef } from 'react';
 import { supabase } from '@/lib/supabase';
 import { useUserStore } from '../components/useUserStore';
+import { verifyUserTokenBrowser } from '@/lib/jwtVerifyBrowser';
 
 export default function LiveklassClient() {
   const { setMember } = useUserStore();
@@ -75,19 +76,16 @@ export default function LiveklassClient() {
       }
 
       if (event.data && event.data.type === 'auth' && event.data.token) {
-        try {
-          const parts = event.data.token.split('.');
-          if (parts.length === 3) {
-            const payload = JSON.parse(atob(parts[1]));
-            const receivedUserId = payload.userId;
-            if (receivedUserId) {
-              setLoading(true);
-              handleJWTLogin(receivedUserId);
-            }
+        console.log('Received auth token:', event.data.token);
+        verifyUserTokenBrowser(event.data.token).then(decoded => {
+          console.log('JWT verification result:', decoded);
+          if (decoded && decoded.userId) {
+            setLoading(true);
+            handleJWTLogin(decoded.userId);
+          } else {
+            setError('JWT 검증 실패');
           }
-        } catch (e) {
-          setError('JWT 토큰 파싱 오류');
-        }
+        });
       }
     }
     window.addEventListener('message', handleMessage);
