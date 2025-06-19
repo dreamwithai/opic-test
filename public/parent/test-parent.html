@@ -89,7 +89,7 @@
         </div>
         
         <div class="iframe-container">
-            <iframe id="testIframe" src="http://localhost:3000/liveklass" allow="microphone; camera"></iframe>
+            <iframe id="testIframe" src="https://opic-test.vercel.app/liveklass" allow="microphone; camera"></iframe>
         </div>
     </div>
 
@@ -120,8 +120,8 @@
                 alert('사용자 ID를 입력해주세요!');
                 return;
             }
-            // API 호출로 JWT 발급
-            const res = await fetch('/api/generate-jwt', {
+            // API 호출로 JWT 발급 (배포 도메인으로 절대경로 사용)
+            const res = await fetch('https://opic-test.vercel.app/api/generate-jwt', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ userId })
