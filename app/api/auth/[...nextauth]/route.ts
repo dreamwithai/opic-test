@@ -5,7 +5,7 @@ import NaverProvider from "next-auth/providers/naver"
 import { supabase } from "@/lib/supabase"
 import { AuthOptions } from "next-auth"
 
-export const authOptions: AuthOptions = {
+const authOptions: AuthOptions = {
   providers: [
     GoogleProvider({
       clientId: process.env.GOOGLE_CLIENT_ID || "",
