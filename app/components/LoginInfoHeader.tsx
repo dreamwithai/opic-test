@@ -1,14 +1,15 @@
 "use client";
-import { useEffect } from "react";
 import Link from "next/link";
-import { useUserStore } from './useUserStore';
+import { useSession, signOut } from "next-auth/react";
 
 export default function LoginInfoHeader() {
-  const { member, initFromStorage, logout } = useUserStore();
+  const { data: session, status } = useSession();
+  const user = session?.user;
 
-  useEffect(() => {
-    initFromStorage();
-  }, [initFromStorage]);
+  const handleLogout = (e: React.MouseEvent<HTMLAnchorElement>) => {
+    e.preventDefault();
+    signOut({ callbackUrl: '/' });
+  };
 
   return (
     <header className="bg-white border-b border-gray-200" style={{ marginBottom: 0 }}>
@@ -16,11 +17,13 @@ export default function LoginInfoHeader() {
         <h1 className="text-lg font-bold text-blue-600 cursor-pointer font-sans">
           <Link href="/">OPIc 모의테스트</Link>
         </h1>
-        {member?.name ? (
+        {status === "loading" ? (
+          <div>Loading...</div>
+        ) : user ? (
           <span style={{ color: "#2563eb", fontWeight: 500, fontSize: 15, display: 'flex', alignItems: 'center' }}>
-            {member.name.length > 6 ? `${member.name.slice(0, 6)}...` : member.name} 님
+            {user.name && (user.name.length > 6 ? `${user.name.slice(0, 6)}...` : user.name)} 님
             <span style={{ marginLeft: 16 }}>
-              <a href="#" onClick={logout} style={{ color: '#888', fontWeight: 400, fontSize: 14, marginLeft: 8, textDecoration: 'underline', cursor: 'pointer' }}>
+              <a href="#" onClick={handleLogout} style={{ color: '#888', fontWeight: 400, fontSize: 14, marginLeft: 8, textDecoration: 'underline', cursor: 'pointer' }}>
                 로그아웃
               </a>
             </span>
@@ -30,7 +33,7 @@ export default function LoginInfoHeader() {
               </button>
             </Link>
           </span>
-        ) : member === null ? null : (
+        ) : (
           <span style={{ color: "#888", fontSize: 15 }}>
             <Link href="/login" style={{ textDecoration: 'underline', cursor: 'pointer' }}>
               로그인
@@ -40,15 +43,4 @@ export default function LoginInfoHeader() {
       </div>
     </header>
   );
-}
-
-export function useScrollToTopOnMount() {
-  useEffect(() => {
-    const isIframe = typeof window !== 'undefined' && window.self !== window.top;
-    if (isIframe) {
-      setTimeout(() => {
-        window.scrollTo(0, 0);
-      }, 30); // 렌더링 이후 스크롤 이동 보장
-    }
-  }, []);
 } 

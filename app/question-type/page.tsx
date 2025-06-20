@@ -4,24 +4,19 @@ import { useState, useEffect } from 'react'
 import { Metadata } from 'next'
 import Link from 'next/link'
 import { useRouter, useSearchParams } from 'next/navigation'
-import { useScrollToTopOnMount } from '../components/LoginInfoHeader'
 
 export default function QuestionTypePage() {
   const [selectedType, setSelectedType] = useState<string | null>(null)
   const [selectedLevel, setSelectedLevel] = useState<string>('IM2') // 기본값
   const router = useRouter()
   const searchParams = useSearchParams()
-  const [isIframe, setIsIframe] = useState(false);
 
   useEffect(() => {
     const level = searchParams.get('level')
     if (level) {
       setSelectedLevel(level)
     }
-    setIsIframe(typeof window !== 'undefined' && window.self !== window.top);
   }, [searchParams])
-
-  useScrollToTopOnMount();
 
   const handleSelect = (type: string) => {
     setSelectedType(type)
@@ -167,11 +162,7 @@ export default function QuestionTypePage() {
 
           {/* 테스트 시작하기 버튼 */}
           {selectedType && (
-            <div className={
-              isIframe
-                ? "relative bg-white border-t border-gray-200 p-4"
-                : "fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 p-4 md:relative md:border-t-0 md:bg-transparent md:p-0"
-            }>
+            <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 p-4 md:relative md:border-t-0 md:bg-transparent md:p-0">
               <div className="flex justify-center">
                 <button 
                   onClick={handleStartTest}

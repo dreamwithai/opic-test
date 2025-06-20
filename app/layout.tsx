@@ -1,26 +1,21 @@
 import './globals.css'
 import type { Metadata } from 'next'
 import LoginInfoHeader from './components/LoginInfoHeader'
-import ClientLayout from './ClientLayout'
+import { Viewport } from 'next'
+import AuthProvider from './components/AuthProvider'
 
 export const metadata: Metadata = {
+  metadataBase: new URL('https://opic-test.vercel.app'),
   title: 'OPIc 모의테스트',
   description: 'OPIc 영어 말하기 모의테스트 - 실전과 같은 환경에서 연습하세요',
   keywords: ['OPIc', '영어 말하기', '모의테스트', '영어 시험', '영어 회화'],
   authors: [{ name: 'OPIc Team' }],
-  viewport: {
-    width: 'device-width',
-    initialScale: 1,
-    maximumScale: 1,
-  },
   icons: {
     icon: '/icon.svg',
     shortcut: '/icon.svg',
     apple: '/icon.svg',
   },
   manifest: '/manifest.json',
-  themeColor: '#2563eb',
-  colorScheme: 'light',
   robots: {
     index: true,
     follow: true,
@@ -33,6 +28,14 @@ export const metadata: Metadata = {
   },
 }
 
+export const viewport: Viewport = {
+  width: 'device-width',
+  initialScale: 1,
+  maximumScale: 1,
+  themeColor: '#2563eb',
+  colorScheme: 'light',
+}
+
 export default function RootLayout({
   children,
 }: {
@@ -41,10 +44,10 @@ export default function RootLayout({
   return (
     <html lang="ko">
       <body>
-        <ClientLayout>
+        <AuthProvider>
           <LoginInfoHeader />
           {children}
-        </ClientLayout>
+        </AuthProvider>
       </body>
     </html>
   )
