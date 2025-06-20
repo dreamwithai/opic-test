@@ -3,8 +3,11 @@
 import Link from 'next/link'
 import { useState, useRef, useEffect } from 'react'
 import { supabase } from '@/lib/supabase'
+import { useSession } from 'next-auth/react'
+import { useRouter } from 'next/navigation'
 
 export default function Home() {
+  const { data: session, status } = useSession()
   const [isFormOpen, setIsFormOpen] = useState(false)
   const [showModal, setShowModal] = useState(false)
   const [surveyDone, setSurveyDone] = useState<boolean | null>(null)
@@ -17,53 +20,27 @@ export default function Home() {
     agreement: ''
   })
   const [modalMessage, setModalMessage] = useState('');
+  const router = useRouter()
 
-  // 설문 완료 여부 체크
+  // 설문 완료 여부 체크 (세션 기반으로 변경)
   useEffect(() => {
     const checkSurvey = async () => {
-      const member = JSON.parse(localStorage.getItem('member') || '{}')
-      if (!member.id) {
-        setSurveyDone(false) // 미로그인 시에도 설문 영역 노출
-        return
+      if (status === 'authenticated' && session?.user?.id) {
+        const { data } = await supabase
+          .from('member_survey')
+          .select('id')
+          .eq('member_id', session.user.id)
+          .order('created_at', { ascending: false })
+          .limit(1)
+          .maybeSingle()
+        setSurveyDone(!!data)
+      } else {
+        // 미로그인 시에는 설문 완료 여부를 null로 설정 (설문 영역을 보여줌)
+        setSurveyDone(null)
       }
-      const { data } = await supabase
-        .from('member_survey')
-        .select('id')
-        .eq('member_id', member.id)
-        .order('created_at', { ascending: false })
-        .limit(1)
-        .maybeSingle()
-      setSurveyDone(!!data)
     }
     checkSurvey()
-  }, [])
-
-  // 설문 제출 핸들러
-  const handleSurveySubmit = async () => {
-    if (!validateForm()) return
-    const member = JSON.parse(localStorage.getItem('member') || '{}')
-    if (!member.id) {
-      alert('로그인 후 이용해 주세요.')
-      return
-    }
-    const { error } = await supabase.from('member_survey').insert([
-      {
-        member_id: member.id,
-        opic_experience: formData.experience,
-        current_level: formData.level,
-        opic_purpose: formData.purpose,
-        opic_plan: formData.schedule,
-        agree_terms: formData.agreement === '동의함',
-      }
-    ])
-    if (!error) {
-      setSurveyDone(true)
-      setIsFormOpen(false)
-      alert('설문이 저장되었습니다!')
-    } else {
-      alert('설문 저장에 실패했습니다. 다시 시도해 주세요.')
-    }
-  }
+  }, [status, session])
 
   const handleRadioChange = (name: string, value: string) => {
     setFormData(prev => ({
@@ -91,33 +68,41 @@ export default function Home() {
     return true
   }
 
-  // 목표레벨 선택 버튼 클릭 시 설문 저장 및 이동
-  const handleLevelClick = async (e: React.MouseEvent, level: string) => {
-    if (surveyDone === false) {
-      // 1) 필수 항목 체크
+  // 목표레벨 선택 버튼을 감싸는 컴포넌트
+  const LevelLink = ({ level, children }: { level: string, children: React.ReactNode }) => {
+    const handleClick = async (e: React.MouseEvent) => {
+      e.preventDefault();
+
+      // 로그인한 사용자가 설문을 완료했다면 바로 테스트로 이동
+      if (status === 'authenticated' && surveyDone === true) {
+        router.push(`/question-type?level=${encodeURIComponent(level)}`);
+        return;
+      }
+
+      // 미로그인 사용자는 로그인 요구
+      if (status !== 'authenticated') {
+        setModalMessage('로그인 후 테스트 진행이 가능합니다.');
+        setShowModal(true);
+        return;
+      }
+
+      // 로그인한 사용자이지만 설문을 완료하지 않은 경우
       const { experience, level: lv, purpose, schedule } = formData;
       if (!experience || !lv || purpose.length === 0 || !schedule) {
         setModalMessage('기초설문 이후 테스트 진행가능합니다.');
         setShowModal(true);
-        e.preventDefault();
-        return false;
+        return;
       }
-      // 2) 동의여부 체크
       if (formData.agreement !== '동의함') {
         setModalMessage('이용 동의 후 테스트 진행가능합니다.');
         setShowModal(true);
-        e.preventDefault();
-        return false;
+        return;
       }
-      const member = JSON.parse(localStorage.getItem('member') || '{}');
-      if (!member.id) {
-        alert('로그인 후 이용해 주세요.');
-        e.preventDefault();
-        return false;
-      }
+      
+      // 로그인한 사용자의 설문 저장 및 테스트 페이지 이동
       const { error } = await supabase.from('member_survey').insert([
         {
-          member_id: member.id,
+          member_id: session.user.id,
           opic_experience: formData.experience,
           current_level: formData.level,
           opic_purpose: formData.purpose,
@@ -125,20 +110,19 @@ export default function Home() {
           agree_terms: formData.agreement === '동의함',
         }
       ]);
+
       if (!error) {
         setSurveyDone(true);
-        // 설문 저장 후 해당 레벨로 이동
-        window.location.href = `/question-type?level=${encodeURIComponent(level)}`;
+        router.push(`/question-type?level=${encodeURIComponent(level)}`);
       } else {
         alert('설문 저장에 실패했습니다. 다시 시도해 주세요.');
-        e.preventDefault();
-        return false;
       }
-    }
-    // 설문 완료 상태면 기존대로 바로 이동 (Link의 href 동작)
+    };
+
+    return <div onClick={handleClick} className="cursor-pointer">{children}</div>;
   };
 
-  const closeModal = () => {
+  const closeModalAndScroll = () => {
     setShowModal(false)
     setIsFormOpen(true) // 설문 영역 펼치기
     
@@ -154,6 +138,14 @@ export default function Home() {
         })
       }
     }, 100)
+  }
+
+  if (status === 'loading') {
+    return (
+      <div className="min-h-screen bg-white flex justify-center items-center">
+        <p className="text-xl">로딩 중...</p>
+      </div>
+    )
   }
 
   return (
@@ -266,7 +258,11 @@ export default function Home() {
       </section>
 
       {/* Survey Section */}
-      {surveyDone !== true && (
+      {surveyDone === true ? (
+        // 설문을 완료한 로그인 사용자에게는 설문 영역을 완전히 숨김
+        null
+      ) : (
+        // 설문을 완료하지 않은 사용자(로그인/미로그인 모두)에게는 설문 영역 표시
         <section className="container mx-auto px-4 py-8" ref={surveyRef}>
           <div className="max-w-4xl mx-auto">
             <div className="border border-gray-300 rounded-lg">
@@ -575,7 +571,7 @@ export default function Home() {
             <h3 className="text-3xl font-bold text-gray-800 mb-6">목표레벨선택</h3>
             
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              <Link href="/question-type?level=IM2" onClick={e => handleLevelClick(e, 'IM2')}>
+              <LevelLink level="IM2">
                 <div 
                   className="rounded-xl p-6 cursor-pointer transition-colors h-full"
                   style={{ backgroundColor: '#063ff9' }}
@@ -587,9 +583,9 @@ export default function Home() {
                     "쉽게 간단한 문장과 원하는 정도를 할 수 있다"
                   </p>
                 </div>
-              </Link>
+              </LevelLink>
 
-              <Link href="/question-type?level=IH" onClick={e => handleLevelClick(e, 'IH')}>
+              <LevelLink level="IH">
                 <div 
                   className="rounded-xl p-6 cursor-pointer transition-colors h-full"
                   style={{ backgroundColor: '#063ff9' }}
@@ -602,9 +598,9 @@ export default function Home() {
                     시제/돌발/일기정보이 가능해야 한다"
                   </p>
                 </div>
-              </Link>
+              </LevelLink>
 
-              <Link href="/question-type?level=AL" onClick={e => handleLevelClick(e, 'AL')}>
+              <LevelLink level="AL">
                 <div 
                   className="rounded-xl p-6 cursor-pointer transition-colors h-full"
                   style={{ backgroundColor: '#063ff9' }}
@@ -616,7 +612,7 @@ export default function Home() {
                     "실수가 극히 적고, 표현이 다양해야 한다."
                   </p>
                 </div>
-              </Link>
+              </LevelLink>
             </div>
           </div>
         </div>
@@ -677,7 +673,7 @@ export default function Home() {
               <p className="text-gray-600 mb-6">{modalMessage}</p>
               <div className="flex justify-center space-x-3">
                 <button
-                  onClick={closeModal}
+                  onClick={closeModalAndScroll}
                   className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium transition-colors"
                 >
                   확인

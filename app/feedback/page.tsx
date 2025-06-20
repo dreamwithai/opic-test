@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { supabase } from '@/lib/supabase'
+import { useSession } from 'next-auth/react'
 
 // 샘플 질문 데이터
 const sampleQuestions = [
@@ -64,6 +65,7 @@ const defaultFeedbackData = {
 export default function FeedbackPage() {
   const router = useRouter()
   const searchParams = useSearchParams()
+  const { data: session, status } = useSession()
   
   // URL parameters
   const currentQuestion = searchParams.get('question') || '1'
@@ -91,13 +93,23 @@ export default function FeedbackPage() {
   }
 
   const [saveResult, setSaveResult] = useState('');
+  const [isSaving, setIsSaving] = useState(false);
 
   const handleSave = async () => {
+    if (isSaving) return;
+    setIsSaving(true);
     setSaveResult('');
+
     try {
-      const member = JSON.parse(localStorage.getItem('member') || '{}');
-      if (!member.id) {
-        setSaveResult('❌ 로그인 정보가 없습니다.');
+      if (status === 'loading') {
+        setSaveResult('🤔 로그인 정보를 확인 중입니다. 잠시 후 다시 시도해주세요.');
+        setIsSaving(false);
+        return;
+      }
+
+      if (status !== 'authenticated' || !session) {
+        setSaveResult('❌ 로그인이 필요합니다. 로그인 후 다시 시도해주세요.');
+        setIsSaving(false);
         return;
       }
 
@@ -105,6 +117,7 @@ export default function FeedbackPage() {
       const storedAnswers = JSON.parse(localStorage.getItem('testAnswers') || '[]');
       if (storedAnswers.length === 0) {
         setSaveResult('❌ 저장할 답변이 없습니다.');
+        setIsSaving(false);
         return;
       }
 
@@ -115,7 +128,7 @@ export default function FeedbackPage() {
       // 1. test_session에 insert
       const { data: sessionData, error: sessionError } = await supabase.from('test_session').insert([
         {
-          member_id: member.id,
+          member_id: session.user.id,
           type: selectedType,
           theme: storedAnswers[0]?.theme || currentTheme,
           level: selectedLevel,
@@ -123,8 +136,10 @@ export default function FeedbackPage() {
           first_feedback: typeof firstFeedback === 'string' ? firstFeedback : JSON.stringify(firstFeedback)
         }
       ]).select('id').single();
+
       if (sessionError || !sessionData) {
         setSaveResult('❌ 시험 세트 저장 실패: ' + (sessionError?.message || '오류'));
+        setIsSaving(false);
         return;
       }
       const sessionId = sessionData.id;
@@ -142,20 +157,30 @@ export default function FeedbackPage() {
         }));
       if (answersToInsert.length === 0) {
         setSaveResult('❌ 저장할 유효한 답변이 없습니다.');
+        setIsSaving(false);
         return;
       }
       const { error: answersError } = await supabase.from('test_answers').insert(answersToInsert);
       if (answersError) {
         setSaveResult('❌ 답변 저장 실패: ' + answersError.message);
+        setIsSaving(false);
         return;
       }
 
       setSaveResult(`✅ 시험 세트 및 ${answersToInsert.length}개 답변이 모두 저장되었습니다.`);
       localStorage.removeItem('testAnswers');
-      router.push('/mypage');
+      
+      // 마이페이지로 이동하기 전에 잠시 딜레이를 주어 메시지를 확인하게 함
+      setTimeout(() => {
+        router.push('/mypage');
+      }, 1500);
+
     } catch (e) {
       console.error('Save error:', e);
       setSaveResult('❌ 저장 중 오류 발생: ' + (e instanceof Error ? e.message : '알 수 없는 오류'));
+    } finally {
+      // isSaving 상태는 성공/실패 여부와 관계없이 1.5초 후에 풀어줌
+      setTimeout(() => setIsSaving(false), 1500);
     }
   };
 
