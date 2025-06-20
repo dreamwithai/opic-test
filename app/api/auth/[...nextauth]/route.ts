@@ -21,15 +21,20 @@ const authOptions: AuthOptions = {
     }),
   ],
   callbacks: {
-    async signIn({ user, account }) {
-      if (!user.email) {
+    async signIn({ user, account, profile }) {
+      const provider = account?.provider;
+      const provider_id = account?.providerAccountId;
+
+      if (!provider || !provider_id) {
         return false;
       }
+
       try {
         const { data: member, error } = await supabase
           .from('members')
           .select('id, type')
-          .eq('email', user.email)
+          .eq('provider', provider)
+          .eq('provider_id', provider_id)
           .single();
 
         if (error && error.code !== 'PGRST116') {
@@ -38,13 +43,26 @@ const authOptions: AuthOptions = {
         }
 
         if (!member) {
+          const email = user.email || null;
+          const name =
+            (profile && typeof profile.name === "string" && profile.name.trim() !== "")
+              ? profile.name
+              : (profile && profile.response && typeof profile.response.name === "string" && profile.response.name.trim() !== "")
+                ? profile.response.name
+                : null;
+          const profile_image = user.image || null;
+          // console.log('profile:', profile);
+          // console.log('DB에 저장할 name:', name);
+
           const { data: newMember, error: insertError } = await supabase
             .from('members')
             .insert([
               {
-                email: user.email,
-                name: user.name,
-                provider: account?.provider,
+                provider,
+                provider_id,
+                email,
+                name,
+                profile_image,
                 type: 'user',
               },
             ])
