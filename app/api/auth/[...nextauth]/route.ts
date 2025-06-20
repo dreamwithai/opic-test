@@ -47,8 +47,8 @@ const authOptions: AuthOptions = {
           const name =
             (profile && typeof profile.name === "string" && profile.name.trim() !== "")
               ? profile.name
-              : (profile && profile.response && typeof profile.response.name === "string" && profile.response.name.trim() !== "")
-                ? profile.response.name
+              : (profile && (profile as any).response && typeof (profile as any).response.name === "string" && (profile as any).response.name.trim() !== "")
+                ? (profile as any).response.name
                 : null;
           const profile_image = user.image || null;
           // console.log('profile:', profile);
