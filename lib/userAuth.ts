@@ -1,16 +1,16 @@
-import { verifyUserToken, UserData } from './jwt';
+// import { verifyUserToken, UserData } from './jwt';
 
 /**
  * localStorage에서 사용자 데이터 가져오기
  */
-export function getUserData(): UserData | null {
+export function getUserData() {
   if (typeof window === 'undefined') return null;
   
   try {
     const userDataStr = localStorage.getItem('userData');
     if (!userDataStr) return null;
     
-    const userData = JSON.parse(userDataStr) as UserData;
+    const userData = JSON.parse(userDataStr);
     return userData;
   } catch (error) {
     console.error('Failed to get user data:', error);
@@ -52,16 +52,16 @@ export function clearUserData(): void {
 /**
  * JWT 토큰으로 사용자 데이터 설정
  */
-export function setUserDataFromToken(token: string): boolean {
-  try {
-    const userData = verifyUserToken(token);
-    if (userData) {
-      localStorage.setItem('userData', JSON.stringify(userData));
-      return true;
-    }
-    return false;
-  } catch (error) {
-    console.error('Failed to set user data from token:', error);
-    return false;
-  }
-} 
+// export function setUserDataFromToken(token: string): boolean {
+//   try {
+//     const userData = verifyUserToken(token);
+//     if (userData) {
+//       localStorage.setItem('userData', JSON.stringify(userData));
+//       return true;
+//     }
+//     return false;
+//   } catch (error) {
+//     console.error('Failed to set user data from token:', error);
+//     return false;
+//   }
+// } 
