@@ -19,8 +19,10 @@ function STTTestUI() {
   const [recognition, setRecognition] = useState<any>(null)
   const [isSTTActive, setIsSTTActive] = useState(false)
   const [sttError, setSttError] = useState('')
-  const [finalTranscript, setFinalTranscript] = useState('')
-  const [interimTranscript, setInterimTranscript] = useState('')
+  // committedText: 확정된 전체 문장
+  // liveText: 현재 인식 세션에서 실시간으로 업데이트되는 문장
+  const [committedText, setCommittedText] = useState('')
+  const [liveText, setLiveText] = useState('')
   const userStopped = useRef(false) // 사용자가 직접 중지했는지 여부
   
   // 디바이스 정보
@@ -168,19 +170,11 @@ function STTTestUI() {
     }
 
     recognition.onresult = (event: any) => {
-      let final_transcript = ''
-      let interim_transcript = ''
-
+      let currentSessionText = ''
       for (let i = 0; i < event.results.length; ++i) {
-        if (event.results[i].isFinal) {
-          final_transcript += event.results[i][0].transcript + ' '
-        } else {
-          interim_transcript = event.results[i][0].transcript
-        }
+        currentSessionText += event.results[i][0].transcript
       }
-
-      setFinalTranscript(final_transcript.trim())
-      setInterimTranscript(interim_transcript.trim())
+      setLiveText(currentSessionText)
     }
 
     recognition.onerror = (event: any) => {
@@ -217,10 +211,13 @@ function STTTestUI() {
     recognition.onend = () => {
       addLog(`⏹️ STT onend event. User stopped: ${userStopped.current}`)
       
+      // 현재 세션의 텍스트를 확정된 텍스트에 추가
+      setCommittedText(prev => (prev + ' ' + liveText).trim())
+      setLiveText('') // 다음 세션을 위해 실시간 텍스트 초기화
+
       if (userStopped.current) {
         setIsSTTActive(false)
       } else {
-        // 비정상 종료 시 자동 재시작
         addLog('🔄 STT가 비정상적으로 종료되어 재시작합니다...')
         try {
           recognition.start()
@@ -235,7 +232,10 @@ function STTTestUI() {
   }
 
   const startSTT = async () => {
-    userStopped.current = false // 시작 시 플래그 리셋
+    userStopped.current = false
+    setCommittedText('')
+    setLiveText('')
+    
     if (!recognition) {
       const newRecognition = initializeSpeechRecognition()
       if (newRecognition) {
@@ -267,15 +267,17 @@ function STTTestUI() {
   const stopSTT = () => {
     if (recognition && isSTTActive) {
       userStopped.current = true // 사용자가 직접 중지했음을 표시
-      recognition.stop()
+      recognition.stop() // onend가 호출되어 텍스트를 확정함
     }
   }
 
   const resetSTT = () => {
     userStopped.current = true // 리셋도 수동 중지로 간주
-    stopSTT()
-    setFinalTranscript('')
-    setInterimTranscript('')
+    if (recognition) {
+        recognition.stop()
+    }
+    setCommittedText('')
+    setLiveText('')
     setSttError('')
     setRecognition(null)
     addLog('STT 리셋됨')
@@ -459,11 +461,11 @@ function STTTestUI() {
 
             {/* STT 결과 */}
             <div className="border border-gray-200 rounded-lg p-4 min-h-[150px] max-h-[300px] overflow-y-auto bg-gray-50">
-              {finalTranscript || interimTranscript ? (
+              {committedText || liveText ? (
                 <p className="text-gray-800 leading-relaxed">
-                  {finalTranscript}
+                  {committedText}
                   <span className="text-gray-500 italic">
-                    {interimTranscript}
+                    {' '}{liveText}
                   </span>
                 </p>
               ) : (
