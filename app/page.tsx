@@ -1,10 +1,12 @@
 'use client'
 
+import Image from 'next/image'
 import Link from 'next/link'
 import { useState, useRef, useEffect } from 'react'
 import { supabase } from '@/lib/supabase'
-import { useSession } from 'next-auth/react'
+import { useSession, signOut } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
+import FullScreenLoader from './components/FullScreenLoader'
 
 export default function Home() {
   const { data: session, status } = useSession()
@@ -141,12 +143,10 @@ export default function Home() {
   }
 
   if (status === 'loading') {
-    return (
-      <div className="min-h-screen bg-white flex justify-center items-center">
-        <p className="text-xl">로딩 중...</p>
-      </div>
-    )
+    return <FullScreenLoader message="로딩 중..." />
   }
+
+  const isLoggedIn = status === 'authenticated'
 
   return (
     <div className="min-h-screen bg-white font-sans" style={{ fontFamily: "'Noto Sans KR', 'Malgun Gothic', 'Apple SD Gothic Neo', sans-serif" }}>

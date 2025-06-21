@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react'
 import { useSession, signOut } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
 import { supabase } from '@/lib/supabase'
+import FullScreenLoader from '../components/FullScreenLoader'
 
 interface MemberInfo {
   id: string
@@ -129,13 +130,7 @@ export default function ProfilePage() {
   }
 
   if (status === 'loading' || isLoading) {
-    return (
-      <div className="min-h-screen bg-gray-50 flex justify-center items-center">
-        <div className="text-center text-gray-500">
-          <p>회원 정보를 불러오는 중입니다...</p>
-        </div>
-      </div>
-    )
+    return <FullScreenLoader message="회원 정보를 불러오는 중입니다..." />
   }
 
   if (status === 'unauthenticated') {

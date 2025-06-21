@@ -4,6 +4,8 @@ import { supabase } from "@/lib/supabase";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
+import FullScreenLoader from '../components/FullScreenLoader'
+import LoadingSpinner from '../components/LoadingSpinner'
 
 interface TestSessionRow {
   id: string;
@@ -61,13 +63,7 @@ export default function MyPage() {
   };
 
   if (authStatus === 'loading') {
-    return (
-      <div className="flex justify-center items-center min-h-screen">
-        <div className="text-center text-gray-500">
-          <p>인증 정보를 불러오는 중입니다...</p>
-        </div>
-      </div>
-    );
+    return <FullScreenLoader message="인증 정보를 불러오는 중입니다..." />;
   }
   
   if (authStatus === 'unauthenticated') {
@@ -116,7 +112,12 @@ export default function MyPage() {
         </div>
 
         {isLoading ? (
-          <div className="text-center py-12 text-gray-500">응시 내역을 불러오는 중...</div>
+          <div className="flex justify-center items-center py-12">
+            <div className="text-center text-gray-500">
+              <LoadingSpinner className="mx-auto mb-2" />
+              응시 내역을 불러오는 중...
+            </div>
+          </div>
         ) : sessions.length === 0 ? (
           <div className="text-center py-12 bg-white rounded-lg shadow-sm">
             <p className="font-semibold text-gray-700">응시 내역이 없습니다.</p>
