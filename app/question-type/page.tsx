@@ -8,6 +8,8 @@ import { useRouter, useSearchParams } from 'next/navigation'
 export default function QuestionTypePage() {
   const [selectedType, setSelectedType] = useState<string | null>(null)
   const [selectedLevel, setSelectedLevel] = useState<string>('IM2') // 기본값
+  const [sttConfig, setSttConfig] = useState<{ mobile_stt_mode: string } | null>(null)
+  const [isLoading, setIsLoading] = useState(true)
   const router = useRouter()
   const searchParams = useSearchParams()
 
@@ -17,6 +19,29 @@ export default function QuestionTypePage() {
       setSelectedLevel(level)
     }
   }, [searchParams])
+
+  // STT 설정 가져오기
+  useEffect(() => {
+    async function fetchSttConfig() {
+      try {
+        const response = await fetch('/api/stt-config')
+        if (response.ok) {
+          const data = await response.json()
+          setSttConfig(data)
+        } else {
+          // 실패 시 기본값 설정
+          setSttConfig({ mobile_stt_mode: 'USER_SELECT' })
+        }
+      } catch (error) {
+        console.error("Failed to fetch STT config:", error)
+        // 에러 시 기본값 설정
+        setSttConfig({ mobile_stt_mode: 'USER_SELECT' })
+      } finally {
+        setIsLoading(false)
+      }
+    }
+    fetchSttConfig()
+  }, [])
 
   const handleSelect = (type: string) => {
     setSelectedType(type)
@@ -47,9 +72,53 @@ export default function QuestionTypePage() {
       default:
         category = 'S'
     }
+
+    // 모바일 기기인지 확인
+    const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)
     
-    // 선택한 유형과 레벨을 query parameter로 전달 (refresh=true 추가로 항상 새로운 랜덤 테마 선택)
+    if (isMobile && sttConfig) {
+      // 모바일 사용자의 경우 STT 설정에 따라 라우팅 결정
+      const savedPreference = localStorage.getItem('savedSTTPreference')
+      const resetTime = localStorage.getItem('sttResetTime')
+      
+      // 설정 초기화 후에는 저장된 설정이 있어도 STT 체크 페이지로 이동
+      if (sttConfig.mobile_stt_mode === 'USER_SELECT' && (!savedPreference || resetTime)) {
+        // 사용자 선택 모드이고 저장된 설정이 없거나 초기화된 경우 STT 체크 페이지로
+        router.push(`/stt-check?type=${encodeURIComponent(selectedType)}&category=${category}&level=${selectedLevel}`)
+        return
+      } else if (sttConfig.mobile_stt_mode === 'FORCE_A') {
+        // A 타입 강제
+        sessionStorage.setItem('selectedSTTType', 'A')
+        router.push(`/test?type=${encodeURIComponent(selectedType)}&category=${category}&level=${selectedLevel}&refresh=true`)
+        return
+      } else if (sttConfig.mobile_stt_mode === 'FORCE_B') {
+        // B 타입 강제
+        sessionStorage.setItem('selectedSTTType', 'B')
+        router.push(`/test?type=${encodeURIComponent(selectedType)}&category=${category}&level=${selectedLevel}&refresh=true`)
+        return
+      } else if (savedPreference && !resetTime) {
+        // 저장된 설정이 있고 초기화되지 않은 경우 해당 설정 사용
+        sessionStorage.setItem('selectedSTTType', savedPreference)
+        router.push(`/test?type=${encodeURIComponent(selectedType)}&category=${category}&level=${selectedLevel}&refresh=true`)
+        return
+      }
+    }
+    
+    // PC 사용자이거나 기본 케이스: 바로 테스트 페이지로
+    // PC 사용자는 항상 A 타입 사용
+    sessionStorage.setItem('selectedSTTType', 'A')
     router.push(`/test?type=${encodeURIComponent(selectedType)}&category=${category}&level=${selectedLevel}&refresh=true`)
+  }
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-white font-sans flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
+          <p className="text-gray-600">로딩 중...</p>
+        </div>
+      </div>
+    )
   }
 
   return (

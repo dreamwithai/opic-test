@@ -178,6 +178,7 @@ export default function STTCheckPage() {
   const selectTypeAndProceed = (selectedSTTType: 'A' | 'B') => {
     if (rememberChoice) {
       localStorage.setItem('savedSTTPreference', selectedSTTType)
+      localStorage.removeItem('sttResetTime')
     }
     sessionStorage.setItem('selectedSTTType', selectedSTTType)
 

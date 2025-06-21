@@ -130,6 +130,7 @@ export default function TestPage() {
   const [isSTTActive, setIsSTTActive] = useState(false) // STT 활성화 상태
   const [sttError, setSttError] = useState('') // STT 에러 메시지
   const [recognition, setRecognition] = useState<SpeechRecognition | null>(null) // 음성 인식 객체
+  const [selectedSTTType, setSelectedSTTType] = useState<string>('A') // 선택된 STT 타입
 
   // Load questions from API
   const loadQuestions = async (category: string) => {
@@ -473,6 +474,10 @@ export default function TestPage() {
     setSelectedCategory(category)
     setSelectedLevel(level)
     
+    // 선택된 STT 타입 가져오기
+    const savedSTTType = sessionStorage.getItem('selectedSTTType') || 'A'
+    setSelectedSTTType(savedSTTType)
+    
     // URL에서 문제 번호가 전달된 경우 (피드백 페이지에서 온 경우)
     if (questionParam) {
       const questionIndex = parseInt(questionParam) - 1 // 1-based를 0-based로 변환
@@ -614,6 +619,14 @@ export default function TestPage() {
                 <span className="text-blue-600 font-semibold">📋 선택된 문제 정보</span>
               </div>
               <div className="text-sm text-gray-700 space-y-1">
+                {/* STT 모드 정보 추가 */}
+                <div className="mb-2 p-2 bg-yellow-100 border border-yellow-200 rounded">
+                  <span className="font-medium text-yellow-800">🎤 STT 모드:</span> 
+                  <span className="ml-2 text-yellow-700">
+                    {selectedSTTType === 'A' ? 'Type A (표준 모드)' : 'Type B (고급 모드)'}
+                  </span>
+                </div>
+                
                 {selectedCategory === 'S' ? (
                   <div>
                     <div>

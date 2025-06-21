@@ -136,6 +136,8 @@ export default function ProfilePage() {
   const handleResetSTT = () => {
     try {
       localStorage.removeItem('savedSTTPreference')
+      // 설정 초기화 시간을 저장하여 추적
+      localStorage.setItem('sttResetTime', Date.now().toString())
       setSttResetMessage('✅ 저장된 STT 설정이 초기화되었습니다.')
     } catch (error) {
       setSttResetMessage('❌ 설정 초기화에 실패했습니다.')
