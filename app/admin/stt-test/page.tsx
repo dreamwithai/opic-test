@@ -134,10 +134,18 @@ function STTTestUI() {
     }
 
     const recognition = new SpeechRecognition()
-    recognition.continuous = continuous
-    recognition.interimResults = interimResults
-    recognition.maxAlternatives = 3  // 중요한 옵션 추가!
+    
+    // 모바일 최적화 설정 적용
+    const settings = getMobileOptimizedSettings()
+    recognition.continuous = settings.continuous
+    recognition.interimResults = settings.interimResults
+    recognition.maxAlternatives = settings.maxAlternatives
     recognition.lang = selectedLanguage
+
+    // 모바일 환경 로그
+    if (browserInfo.isMobile) {
+      addLog(`📱 모바일 최적화 설정 적용: continuous=${settings.continuous}, interimResults=${settings.interimResults}`)
+    }
 
     recognition.onstart = () => {
       setIsSTTActive(true)
@@ -162,29 +170,26 @@ function STTTestUI() {
     }
 
     recognition.onresult = (event: any) => {
-      let allFinalText = ''
-      let allInterimText = ''
+      const finalTexts: string[] = []
+      let interimText = ''
 
       for (let i = 0; i < event.results.length; i++) {
         const transcript = event.results[i][0].transcript
-        const confidence = event.results[i][0].confidence
-        
         if (event.results[i].isFinal) {
-          allFinalText += transcript + ' '
-          if (i >= event.resultIndex) {
-            addLog(`✅ 최종 결과: "${transcript}" (신뢰도: ${(confidence * 100).toFixed(1)}%)`)
-          }
+          finalTexts.push(transcript.trim())
         } else {
-          allInterimText += transcript
-          if (i >= event.resultIndex) {
-            addLog(`📝 중간 결과: "${transcript}"`)
-          }
+          interimText = transcript.trim()
         }
       }
+      
+      // Filter out empty strings that might have been pushed
+      const nonEmptyFinalTexts = finalTexts.filter(text => text)
 
-      setFinalTranscripts([allFinalText.trim()])
-      setInterimTranscript(allInterimText)
-      setSttText(allFinalText + allInterimText)
+      setFinalTranscripts(nonEmptyFinalTexts)
+      setInterimTranscript(interimText)
+      
+      // Update the complete text view
+      setSttText([...nonEmptyFinalTexts, interimText].filter(text => text).join(' '))
     }
 
     recognition.onerror = (event: any) => {
@@ -241,6 +246,12 @@ function STTTestUI() {
     }
 
     try {
+      // 모바일에서 마이크 권한 재확인
+      if (browserInfo.isMobile) {
+        addLog('📱 모바일 환경 - 마이크 권한 재확인 중...')
+        await requestMicrophoneAccess()
+      }
+
       addLog('🎤 STT 시작 시도 중...')
       recognition.start()
     } catch (error) {
@@ -268,9 +279,15 @@ function STTTestUI() {
   const requestMicrophoneAccess = async () => {
     try {
       addLog('📱 마이크 권한 요청 중...')
-      const stream = await navigator.mediaDevices.getUserMedia({ audio: true })
+      const stream = await navigator.mediaDevices.getUserMedia({ 
+        audio: {
+          echoCancellation: true,
+          noiseSuppression: true,
+          autoGainControl: true
+        } 
+      })
       addLog('✅ 마이크 권한이 허용되었습니다.')
-      // 스트림을 즉시 정리 (작동한 코드처럼)
+      // 스트림을 즉시 정리
       stream.getTracks().forEach(track => track.stop())
     } catch (error: any) {
       addLog(`❌ 마이크 권한 요청 실패: ${error.message}`)
@@ -280,6 +297,22 @@ function STTTestUI() {
 
   const clearLogs = () => {
     setTestLogs([])
+  }
+
+  // 모바일 최적화된 STT 설정
+  const getMobileOptimizedSettings = () => {
+    if (browserInfo.isMobile) {
+      return {
+        continuous: false, // 모바일에서는 연속 인식 비활성화
+        interimResults: true,
+        maxAlternatives: 1
+      }
+    }
+    return {
+      continuous,
+      interimResults,
+      maxAlternatives: 1
+    }
   }
 
   return (
@@ -429,7 +462,7 @@ function STTTestUI() {
             <div className="border border-gray-200 rounded-lg p-4 min-h-[150px] max-h-[300px] overflow-y-auto bg-gray-50">
               {sttText ? (
                 <div className="space-y-2">
-                  {finalTranscripts.map((text, index) => (
+                  {finalTranscripts.filter(text => text).map((text, index) => (
                     <div key={index} className="bg-white p-2 rounded border-l-4 border-green-500">
                       <span className="text-gray-800">{text}</span>
                     </div>
