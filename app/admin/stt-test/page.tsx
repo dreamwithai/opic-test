@@ -18,8 +18,11 @@ function STTTestUI() {
   // STT 관련 상태
   const [isSTTActive, setIsSTTActive] = useState(false)
   const [sttError, setSttError] = useState('')
-  const [transcript, setTranscript] = useState('') // 모든 결과를 담는 단일 상태
+  const [finalTranscript, setFinalTranscript] = useState('')
+  const [interimTranscript, setInterimTranscript] = useState('')
+
   const recognitionRef = useRef<any>(null)
+  const isStoppingRef = useRef(false)
 
   // 디바이스 정보
   const [deviceInfo, setDeviceInfo] = useState<any>({})
@@ -170,7 +173,7 @@ function STTTestUI() {
       for (let i = 0; i < event.results.length; ++i) {
         fullTranscript += event.results[i][0].transcript
       }
-      setTranscript(fullTranscript)
+      setFinalTranscript(fullTranscript)
     }
 
     recognition.onerror = (event: any) => {
@@ -215,13 +218,14 @@ function STTTestUI() {
   const startSTT = async () => {
     if (isSTTActive) return
 
-    setTranscript('') // 시작 시 항상 초기화
-    setIsSTTActive(true)
-
+    setFinalTranscript('')
+    setInterimTranscript('')
+    setSttError('')
+    isStoppingRef.current = false
+    
     const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition
     if (!SpeechRecognition) {
       setSttError('이 브라우저는 음성 인식을 지원하지 않습니다.')
-      setIsSTTActive(false)
       return
     }
 
@@ -232,12 +236,17 @@ function STTTestUI() {
     recognition.continuous = true
     recognition.interimResults = true
 
+    recognition.onstart = () => {
+      addLog('🎤 STT 세션 시작됨')
+      setIsSTTActive(true)
+    }
+
     recognition.onresult = (event: any) => {
-      let fullTranscript = ''
-      for (let i = 0; i < event.results.length; ++i) {
-        fullTranscript += event.results[i][0].transcript
+      let interim = ''
+      for (let i = event.resultIndex; i < event.results.length; ++i) {
+        interim += event.results[i][0].transcript
       }
-      setTranscript(fullTranscript)
+      setInterimTranscript(interim)
     }
 
     recognition.onerror = (event: any) => {
@@ -246,40 +255,41 @@ function STTTestUI() {
     }
 
     recognition.onend = () => {
-      // isSTTActive가 true일 때만 (즉, 사용자가 stop을 누르지 않았을 때) 재시작
-      if (isSTTActive) {
-        addLog('🔄 STT 세션 자동 재시작...');
-        recognitionRef.current?.start()
+      addLog(`⏹️ STT 세션 종료됨. 중지 요청: ${isStoppingRef.current}`)
+      
+      setFinalTranscript(prev => (prev + ' ' + interimTranscript).trim())
+      setInterimTranscript('')
+
+      if (!isStoppingRef.current) {
+        addLog('🔄 자동 재시작...')
+        recognition.start()
       } else {
-        addLog('⏹️ STT 세션이 정상적으로 종료되었습니다.')
+        setIsSTTActive(false)
+        recognitionRef.current = null
       }
     }
     
-    try {
-      addLog('🎤 STT 시작 시도 중...')
-      recognition.start()
-    } catch (error) {
-      addLog('❌ STT 시작 실패: ' + error)
-      setSttError('STT 시작 실패: ' + error)
-      setIsSTTActive(false)
-    }
+    recognition.start()
   }
 
   const stopSTT = () => {
-    setIsSTTActive(false) // 재시작 루프를 멈추기 위해 상태를 먼저 변경
     if (recognitionRef.current) {
-      addLog('🛑 사용자가 STT를 수동으로 중지합니다.')
+      addLog('🛑 사용자가 수동으로 중지 요청')
+      isStoppingRef.current = true
       recognitionRef.current.stop()
     }
+    setIsSTTActive(false)
   }
 
   const resetSTT = () => {
-    setIsSTTActive(false) // 재시작 루프 중단
     if (recognitionRef.current) {
+      isStoppingRef.current = true
       recognitionRef.current.abort()
     }
-    setTranscript('')
+    setFinalTranscript('')
+    setInterimTranscript('')
     setSttError('')
+    setIsSTTActive(false)
     recognitionRef.current = null
     addLog('STT 리셋됨')
   }
@@ -461,9 +471,12 @@ function STTTestUI() {
 
             {/* STT 결과 */}
             <div className="border border-gray-200 rounded-lg p-4 min-h-[150px] max-h-[300px] overflow-y-auto bg-gray-50">
-              {transcript ? (
+              {finalTranscript || interimTranscript ? (
                 <p className="text-gray-800 leading-relaxed">
-                  {transcript}
+                  {finalTranscript}
+                  <span className="text-gray-500 italic">
+                    {' '}{interimTranscript}
+                  </span>
                 </p>
               ) : (
                 <p className="text-gray-400 italic text-sm">
