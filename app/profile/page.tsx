@@ -130,7 +130,7 @@ export default function ProfilePage() {
   }
 
   if (status === 'loading' || isLoading) {
-    return <FullScreenLoader message="회원 정보를 불러오는 중입니다..." />
+    return <FullScreenLoader />
   }
 
   if (status === 'unauthenticated') {

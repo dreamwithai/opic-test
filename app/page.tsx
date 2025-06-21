@@ -143,7 +143,7 @@ export default function Home() {
   }
 
   if (status === 'loading') {
-    return <FullScreenLoader message="로딩 중..." />
+    return <FullScreenLoader />
   }
 
   const isLoggedIn = status === 'authenticated'

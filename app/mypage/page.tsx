@@ -63,7 +63,7 @@ export default function MyPage() {
   };
 
   if (authStatus === 'loading') {
-    return <FullScreenLoader message="인증 정보를 불러오는 중입니다..." />;
+    return <FullScreenLoader />;
   }
   
   if (authStatus === 'unauthenticated') {
@@ -113,10 +113,7 @@ export default function MyPage() {
 
         {isLoading ? (
           <div className="flex justify-center items-center py-12">
-            <div className="text-center text-gray-500">
-              <LoadingSpinner className="mx-auto mb-2" />
-              응시 내역을 불러오는 중...
-            </div>
+            <LoadingSpinner className="mx-auto" />
           </div>
         ) : sessions.length === 0 ? (
           <div className="text-center py-12 bg-white rounded-lg shadow-sm">
