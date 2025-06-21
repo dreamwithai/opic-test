@@ -16,10 +16,10 @@ export default function STTTestPage() {
 
 function STTTestUI() {
   // STT 관련 상태
-  const [recognition, setRecognition] = useState<any>(null)
   const [isSTTActive, setIsSTTActive] = useState(false)
   const [sttError, setSttError] = useState('')
   const [transcript, setTranscript] = useState('') // 모든 결과를 담는 단일 상태
+  const recognitionRef = useRef<any>(null)
 
   // 디바이스 정보
   const [deviceInfo, setDeviceInfo] = useState<any>({})
@@ -213,48 +213,74 @@ function STTTestUI() {
   }
 
   const startSTT = async () => {
-    // 시작할 때마다 이전 결과 초기화
-    setTranscript('')
-    
-    if (!recognition) {
-      const newRecognition = initializeSpeechRecognition()
-      if (newRecognition) {
-        setRecognition(newRecognition)
-        addLog('🎤 STT 엔진 초기화 및 시작 시도 중...')
-        newRecognition.start()
+    if (isSTTActive) return
+
+    setTranscript('') // 시작 시 항상 초기화
+    setIsSTTActive(true)
+
+    const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition
+    if (!SpeechRecognition) {
+      setSttError('이 브라우저는 음성 인식을 지원하지 않습니다.')
+      setIsSTTActive(false)
+      return
+    }
+
+    const recognition = new SpeechRecognition()
+    recognitionRef.current = recognition
+
+    recognition.lang = selectedLanguage
+    recognition.continuous = true
+    recognition.interimResults = true
+
+    recognition.onresult = (event: any) => {
+      let fullTranscript = ''
+      for (let i = 0; i < event.results.length; ++i) {
+        fullTranscript += event.results[i][0].transcript
       }
-      return
+      setTranscript(fullTranscript)
     }
 
-    if (isSTTActive) {
-      addLog('⚠️ 이미 STT가 실행 중입니다.')
-      return
+    recognition.onerror = (event: any) => {
+      console.error('STT Error:', event.error)
+      setSttError(`STT 오류: ${event.error}`)
     }
 
+    recognition.onend = () => {
+      // isSTTActive가 true일 때만 (즉, 사용자가 stop을 누르지 않았을 때) 재시작
+      if (isSTTActive) {
+        addLog('🔄 STT 세션 자동 재시작...');
+        recognitionRef.current?.start()
+      } else {
+        addLog('⏹️ STT 세션이 정상적으로 종료되었습니다.')
+      }
+    }
+    
     try {
       addLog('🎤 STT 시작 시도 중...')
       recognition.start()
     } catch (error) {
       addLog('❌ STT 시작 실패: ' + error)
       setSttError('STT 시작 실패: ' + error)
+      setIsSTTActive(false)
     }
   }
 
   const stopSTT = () => {
-    if (recognition && isSTTActive) {
+    setIsSTTActive(false) // 재시작 루프를 멈추기 위해 상태를 먼저 변경
+    if (recognitionRef.current) {
       addLog('🛑 사용자가 STT를 수동으로 중지합니다.')
-      recognition.stop()
+      recognitionRef.current.stop()
     }
   }
 
   const resetSTT = () => {
-    if (recognition) {
-      recognition.abort() // 진행중인 인식 즉시 중단
+    setIsSTTActive(false) // 재시작 루프 중단
+    if (recognitionRef.current) {
+      recognitionRef.current.abort()
     }
     setTranscript('')
     setSttError('')
-    setRecognition(null)
-    setIsSTTActive(false)
+    recognitionRef.current = null
     addLog('STT 리셋됨')
   }
 
@@ -281,16 +307,8 @@ function STTTestUI() {
     setTestLogs([])
   }
 
-  // 모바일 최적화된 STT 설정
+  // 모바일 최적화된 STT 설정 (이제 PC와 동일)
   const getMobileOptimizedSettings = () => {
-    // 모바일에서는 한 번의 발화 후 자동으로 종료되도록 설정
-    if (browserInfo.isMobile) {
-      return {
-        continuous: false,
-        interimResults: true,
-        maxAlternatives: 1
-      }
-    }
     return {
       continuous: true,
       interimResults: true,
