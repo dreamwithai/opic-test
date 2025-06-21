@@ -18,9 +18,8 @@ function STTTestUI() {
   // STT 관련 상태
   const [recognition, setRecognition] = useState<any>(null)
   const [isSTTActive, setIsSTTActive] = useState(false)
-  const [sttText, setSttText] = useState('')
   const [sttError, setSttError] = useState('')
-  const [finalTranscripts, setFinalTranscripts] = useState<string[]>([])
+  const [finalTranscript, setFinalTranscript] = useState('')
   const [interimTranscript, setInterimTranscript] = useState('')
   const userStopped = useRef(false) // 사용자가 직접 중지했는지 여부
   
@@ -33,8 +32,6 @@ function STTTestUI() {
   const [selectedLanguage, setSelectedLanguage] = useState('en-US')
   const [continuous, setContinuous] = useState(true)
   const [interimResults, setInterimResults] = useState(true)
-  
-  // 단순화된 상태
   
   // 테스트 로그
   const [testLogs, setTestLogs] = useState<string[]>([])
@@ -171,26 +168,19 @@ function STTTestUI() {
     }
 
     recognition.onresult = (event: any) => {
-      const finalTexts: string[] = []
-      let interimText = ''
+      let final_transcript = ''
+      let interim_transcript = ''
 
-      for (let i = 0; i < event.results.length; i++) {
-        const transcript = event.results[i][0].transcript
+      for (let i = 0; i < event.results.length; ++i) {
         if (event.results[i].isFinal) {
-          finalTexts.push(transcript.trim())
+          final_transcript += event.results[i][0].transcript + ' '
         } else {
-          interimText = transcript.trim()
+          interim_transcript = event.results[i][0].transcript
         }
       }
-      
-      // Filter out empty strings that might have been pushed
-      const nonEmptyFinalTexts = finalTexts.filter(text => text)
 
-      setFinalTranscripts(nonEmptyFinalTexts)
-      setInterimTranscript(interimText)
-      
-      // Update the complete text view
-      setSttText([...nonEmptyFinalTexts, interimText].filter(text => text).join(' '))
+      setFinalTranscript(final_transcript.trim())
+      setInterimTranscript(interim_transcript.trim())
     }
 
     recognition.onerror = (event: any) => {
@@ -284,8 +274,7 @@ function STTTestUI() {
   const resetSTT = () => {
     userStopped.current = true // 리셋도 수동 중지로 간주
     stopSTT()
-    setSttText('')
-    setFinalTranscripts([])
+    setFinalTranscript('')
     setInterimTranscript('')
     setSttError('')
     setRecognition(null)
@@ -470,19 +459,13 @@ function STTTestUI() {
 
             {/* STT 결과 */}
             <div className="border border-gray-200 rounded-lg p-4 min-h-[150px] max-h-[300px] overflow-y-auto bg-gray-50">
-              {sttText ? (
-                <div className="space-y-2">
-                  {finalTranscripts.filter(text => text).map((text, index) => (
-                    <div key={index} className="bg-white p-2 rounded border-l-4 border-green-500">
-                      <span className="text-gray-800">{text}</span>
-                    </div>
-                  ))}
-                  {interimTranscript && (
-                    <div className="bg-yellow-50 p-2 rounded border-l-4 border-yellow-500">
-                      <span className="text-gray-600 italic">{interimTranscript}</span>
-                    </div>
-                  )}
-                </div>
+              {finalTranscript || interimTranscript ? (
+                <p className="text-gray-800 leading-relaxed">
+                  {finalTranscript}
+                  <span className="text-gray-500 italic">
+                    {interimTranscript}
+                  </span>
+                </p>
               ) : (
                 <p className="text-gray-400 italic text-sm">
                   🎤 STT를 시작하면 인식된 텍스트가 여기에 표시됩니다.
