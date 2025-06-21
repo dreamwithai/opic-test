@@ -5,6 +5,7 @@ import { useDropzone } from 'react-dropzone'
 import Papa from 'papaparse'
 import Link from 'next/link'
 import { ArrowLeft, Upload, Download, Eye, CheckCircle } from 'lucide-react'
+import AdminGuard from '@/components/AdminGuard'
 
 interface CSVRow {
   [key: string]: string
@@ -37,6 +38,14 @@ const CATEGORY_OPTIONS = [
 ]
 
 export default function CSVConverterPage() {
+  return (
+    <AdminGuard>
+      <CSVConverterUI />
+    </AdminGuard>
+  )
+}
+
+function CSVConverterUI() {
   const [csvData, setCsvData] = useState<CSVRow[]>([])
   const [csvHeaders, setCsvHeaders] = useState<string[]>([])
   const [columnMappings, setColumnMappings] = useState<ColumnMapping[]>([])

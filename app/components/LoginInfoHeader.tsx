@@ -17,6 +17,11 @@ export default function LoginInfoHeader() {
     signOut({ callbackUrl: '/' });
   };
 
+  // 드롭다운 메뉴 닫기 함수
+  const closeDropdown = () => {
+    setIsDropdownOpen(false);
+  };
+
   // 드롭다운 외부 클릭 감지
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
@@ -68,10 +73,18 @@ export default function LoginInfoHeader() {
                 
                 {isDropdownOpen && (
                   <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-10">
-                    <Link href="/mypage" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                    <Link 
+                      href="/mypage" 
+                      className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                      onClick={closeDropdown}
+                    >
                       마이페이지
                     </Link>
-                    <Link href="/profile" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                    <Link 
+                      href="/profile" 
+                      className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                      onClick={closeDropdown}
+                    >
                       회원정보 수정
                     </Link>
                     <button

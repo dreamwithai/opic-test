@@ -904,6 +904,12 @@ export default function TestPage() {
               // 마지막 문제가 아닌 경우: 다음문제 버튼
               <button 
                 onClick={() => {
+                  // 녹음 중인지 확인
+                  if (isRecording) {
+                    alert('녹음이 진행 중입니다. 녹음을 정지한 후 다음 문제로 넘어가주세요.')
+                    return
+                  }
+                  
                   // STT 텍스트와 녹음 데이터를 로컬 스토리지에 저장
                   const answerData = {
                     questionIndex: currentQuestionIndex,
@@ -929,14 +935,25 @@ export default function TestPage() {
                   // 페이지 상단으로 스크롤
                   window.scrollTo({ top: 0, behavior: 'smooth' })
                 }}
-                className="bg-green-600 hover:bg-green-700 text-white px-8 py-3 rounded-lg font-medium transition-colors"
+                className={`px-8 py-3 rounded-lg font-medium transition-colors ${
+                  isRecording 
+                    ? 'bg-gray-400 text-white cursor-not-allowed' 
+                    : 'bg-green-600 hover:bg-green-700 text-white'
+                }`}
+                disabled={isRecording}
               >
-                다음문제
+                {isRecording ? '녹음 중...' : '다음문제'}
               </button>
             ) : (
               // 마지막 문제인 경우: 답변제출 및 피드백받기 버튼
               <button 
                 onClick={() => {
+                  // 녹음 중인지 확인
+                  if (isRecording) {
+                    alert('녹음이 진행 중입니다. 녹음을 정지한 후 답변을 제출해주세요.')
+                    return
+                  }
+                  
                   const currentTheme = getTheme(currentQuestion)
                   const userAnswer = sttText || "음성 인식된 답변이 없습니다. 녹음을 다시 시도해주세요."
                   
@@ -957,9 +974,14 @@ export default function TestPage() {
                   const feedbackUrl = `/feedback?question=${currentQuestionIndex + 1}&type=${encodeURIComponent(selectedType)}&category=${encodeURIComponent(selectedCategory)}&level=${encodeURIComponent(selectedLevel)}&theme=${encodeURIComponent(currentTheme)}&qid=${currentQuestion?.q_id}&qseq=${currentQuestion?.q_seq}&totalQuestions=${totalQuestions}&answer=${encodeURIComponent(userAnswer)}`
                   router.push(feedbackUrl)
                 }}
-                className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-3 rounded-lg font-medium transition-colors"
+                className={`px-8 py-3 rounded-lg font-medium transition-colors ${
+                  isRecording 
+                    ? 'bg-gray-400 text-white cursor-not-allowed' 
+                    : 'bg-blue-600 hover:bg-blue-700 text-white'
+                }`}
+                disabled={isRecording}
               >
-                답변제출 및 피드백받기
+                {isRecording ? '녹음 중...' : '답변제출 및 피드백받기'}
               </button>
             )}
           </div>

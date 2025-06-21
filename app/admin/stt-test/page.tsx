@@ -2,10 +2,19 @@
 
 import { useState, useEffect, useRef } from 'react'
 import Link from 'next/link'
+import AdminGuard from '@/components/AdminGuard'
 
 // Speech Recognition type declaration
 
 export default function STTTestPage() {
+  return (
+    <AdminGuard>
+      <STTTestUI />
+    </AdminGuard>
+  )
+}
+
+function STTTestUI() {
   // STT 관련 상태
   const [recognition, setRecognition] = useState<any>(null)
   const [isSTTActive, setIsSTTActive] = useState(false)

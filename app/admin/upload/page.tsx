@@ -2,8 +2,17 @@
 
 import { useState } from 'react'
 import { uploadAudioFile, supabase } from '@/lib/supabase'
+import AdminGuard from '@/components/AdminGuard'
 
 export default function AdminUploadPage() {
+  return (
+    <AdminGuard>
+      <UploadUI />
+    </AdminGuard>
+  )
+}
+
+function UploadUI() {
   const [uploading, setUploading] = useState(false)
   const [uploadResult, setUploadResult] = useState<string>('')
   const [testing, setTesting] = useState(false)

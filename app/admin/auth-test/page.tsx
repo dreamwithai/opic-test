@@ -2,9 +2,14 @@
 
 import { useState } from 'react';
 import { supabase } from '@/lib/supabase';
+import AdminGuard from '@/components/AdminGuard';
 
 export default function AuthTestPage() {
-  return <AuthTestUI />;
+  return (
+    <AdminGuard>
+      <AuthTestUI />
+    </AdminGuard>
+  );
 }
 
 function AuthTestUI() {
