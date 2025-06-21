@@ -19,12 +19,8 @@ function STTTestUI() {
   const [recognition, setRecognition] = useState<any>(null)
   const [isSTTActive, setIsSTTActive] = useState(false)
   const [sttError, setSttError] = useState('')
-  // committedText: 확정된 전체 문장
-  // liveText: 현재 인식 세션에서 실시간으로 업데이트되는 문장
-  const [committedText, setCommittedText] = useState('')
-  const [liveText, setLiveText] = useState('')
-  const userStopped = useRef(false) // 사용자가 직접 중지했는지 여부
-  
+  const [transcript, setTranscript] = useState('') // 모든 결과를 담는 단일 상태
+
   // 디바이스 정보
   const [deviceInfo, setDeviceInfo] = useState<any>({})
   const [browserInfo, setBrowserInfo] = useState<any>({})
@@ -170,11 +166,11 @@ function STTTestUI() {
     }
 
     recognition.onresult = (event: any) => {
-      let currentSessionText = ''
+      let fullTranscript = ''
       for (let i = 0; i < event.results.length; ++i) {
-        currentSessionText += event.results[i][0].transcript
+        fullTranscript += event.results[i][0].transcript
       }
-      setLiveText(currentSessionText)
+      setTranscript(fullTranscript)
     }
 
     recognition.onerror = (event: any) => {
@@ -209,37 +205,23 @@ function STTTestUI() {
     }
 
     recognition.onend = () => {
-      addLog(`⏹️ STT onend event. User stopped: ${userStopped.current}`)
-      
-      // 현재 세션의 텍스트를 확정된 텍스트에 추가
-      setCommittedText(prev => (prev + ' ' + liveText).trim())
-      setLiveText('') // 다음 세션을 위해 실시간 텍스트 초기화
-
-      if (userStopped.current) {
-        setIsSTTActive(false)
-      } else {
-        addLog('🔄 STT가 비정상적으로 종료되어 재시작합니다...')
-        try {
-          recognition.start()
-        } catch (e) {
-          addLog(`❌ 재시작 실패: ${e}`)
-          setIsSTTActive(false)
-        }
-      }
+      addLog('⏹️ STT 세션이 종료되었습니다.')
+      setIsSTTActive(false)
     }
 
     return recognition
   }
 
   const startSTT = async () => {
-    userStopped.current = false
-    setCommittedText('')
-    setLiveText('')
+    // 시작할 때마다 이전 결과 초기화
+    setTranscript('')
     
     if (!recognition) {
       const newRecognition = initializeSpeechRecognition()
       if (newRecognition) {
         setRecognition(newRecognition)
+        addLog('🎤 STT 엔진 초기화 및 시작 시도 중...')
+        newRecognition.start()
       }
       return
     }
@@ -250,12 +232,6 @@ function STTTestUI() {
     }
 
     try {
-      // 모바일에서 마이크 권한 재확인
-      if (browserInfo.isMobile) {
-        addLog('📱 모바일 환경 - 마이크 권한 재확인 중...')
-        await requestMicrophoneAccess()
-      }
-
       addLog('🎤 STT 시작 시도 중...')
       recognition.start()
     } catch (error) {
@@ -266,20 +242,19 @@ function STTTestUI() {
 
   const stopSTT = () => {
     if (recognition && isSTTActive) {
-      userStopped.current = true // 사용자가 직접 중지했음을 표시
-      recognition.stop() // onend가 호출되어 텍스트를 확정함
+      addLog('🛑 사용자가 STT를 수동으로 중지합니다.')
+      recognition.stop()
     }
   }
 
   const resetSTT = () => {
-    userStopped.current = true // 리셋도 수동 중지로 간주
     if (recognition) {
-        recognition.stop()
+      recognition.abort() // 진행중인 인식 즉시 중단
     }
-    setCommittedText('')
-    setLiveText('')
+    setTranscript('')
     setSttError('')
     setRecognition(null)
+    setIsSTTActive(false)
     addLog('STT 리셋됨')
   }
 
@@ -308,7 +283,14 @@ function STTTestUI() {
 
   // 모바일 최적화된 STT 설정
   const getMobileOptimizedSettings = () => {
-    // 모바일에서도 연속 인식을 활성화하여 긴 문장 지원
+    // 모바일에서는 한 번의 발화 후 자동으로 종료되도록 설정
+    if (browserInfo.isMobile) {
+      return {
+        continuous: false,
+        interimResults: true,
+        maxAlternatives: 1
+      }
+    }
     return {
       continuous: true,
       interimResults: true,
@@ -461,12 +443,9 @@ function STTTestUI() {
 
             {/* STT 결과 */}
             <div className="border border-gray-200 rounded-lg p-4 min-h-[150px] max-h-[300px] overflow-y-auto bg-gray-50">
-              {committedText || liveText ? (
+              {transcript ? (
                 <p className="text-gray-800 leading-relaxed">
-                  {committedText}
-                  <span className="text-gray-500 italic">
-                    {' '}{liveText}
-                  </span>
+                  {transcript}
                 </p>
               ) : (
                 <p className="text-gray-400 italic text-sm">
