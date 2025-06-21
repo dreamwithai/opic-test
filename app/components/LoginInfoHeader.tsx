@@ -85,7 +85,7 @@ export default function LoginInfoHeader() {
                       className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
                       onClick={closeDropdown}
                     >
-                      회원정보 수정
+                      설정
                     </Link>
                     {user.type === 'admin' && (
                       <Link 

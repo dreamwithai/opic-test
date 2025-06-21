@@ -67,9 +67,12 @@ export default function STTCheckPage() {
     B: { text: '', error: '' },
   })
   const recognitionRef = useRef<SpeechRecognition | null>(null)
-  const finalTranscriptRef = useRef<string>('') // For Type B's improved logic
+  const finalTranscriptRef = useRef<string>('')
+  const [rememberChoice, setRememberChoice] = useState(true)
+
+  // Get level and question type from URL
   const level = searchParams.get('level') || 'IM'
-  const [rememberChoice, setRememberChoice] = useState(true) // State for the checkbox
+  const questionType = searchParams.get('type') || '선택주제'
 
   useEffect(() => {
     const checkPermission = async () => {
@@ -172,12 +175,24 @@ export default function STTCheckPage() {
     }
   }
 
-  const selectTypeAndProceed = (type: 'A' | 'B') => {
+  const selectTypeAndProceed = (selectedSTTType: 'A' | 'B') => {
     if (rememberChoice) {
-      localStorage.setItem('savedSTTPreference', type)
+      localStorage.setItem('savedSTTPreference', selectedSTTType)
     }
-    sessionStorage.setItem('selectedSTTType', type)
-    router.push(`/question-type?level=${encodeURIComponent(level)}`)
+    sessionStorage.setItem('selectedSTTType', selectedSTTType)
+
+    // Map questionType to category, needed for the /test page
+    let category = '';
+    switch (questionType) {
+      case '선택주제': category = 'S'; break;
+      case '롤플레이': category = 'RP'; break;
+      case '돌발주제': category = 'C'; break;
+      case '모의고사': category = 'MOCK'; break;
+      default: category = 'S';
+    }
+
+    const destination = `/test?type=${encodeURIComponent(questionType)}&category=${category}&level=${level}&refresh=true`;
+    router.push(destination);
   }
 
   const TestCard = ({ type, title, description }: { type: 'A' | 'B', title: string, description: string }) => {

@@ -3,8 +3,10 @@
 import { useState, useEffect } from 'react'
 import { useSession, signOut } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
+import { Settings } from 'lucide-react'
 import { supabase } from '@/lib/supabase'
 import FullScreenLoader from '../components/FullScreenLoader'
+import Breadcrumb from '../components/Breadcrumb'
 
 interface MemberInfo {
   id: string
@@ -26,6 +28,7 @@ export default function ProfilePage() {
   const [isUpdating, setIsUpdating] = useState(false)
   const [liveKlassId, setLiveKlassId] = useState('')
   const [updateMessage, setUpdateMessage] = useState('')
+  const [sttResetMessage, setSttResetMessage] = useState('')
 
   // 회원 정보 불러오기
   useEffect(() => {
@@ -129,6 +132,21 @@ export default function ProfilePage() {
     signOut({ callbackUrl: '/' })
   }
 
+  // STT 설정 초기화
+  const handleResetSTT = () => {
+    try {
+      localStorage.removeItem('savedSTTPreference')
+      setSttResetMessage('✅ 저장된 STT 설정이 초기화되었습니다.')
+    } catch (error) {
+      setSttResetMessage('❌ 설정 초기화에 실패했습니다.')
+      console.error('Failed to reset STT preference:', error)
+    }
+    
+    setTimeout(() => {
+      setSttResetMessage('')
+    }, 3000)
+  }
+
   if (status === 'loading' || isLoading) {
     return <FullScreenLoader />
   }
@@ -161,24 +179,20 @@ export default function ProfilePage() {
 
   return (
     <div className="min-h-screen bg-gray-50 font-sans">
-      <div className="max-w-4xl mx-auto py-10 px-4">
+      <div className="max-w-7xl mx-auto py-10 px-4">
         {/* 헤더 */}
-        <div className="flex justify-between items-center mb-8">
-          <div>
-            <h1 className="text-3xl font-bold text-gray-800">회원정보 관리</h1>
-            <p className="text-gray-600 mt-2">회원 정보를 확인하고 관리할 수 있습니다.</p>
+        <div className="mb-8">
+          <Breadcrumb items={[{ href: '/', label: '홈' }, { label: '설정' }]} />
+          <div className="flex items-center gap-3 mt-2">
+            <Settings className="h-8 w-8 text-gray-700" />
+            <h1 className="text-3xl font-bold text-gray-800">설정</h1>
           </div>
-          <button
-            onClick={() => router.push('/')}
-            className="text-gray-600 hover:text-gray-800 text-sm font-medium"
-          >
-            홈으로 돌아가기
-          </button>
+          <p className="text-gray-600 mt-2">회원 정보 및 기타 설정을 관리합니다.</p>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        <div className="grid grid-cols-1 lg:grid-cols-5 gap-6 mb-8">
           {/* 기본 정보 */}
-          <div className="bg-white rounded-lg shadow-sm p-6">
+          <div className="lg:col-span-2 bg-white rounded-lg shadow-sm p-6 flex flex-col">
             <h2 className="text-xl font-semibold text-gray-800 mb-4">기본 정보</h2>
             <div className="space-y-4">
               <div>
@@ -207,61 +221,81 @@ export default function ProfilePage() {
             </div>
           </div>
 
-          {/* LiveKlass ID 설정 */}
-          <div className="bg-white rounded-lg shadow-sm p-6">
-            <h2 className="text-xl font-semibold text-gray-800 mb-4">LiveKlass ID 설정</h2>
-            <div className="space-y-4">
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">LiveKlass ID</label>
-                <input
-                  type="text"
-                  value={liveKlassId}
-                  onChange={(e) => setLiveKlassId(e.target.value)}
-                  placeholder="LiveKlass ID를 입력하세요"
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                />
+          {/* 오른쪽 영역 */}
+          <div className="lg:col-span-3 flex flex-col gap-6">
+            {/* LiveKlass ID 설정 */}
+            <div className="bg-white rounded-lg shadow-sm p-6 flex flex-col">
+              <h2 className="text-xl font-semibold text-gray-800 mb-4">LiveKlass ID 설정</h2>
+              <div className="space-y-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">LiveKlass ID</label>
+                  <input
+                    type="text"
+                    value={liveKlassId}
+                    onChange={(e) => setLiveKlassId(e.target.value)}
+                    placeholder="LiveKlass ID를 입력하세요"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  />
+                </div>
+                <button
+                  onClick={handleUpdateLiveKlassId}
+                  disabled={isUpdating}
+                  className="w-full bg-blue-600 hover:bg-blue-700 disabled:bg-gray-400 text-white font-medium py-2 px-4 rounded-md transition-colors"
+                >
+                  {isUpdating ? '업데이트 중...' : 'LiveKlass ID 업데이트'}
+                </button>
+                {updateMessage && (
+                  <p className={`text-sm ${updateMessage.includes('✅') ? 'text-green-600' : 'text-red-600'}`}>
+                    {updateMessage}
+                  </p>
+                )}
               </div>
-              <button
-                onClick={handleUpdateLiveKlassId}
-                disabled={isUpdating}
-                className="w-full bg-blue-600 hover:bg-blue-700 disabled:bg-gray-400 text-white font-medium py-2 px-4 rounded-md transition-colors"
-              >
-                {isUpdating ? '업데이트 중...' : 'LiveKlass ID 업데이트'}
-              </button>
-              {updateMessage && (
-                <p className={`text-sm ${updateMessage.includes('✅') ? 'text-green-600' : 'text-red-600'}`}>
-                  {updateMessage}
+            </div>
+            
+            {/* 모바일 STT 설정 */}
+            <div className="bg-white rounded-lg shadow-sm p-6 flex flex-col">
+              <h2 className="text-xl font-semibold text-gray-800 mb-4">모바일 STT 설정</h2>
+              <div className="space-y-4 flex flex-col justify-between h-full">
+                <p className="text-sm text-gray-600">
+                  모바일에서 테스트 시 저장된 STT 설정을 초기화합니다.
                 </p>
-              )}
+                <div>
+                  <button
+                    onClick={handleResetSTT}
+                    className="w-full bg-yellow-500 hover:bg-yellow-600 text-white font-medium py-2 px-4 rounded-md transition-colors"
+                  >
+                    저장된 설정 초기화
+                  </button>
+                  {sttResetMessage && (
+                    <p className={`mt-2 text-sm text-center ${sttResetMessage.includes('✅') ? 'text-green-600' : 'text-red-600'}`}>
+                      {sttResetMessage}
+                    </p>
+                  )}
+                </div>
+              </div>
             </div>
           </div>
         </div>
 
         {/* 계정 관리 */}
-        <div className="mt-8 bg-white rounded-lg shadow-sm p-6">
-          <h2 className="text-xl font-semibold text-gray-800 mb-4">계정 관리</h2>
-          <div className="flex flex-col sm:flex-row gap-4">
-            <button
-              onClick={handleLogout}
-              className="w-full bg-gray-600 hover:bg-gray-700 text-white font-medium py-3 px-4 rounded-md transition-colors"
-            >
-              로그아웃
-            </button>
-            {/*
-            <button
-              onClick={handleDeleteAccount}
-              disabled={isUpdating}
-              className="flex-1 bg-red-600 hover:bg-red-700 disabled:bg-gray-400 text-white font-medium py-3 px-4 rounded-md transition-colors"
-            >
-              {isUpdating ? '처리 중...' : '회원탈퇴'}
-            </button>
-            */}
-          </div>
-          {/*
-          <p className="text-sm text-gray-500 mt-2">
-            회원탈퇴 시 모든 데이터가 영구적으로 삭제되며 복구할 수 없습니다.
-          </p>
-          */}
+        <div className="mt-8 border-t pt-8">
+            <div className="max-w-md mx-auto bg-white rounded-lg shadow-sm p-6">
+                <div className="flex flex-col sm:flex-row gap-4">
+                    <button
+                        onClick={handleLogout}
+                        className="flex-1 bg-gray-500 hover:bg-gray-600 text-white font-medium py-2 px-4 rounded-md transition-colors"
+                    >
+                        로그아웃
+                    </button>
+                    {/* <button
+                        onClick={handleDeleteAccount}
+                        disabled={isUpdating}
+                        className="flex-1 bg-red-600 hover:bg-red-700 disabled:bg-gray-400 text-white font-medium py-2 px-4 rounded-md transition-colors"
+                    >
+                        {isUpdating ? '처리 중...' : '회원 탈퇴'}
+                    </button> */}
+                </div>
+            </div>
         </div>
       </div>
     </div>

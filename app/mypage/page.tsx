@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
 import FullScreenLoader from '../components/FullScreenLoader'
 import LoadingSpinner from '../components/LoadingSpinner'
+import Breadcrumb from "../components/Breadcrumb";
 
 interface TestSessionRow {
   id: string;
@@ -83,17 +84,12 @@ export default function MyPage() {
   return (
     <div className="min-h-screen bg-gray-50 font-sans">
       <div className="max-w-5xl mx-auto py-10 px-4">
-        <div className="flex justify-between items-center mb-6">
-          <div>
+        <div className="mb-6">
+          <Breadcrumb items={[{ href: '/', label: '홈' }, { label: '마이페이지' }]} />
+          <div className="mt-2">
             <h2 className="text-3xl font-bold text-gray-800">마이페이지</h2>
-            <p className="text-gray-600 font-medium">내 응시내역을 보실 수 있습니다.</p>
+            <p className="text-gray-600 font-medium mt-2">내 응시내역을 보실 수 있습니다.</p>
           </div>
-          <button 
-            onClick={() => router.push('/')}
-            className="flex items-center text-gray-600 hover:text-gray-800 text-sm font-medium"
-          >
-             홈으로 돌아가기
-          </button>
         </div>
         
         <div className="flex justify-end mb-4 gap-2">

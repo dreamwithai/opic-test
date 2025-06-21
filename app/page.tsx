@@ -94,41 +94,9 @@ export default function Home() {
     const handleClick = async (e: React.MouseEvent) => {
       e.preventDefault();
 
-      if (!sttConfig) {
-        // Config is not loaded yet, show a message or disable the button
-        alert("설정 정보를 불러오는 중입니다. 잠시 후 다시 시도해주세요.");
-        return;
-      }
-
-      // 모바일 감지
-      const isMobile = /Mobile|Android|iPhone|iPad/.test(navigator.userAgent);
-      
       const proceedToNextStep = (targetLevel: string) => {
-        if (isMobile) {
-          // 1. Check for user's saved preference first
-          const savedPreference = localStorage.getItem('savedSTTPreference');
-          if (savedPreference === 'A' || savedPreference === 'B') {
-            sessionStorage.setItem('selectedSTTType', savedPreference);
-            router.push(`/question-type?level=${encodeURIComponent(targetLevel)}`);
-            return; // Skip all other checks
-          }
-
-          // 2. If no saved preference, check admin config
-          const { mobile_stt_mode } = sttConfig;
-          if (mobile_stt_mode === 'FORCE_A') {
-            sessionStorage.setItem('selectedSTTType', 'A');
-            router.push(`/question-type?level=${encodeURIComponent(targetLevel)}`);
-          } else if (mobile_stt_mode === 'FORCE_B') {
-            sessionStorage.setItem('selectedSTTType', 'B');
-            router.push(`/question-type?level=${encodeURIComponent(targetLevel)}`);
-          } else { // 'USER_SELECT'
-            router.push(`/stt-check?level=${encodeURIComponent(targetLevel)}`);
-          }
-        } else {
-          // PC는 항상 바로 문제 유형 페이지로 이동 (STT 타입 A로 고정)
-          sessionStorage.setItem('selectedSTTType', 'A');
-          router.push(`/question-type?level=${encodeURIComponent(targetLevel)}`);
-        }
+        // Now, it ALWAYS goes to the question-type page first.
+        router.push(`/question-type?level=${encodeURIComponent(targetLevel)}`);
       };
 
       // 로그인한 사용자가 설문을 완료했다면
