@@ -9,6 +9,7 @@
   },
   "dependencies": {
     "@auth/supabase-adapter": "^1.9.1",
+    "@supabase/auth-helpers-nextjs": "^0.10.0",
     "@supabase/supabase-js": "^2.49.8",
     "@types/jsonwebtoken": "^9.0.10",
     "jsonwebtoken": "^9.0.2",

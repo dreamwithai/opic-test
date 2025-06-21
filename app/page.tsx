@@ -23,6 +23,25 @@ export default function Home() {
   })
   const [modalMessage, setModalMessage] = useState('');
   const router = useRouter()
+  const [sttConfig, setSttConfig] = useState<{ mobile_stt_mode: string } | null>(null);
+
+  // Fetch STT config on component mount
+  useEffect(() => {
+    async function fetchSttConfig() {
+      try {
+        const response = await fetch('/api/stt-config');
+        if (response.ok) {
+          const data = await response.json();
+          setSttConfig(data);
+        }
+      } catch (error) {
+        console.error("Failed to fetch STT config:", error);
+        // On failure, default to user selection to avoid blocking users
+        setSttConfig({ mobile_stt_mode: 'USER_SELECT' });
+      }
+    }
+    fetchSttConfig();
+  }, []);
 
   // 설문 완료 여부 체크 (세션 기반으로 변경)
   useEffect(() => {
@@ -75,9 +94,46 @@ export default function Home() {
     const handleClick = async (e: React.MouseEvent) => {
       e.preventDefault();
 
-      // 로그인한 사용자가 설문을 완료했다면 바로 테스트로 이동
+      if (!sttConfig) {
+        // Config is not loaded yet, show a message or disable the button
+        alert("설정 정보를 불러오는 중입니다. 잠시 후 다시 시도해주세요.");
+        return;
+      }
+
+      // 모바일 감지
+      const isMobile = /Mobile|Android|iPhone|iPad/.test(navigator.userAgent);
+      
+      const proceedToNextStep = (targetLevel: string) => {
+        if (isMobile) {
+          // 1. Check for user's saved preference first
+          const savedPreference = localStorage.getItem('savedSTTPreference');
+          if (savedPreference === 'A' || savedPreference === 'B') {
+            sessionStorage.setItem('selectedSTTType', savedPreference);
+            router.push(`/question-type?level=${encodeURIComponent(targetLevel)}`);
+            return; // Skip all other checks
+          }
+
+          // 2. If no saved preference, check admin config
+          const { mobile_stt_mode } = sttConfig;
+          if (mobile_stt_mode === 'FORCE_A') {
+            sessionStorage.setItem('selectedSTTType', 'A');
+            router.push(`/question-type?level=${encodeURIComponent(targetLevel)}`);
+          } else if (mobile_stt_mode === 'FORCE_B') {
+            sessionStorage.setItem('selectedSTTType', 'B');
+            router.push(`/question-type?level=${encodeURIComponent(targetLevel)}`);
+          } else { // 'USER_SELECT'
+            router.push(`/stt-check?level=${encodeURIComponent(targetLevel)}`);
+          }
+        } else {
+          // PC는 항상 바로 문제 유형 페이지로 이동 (STT 타입 A로 고정)
+          sessionStorage.setItem('selectedSTTType', 'A');
+          router.push(`/question-type?level=${encodeURIComponent(targetLevel)}`);
+        }
+      };
+
+      // 로그인한 사용자가 설문을 완료했다면
       if (status === 'authenticated' && surveyDone === true) {
-        router.push(`/question-type?level=${encodeURIComponent(level)}`);
+        proceedToNextStep(level);
         return;
       }
 
@@ -115,7 +171,7 @@ export default function Home() {
 
       if (!error) {
         setSurveyDone(true);
-        router.push(`/question-type?level=${encodeURIComponent(level)}`);
+        proceedToNextStep(level);
       } else {
         alert('설문 저장에 실패했습니다. 다시 시도해 주세요.');
       }
@@ -142,7 +198,7 @@ export default function Home() {
     }, 100)
   }
 
-  if (status === 'loading') {
+  if (status === 'loading' || sttConfig === null) {
     return <FullScreenLoader />
   }
 

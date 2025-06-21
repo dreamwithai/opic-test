@@ -383,29 +383,45 @@ export default function TestPage() {
     recognition.interimResults = true
     recognition.lang = 'en-US' // 영어로 설정
 
+    // 선택된 STT 타입 확인
+    const selectedSTTType = sessionStorage.getItem('selectedSTTType') || 'A'
+
     recognition.onstart = () => {
       setIsSTTActive(true)
       setSttError('')
     }
 
-    recognition.onresult = (event) => {
-      let finalTranscript = ''
-      let interimTranscript = ''
-
-      for (let i = event.resultIndex; i < event.results.length; i++) {
-        const transcript = event.results[i][0].transcript
-        if (event.results[i].isFinal) {
-          finalTranscript += transcript
-        } else {
-          interimTranscript += transcript
+    // Type A: Simple accumulation (current test page style)
+    if (selectedSTTType === 'A') {
+      recognition.onresult = (event) => {
+        let allText = ''
+        for (let i = 0; i < event.results.length; i++) {
+          allText += event.results[i][0].transcript
         }
+        setSttText(allText)
       }
+    }
+    // Type B: Advanced with interim handling (admin style)
+    else {
+      recognition.onresult = (event) => {
+        let finalTranscript = ''
+        let interimTranscript = ''
 
-      // 최종 결과와 임시 결과를 결합하여 표시
-      setSttText(prev => {
-        const existingFinal = prev.split('...')[0] // 기존 최종 텍스트
-        return existingFinal + finalTranscript + (interimTranscript ? '...' + interimTranscript : '')
-      })
+        for (let i = 0; i < event.results.length; i++) {
+          const transcript = event.results[i][0].transcript
+          if (event.results[i].isFinal) {
+            finalTranscript += transcript
+          } else {
+            interimTranscript += transcript
+          }
+        }
+
+        // 최종 결과와 임시 결과를 결합하여 표시
+        setSttText(prev => {
+          const existingFinal = prev.split('...')[0] // 기존 최종 텍스트
+          return existingFinal + finalTranscript + (interimTranscript ? '...' + interimTranscript : '')
+        })
+      }
     }
 
     recognition.onerror = (event) => {
