@@ -169,11 +169,18 @@ function STTTestUI() {
     }
 
     recognition.onresult = (event: any) => {
-      let fullTranscript = ''
+      let interim = ''
+      // 모든 결과를 순회하면서 최신 interim 결과만 추출
       for (let i = 0; i < event.results.length; ++i) {
-        fullTranscript += event.results[i][0].transcript
+        if (event.results[i].isFinal) {
+          // final 결과는 finalTranscript에 추가
+          setFinalTranscript(prev => (prev + ' ' + event.results[i][0].transcript).trim())
+        } else {
+          // interim 결과는 현재 interim에 누적
+          interim += event.results[i][0].transcript
+        }
       }
-      setFinalTranscript(fullTranscript)
+      setInterimTranscript(interim)
     }
 
     recognition.onerror = (event: any) => {
@@ -208,8 +215,21 @@ function STTTestUI() {
     }
 
     recognition.onend = () => {
-      addLog('⏹️ STT 세션이 종료되었습니다.')
-      setIsSTTActive(false)
+      addLog(`⏹️ STT 세션 종료됨. 중지 요청: ${isStoppingRef.current}`)
+      
+      // interimTranscript가 남아있다면 finalTranscript로 이동
+      if (interimTranscript.trim()) {
+        setFinalTranscript(prev => (prev + ' ' + interimTranscript).trim())
+        setInterimTranscript('')
+      }
+
+      if (!isStoppingRef.current) {
+        addLog('🔄 자동 재시작...')
+        recognition.start()
+      } else {
+        setIsSTTActive(false)
+        recognitionRef.current = null
+      }
     }
 
     return recognition
@@ -257,8 +277,11 @@ function STTTestUI() {
     recognition.onend = () => {
       addLog(`⏹️ STT 세션 종료됨. 중지 요청: ${isStoppingRef.current}`)
       
-      setFinalTranscript(prev => (prev + ' ' + interimTranscript).trim())
-      setInterimTranscript('')
+      // interimTranscript가 남아있다면 finalTranscript로 이동
+      if (interimTranscript.trim()) {
+        setFinalTranscript(prev => (prev + ' ' + interimTranscript).trim())
+        setInterimTranscript('')
+      }
 
       if (!isStoppingRef.current) {
         addLog('🔄 자동 재시작...')
