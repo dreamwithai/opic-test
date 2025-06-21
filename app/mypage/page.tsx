@@ -7,6 +7,7 @@ import { useSession } from "next-auth/react";
 import FullScreenLoader from '../components/FullScreenLoader'
 import LoadingSpinner from '../components/LoadingSpinner'
 import Breadcrumb from "../components/Breadcrumb";
+import { ClipboardList } from "lucide-react";
 
 interface TestSessionRow {
   id: string;
@@ -86,10 +87,11 @@ export default function MyPage() {
       <div className="max-w-5xl mx-auto py-10 px-4">
         <div className="mb-6">
           <Breadcrumb items={[{ href: '/', label: '홈' }, { label: '마이페이지' }]} />
-          <div className="mt-2">
+          <div className="mt-2 flex items-center gap-3">
+            <ClipboardList className="h-8 w-8 text-gray-700" />
             <h2 className="text-3xl font-bold text-gray-800">마이페이지</h2>
-            <p className="text-gray-600 font-medium mt-2">내 응시내역을 보실 수 있습니다.</p>
           </div>
+          <p className="text-gray-600 font-medium mt-2 ml-11">내 응시내역을 보실 수 있습니다.</p>
         </div>
         
         <div className="flex justify-end mb-4 gap-2">

@@ -4,6 +4,7 @@ import { useSession, signOut } from "next-auth/react";
 import { useState, useEffect, useRef } from "react";
 import { usePathname } from 'next/navigation';
 import Image from 'next/image';
+import { LogOut, User, Settings, ClipboardList } from 'lucide-react';
 
 export default function LoginInfoHeader() {
   const { data: session, status } = useSession();
@@ -75,16 +76,18 @@ export default function LoginInfoHeader() {
                   <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-10">
                     <Link 
                       href="/mypage" 
-                      className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                      className="flex items-center gap-3 px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
                       onClick={closeDropdown}
                     >
+                      <ClipboardList className="h-4 w-4" />
                       마이페이지
                     </Link>
                     <Link 
                       href="/profile" 
-                      className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                      className="flex items-center gap-3 px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
                       onClick={closeDropdown}
                     >
+                      <Settings className="h-4 w-4" />
                       설정
                     </Link>
                     {user.type === 'admin' && (
