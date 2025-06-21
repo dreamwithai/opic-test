@@ -22,6 +22,7 @@ function STTTestUI() {
   const [sttError, setSttError] = useState('')
   const [finalTranscripts, setFinalTranscripts] = useState<string[]>([])
   const [interimTranscript, setInterimTranscript] = useState('')
+  const userStopped = useRef(false) // 사용자가 직접 중지했는지 여부
   
   // 디바이스 정보
   const [deviceInfo, setDeviceInfo] = useState<any>({})
@@ -224,14 +225,27 @@ function STTTestUI() {
     }
 
     recognition.onend = () => {
-      setIsSTTActive(false)
-      addLog('⏹️ STT 종료됨')
+      addLog(`⏹️ STT onend event. User stopped: ${userStopped.current}`)
+      
+      if (userStopped.current) {
+        setIsSTTActive(false)
+      } else {
+        // 비정상 종료 시 자동 재시작
+        addLog('🔄 STT가 비정상적으로 종료되어 재시작합니다...')
+        try {
+          recognition.start()
+        } catch (e) {
+          addLog(`❌ 재시작 실패: ${e}`)
+          setIsSTTActive(false)
+        }
+      }
     }
 
     return recognition
   }
 
   const startSTT = async () => {
+    userStopped.current = false // 시작 시 플래그 리셋
     if (!recognition) {
       const newRecognition = initializeSpeechRecognition()
       if (newRecognition) {
@@ -262,11 +276,13 @@ function STTTestUI() {
 
   const stopSTT = () => {
     if (recognition && isSTTActive) {
+      userStopped.current = true // 사용자가 직접 중지했음을 표시
       recognition.stop()
     }
   }
 
   const resetSTT = () => {
+    userStopped.current = true // 리셋도 수동 중지로 간주
     stopSTT()
     setSttText('')
     setFinalTranscripts([])
@@ -301,16 +317,10 @@ function STTTestUI() {
 
   // 모바일 최적화된 STT 설정
   const getMobileOptimizedSettings = () => {
-    if (browserInfo.isMobile) {
-      return {
-        continuous: false, // 모바일에서는 연속 인식 비활성화
-        interimResults: true,
-        maxAlternatives: 1
-      }
-    }
+    // 모바일에서도 연속 인식을 활성화하여 긴 문장 지원
     return {
-      continuous,
-      interimResults,
+      continuous: true,
+      interimResults: true,
       maxAlternatives: 1
     }
   }
