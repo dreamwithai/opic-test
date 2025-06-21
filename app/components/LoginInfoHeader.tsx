@@ -87,6 +87,15 @@ export default function LoginInfoHeader() {
                     >
                       회원정보 수정
                     </Link>
+                    {user.type === 'admin' && (
+                      <Link 
+                        href="/admin" 
+                        className="block px-4 py-2 text-sm text-purple-600 hover:bg-purple-50 border-t border-gray-100"
+                        onClick={closeDropdown}
+                      >
+                        관리자 페이지
+                      </Link>
+                    )}
                     <button
                       onClick={handleLogout}
                       className="w-full text-left block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
