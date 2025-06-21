@@ -3,6 +3,7 @@ import type { Metadata } from 'next'
 import LoginInfoHeader from './components/LoginInfoHeader'
 import { Viewport } from 'next'
 import AuthProvider from './components/AuthProvider'
+import ScrollToTop from './components/ScrollToTop'
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://opic-test.vercel.app'),
@@ -45,6 +46,7 @@ export default function RootLayout({
     <html lang="ko">
       <body>
         <AuthProvider>
+          <ScrollToTop />
           <LoginInfoHeader />
           {children}
         </AuthProvider>

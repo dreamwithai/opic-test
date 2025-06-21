@@ -24,10 +24,14 @@ export default function MyPage() {
   const { data: session, status: authStatus } = useSession();
   const [sessions, setSessions] = useState<TestSessionRow[]>([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [viewType, setViewType] = useState<'card' | 'table'>('card');
+  const [viewType, setViewType] = useState<'card' | 'table' | null>(null);
   const router = useRouter();
 
   useEffect(() => {
+    // Detect device type and set default view
+    const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+    setViewType(isMobile ? 'card' : 'table');
+
     const fetchSessions = async () => {
       if (authStatus === 'authenticated' && session?.user?.id) {
         setIsLoading(true);
@@ -94,22 +98,7 @@ export default function MyPage() {
           <p className="text-gray-600 font-medium mt-2 ml-11">내 응시내역을 보실 수 있습니다.</p>
         </div>
         
-        <div className="flex justify-end mb-4 gap-2">
-          <button
-            className={`px-4 py-2 rounded-md font-semibold border text-sm ${viewType === 'card' ? 'bg-blue-600 text-white border-blue-600' : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-100'}`}
-            onClick={() => setViewType('card')}
-          >
-            카드형 보기
-          </button>
-          <button
-            className={`px-4 py-2 rounded-md font-semibold border text-sm ${viewType === 'table' ? 'bg-blue-600 text-white border-blue-600' : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-100'}`}
-            onClick={() => setViewType('table')}
-          >
-            테이블형 보기
-          </button>
-        </div>
-
-        {isLoading ? (
+        {isLoading || viewType === null ? (
           <div className="flex justify-center items-center py-12">
             <LoadingSpinner className="mx-auto" />
           </div>
