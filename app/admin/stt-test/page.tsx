@@ -169,18 +169,35 @@ function STTTestUI() {
     }
 
     recognition.onresult = (event: any) => {
-      let interim = ''
-      // 모든 결과를 순회하면서 최신 interim 결과만 추출
+      let currentInterim = ''
+      let newFinalText = ''
+      
+      // 모든 결과를 순회하면서 처리
       for (let i = 0; i < event.results.length; ++i) {
-        if (event.results[i].isFinal) {
-          // final 결과는 finalTranscript에 추가
-          setFinalTranscript(prev => (prev + ' ' + event.results[i][0].transcript).trim())
+        const result = event.results[i]
+        const transcript = result[0].transcript
+        
+        if (result.isFinal) {
+          // final 결과는 누적할 텍스트에 추가
+          newFinalText += (newFinalText ? ' ' : '') + transcript
         } else {
-          // interim 결과는 현재 interim에 누적
-          interim += event.results[i][0].transcript
+          // interim 결과는 현재 interim에 추가
+          currentInterim += (currentInterim ? ' ' : '') + transcript
         }
       }
-      setInterimTranscript(interim)
+      
+      // 새로운 final 텍스트가 있으면 누적
+      if (newFinalText) {
+        setFinalTranscript(prev => (prev + (prev ? ' ' : '') + newFinalText).trim())
+      }
+      
+      // interim 텍스트 업데이트
+      setInterimTranscript(currentInterim)
+      
+      // 디버깅용 로그
+      if (newFinalText || currentInterim) {
+        addLog(`📝 결과: final="${newFinalText}", interim="${currentInterim}"`)
+      }
     }
 
     recognition.onerror = (event: any) => {
