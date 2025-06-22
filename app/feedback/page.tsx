@@ -430,25 +430,33 @@ export default function FeedbackPage() {
             </div>
           </div>
 
-          {/* Action Buttons */}
-          <div className="flex justify-center gap-4 max-w-lg mx-auto">
+          {/* 하단 버튼 영역 */}
+          <div className="sticky bottom-0 left-0 right-0 bg-white p-4 border-t border-gray-200 shadow-md flex items-center gap-4">
             <button
               onClick={handleSave}
-              className={`w-full px-6 py-4 rounded-lg font-bold text-lg text-white transition-colors duration-300 flex items-center justify-center gap-3 ${
+              className={`w-1/2 flex items-center justify-center text-center gap-2 px-6 py-3 rounded-lg font-bold text-white transition-colors duration-300 ${
                 isSaving
                   ? 'bg-gray-400 cursor-not-allowed'
-                  : 'bg-indigo-600 hover:bg-indigo-700'
+                  : 'bg-green-600 hover:bg-green-700'
               }`}
               disabled={isSaving}
             >
               {isSaving && <span className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></span>}
-              {isSaving ? '저장 중...' : '저장 및 응시 리스트 보기'}
+              <span className="leading-tight">
+                저장 및 응시
+                <br />
+                리스트 보기
+              </span>
             </button>
-            <button 
+            <button
               onClick={handleNextQuestion}
-              className="flex-1 bg-blue-600 hover:bg-blue-700 text-white px-4 py-3 rounded-lg font-medium transition-colors text-center leading-tight"
+              className="w-1/2 flex items-center justify-center text-center bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-bold transition-colors duration-300"
             >
-              <span className="block sm:inline">{isLastQuestion ? '다른 문제 풀기' : '다음 문제 풀기'}</span>
+              <span className="leading-tight">
+                다른 문제
+                <br />
+                풀기
+              </span>
             </button>
           </div>
           {saveResult && (

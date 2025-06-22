@@ -361,40 +361,54 @@ export default function TestPage() {
 
   // Recording functions
   const startRecording = async () => {
-    try {
-      setRecordingError('')
-      setSttError('')
+    if (isRecording) return
+    setRecordingError('')
+    setSttError('')
+    setRecordedBlob(null)
 
-      // 마이크 권한 요청
+    try {
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true })
       
-      // MediaRecorder 생성
-      const recorder = new MediaRecorder(stream)
-      const chunks: BlobPart[] = []
+      const options = { mimeType: 'audio/webm; codecs=opus' }
+      let recorder: MediaRecorder;
+      if (MediaRecorder.isTypeSupported(options.mimeType)) {
+        console.log(`Using supported mimeType: ${options.mimeType}`)
+        recorder = new MediaRecorder(stream, options)
+      } else {
+        console.warn(`${options.mimeType} is not supported, falling back to default.`)
+        recorder = new MediaRecorder(stream) // Fallback to default
+      }
       
-      recorder.ondataavailable = (event) => {
+      const chunks: BlobPart[] = []
+      recorder.ondataavailable = (event: BlobEvent) => {
         if (event.data.size > 0) {
           chunks.push(event.data)
         }
       }
-      
+
       recorder.onstop = () => {
-        const blob = new Blob(chunks, { type: 'audio/wav' })
+        // 녹음 중지 시 Blob 타입 명시
+        const blob = new Blob(chunks, { type: recorder.mimeType || 'audio/webm' })
         setRecordedBlob(blob)
-        stream.getTracks().forEach(track => track.stop()) // 마이크 스트림 정리
+        stream.getTracks().forEach(track => track.stop())
       }
-      
-      recorder.start()
+
       setMediaRecorder(recorder)
+      recorder.start()
       setIsRecording(true)
       setRecordingTime(0)
-
+      
       // STT 시작
       startSTT()
-      
-    } catch (error) {
-      setRecordingError('마이크 접근 권한이 필요합니다. 브라우저 설정을 확인해주세요.')
-      console.error('Recording start error:', error)
+
+    } catch (err) {
+      console.error('Failed to get user media', err)
+      if (err instanceof Error) {
+        setRecordingError(`마이크 접근에 실패했습니다: ${err.message}`)
+      } else {
+        setRecordingError('마이크 접근에 실패했습니다.')
+      }
+      setIsRecording(false)
     }
   }
 
