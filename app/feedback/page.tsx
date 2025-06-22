@@ -125,55 +125,64 @@ export default function FeedbackPage() {
       const firstAnswer = storedAnswers[0]?.answer || '';
       const firstFeedback = storedAnswers[0]?.feedback || '';
 
-      // 1. test_session에 insert
-      const { data: sessionData, error: sessionError } = await supabase.from('test_session').insert([
-        {
-          member_id: session.user.id,
-          type: selectedType,
-          theme: storedAnswers[0]?.theme || currentTheme,
-          level: selectedLevel,
-          first_answer: firstAnswer,
-          first_feedback: typeof firstFeedback === 'string' ? firstFeedback : JSON.stringify(firstFeedback)
-        }
-      ]).select('id').single();
+      // save-session API 호출을 위한 데이터 준비
+      const sessionData = {
+        type: selectedType,
+        theme: storedAnswers[0]?.theme || currentTheme,
+        level: selectedLevel,
+        first_answer: firstAnswer,
+        first_feedback: typeof firstFeedback === 'string' ? firstFeedback : JSON.stringify(firstFeedback)
+      };
 
-      if (sessionError || !sessionData) {
-        setSaveResult('❌ 시험 세트 저장 실패: ' + (sessionError?.message || '오류'));
-        setIsSaving(false);
-        return;
-      }
-      const sessionId = sessionData.id;
-
-      // 2. test_answers에 insert (session_id로 연결)
-      const answersToInsert = storedAnswers
+      // 답변 데이터 준비
+      const answersData = storedAnswers
         .filter((answer: any) => answer && answer.answer)
         .map((answer: any) => ({
-          session_id: sessionId,
           q_id: answer.qId || 0,
           q_seq: answer.qSeq || 0,
           answer_text: answer.answer,
-          answer_url: answer.answer_url || null, // 녹음파일 등
+          answer_url: answer.uploadedPath || null, // temp 폴더의 상대 경로
           feedback: answer.feedback ? (typeof answer.feedback === 'string' ? answer.feedback : JSON.stringify(answer.feedback)) : null
         }));
-      if (answersToInsert.length === 0) {
-        setSaveResult('❌ 저장할 유효한 답변이 없습니다.');
-        setIsSaving(false);
-        return;
-      }
-      const { error: answersError } = await supabase.from('test_answers').insert(answersToInsert);
-      if (answersError) {
-        setSaveResult('❌ 답변 저장 실패: ' + answersError.message);
-        setIsSaving(false);
-        return;
+
+      // 녹음 파일 정보 준비
+      const recordingFiles = storedAnswers
+        .filter((answer: any) => answer.uploadedPath)
+        .map((answer: any) => ({
+          path: answer.uploadedPath // 'USER_ID/FILENAME.webm' 형태
+        }));
+
+      // save-session API 호출
+      const response = await fetch('/api/save-session', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          sessionData,
+          answersData,
+          recordingFiles
+        })
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || '저장 실패');
       }
 
-      setSaveResult(`✅ 시험 세트 및 ${answersToInsert.length}개 답변이 모두 저장되었습니다.`);
-      localStorage.removeItem('testAnswers');
+      const result = await response.json();
       
-      // 마이페이지로 이동하기 전에 잠시 딜레이를 주어 메시지를 확인하게 함
-      setTimeout(() => {
-        router.push('/mypage');
-      }, 1500);
+      if (result.success) {
+        setSaveResult(`✅ 시험 세트 및 ${result.savedAnswers}개 답변이 모두 저장되었습니다.`);
+        localStorage.removeItem('testAnswers');
+        
+        // 마이페이지로 이동하기 전에 잠시 딜레이를 주어 메시지를 확인하게 함
+        setTimeout(() => {
+          router.push('/mypage');
+        }, 1500);
+      } else {
+        throw new Error(result.error || '저장 실패');
+      }
 
     } catch (e) {
       console.error('Save error:', e);
@@ -423,11 +432,17 @@ export default function FeedbackPage() {
 
           {/* Action Buttons */}
           <div className="flex justify-center gap-4 max-w-lg mx-auto">
-            <button 
+            <button
               onClick={handleSave}
-              className="flex-1 bg-green-500 hover:bg-green-600 text-white px-4 py-3 rounded-lg font-medium transition-colors text-center leading-tight"
+              className={`w-full px-6 py-4 rounded-lg font-bold text-lg text-white transition-colors duration-300 flex items-center justify-center gap-3 ${
+                isSaving
+                  ? 'bg-gray-400 cursor-not-allowed'
+                  : 'bg-indigo-600 hover:bg-indigo-700'
+              }`}
+              disabled={isSaving}
             >
-              <span className="block sm:inline">저장 및<br className="sm:hidden" /> 응시 리스트 보기</span>
+              {isSaving && <span className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></span>}
+              {isSaving ? '저장 중...' : '저장 및 응시 리스트 보기'}
             </button>
             <button 
               onClick={handleNextQuestion}

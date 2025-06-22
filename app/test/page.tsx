@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { useRouter, useSearchParams } from 'next/navigation'
+import { useSession } from 'next-auth/react'
 import { getAudioUrl } from '@/lib/supabase'
 
 // Speech Recognition type declaration
@@ -94,9 +95,19 @@ const defaultQuestions: Question[] = [
   }
 ]
 
+// UUID 생성 함수
+const generateUUID = (): string => {
+  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+    const r = Math.random() * 16 | 0;
+    const v = c === 'x' ? r : (r & 0x3 | 0x8);
+    return v.toString(16);
+  });
+}
+
 export default function TestPage() {
   const router = useRouter()
   const searchParams = useSearchParams()
+  const session = useSession()
   
   // State management
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0)
@@ -131,6 +142,9 @@ export default function TestPage() {
   const [sttError, setSttError] = useState('') // STT 에러 메시지
   const [recognition, setRecognition] = useState<SpeechRecognition | null>(null) // 음성 인식 객체
   const [selectedSTTType, setSelectedSTTType] = useState<string>('A') // 선택된 STT 타입
+
+  // Upload states
+  const [isUploading, setIsUploading] = useState(false) // 업로드 진행 상태
 
   // Load questions from API
   const loadQuestions = async (category: string) => {
@@ -292,6 +306,55 @@ export default function TestPage() {
     return question.Theme || question.theme || question.q_theme || ''
   }
 
+  // 녹음 파일을 Storage에 업로드하는 함수
+  const uploadRecording = async (blob: Blob, questionIndex: number): Promise<string | null> => {
+    if (!session.data?.user?.id) {
+      console.error('User not authenticated')
+      return null
+    }
+
+    setIsUploading(true)
+    try {
+      const currentQuestion = questions[questionIndex]
+      const theme = getTheme(currentQuestion)
+      const qId = currentQuestion?.q_id || 0
+      const qSeq = currentQuestion?.q_seq || 0
+      const uuid = generateUUID()
+      
+      // 파일명을 theme_Qid_Qseq_UUID 형식으로 생성
+      // 테마에 포함된 '/' 문자를 '_'로 변경하여 폴더가 생성되지 않도록 함
+      const sanitizedTheme = theme.replace(/\//g, '_');
+      const fileName = `${sanitizedTheme}_Q${qId}_${qSeq}_${uuid}.webm`
+      
+      const formData = new FormData()
+      formData.append('file', blob, fileName)
+      formData.append('memberId', session.data.user.id)
+      formData.append('fileName', fileName)
+
+      const response = await fetch('/api/upload-recording', {
+        method: 'POST',
+        body: formData
+      })
+
+      if (!response.ok) {
+        throw new Error('Upload failed')
+      }
+
+      const result = await response.json()
+      if (result.success) {
+        console.log('Recording uploaded successfully:', result.path)
+        return result.path
+      } else {
+        throw new Error(result.error || 'Upload failed')
+      }
+    } catch (error) {
+      console.error('Error uploading recording:', error)
+      return null
+    } finally {
+      setIsUploading(false)
+    }
+  }
+
   const handleBack = () => {
     router.back()
   }
@@ -301,7 +364,7 @@ export default function TestPage() {
     try {
       setRecordingError('')
       setSttError('')
-      
+
       // 마이크 권한 요청
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true })
       
@@ -325,7 +388,7 @@ export default function TestPage() {
       setMediaRecorder(recorder)
       setIsRecording(true)
       setRecordingTime(0)
-      
+
       // STT 시작
       startSTT()
       
@@ -932,11 +995,17 @@ export default function TestPage() {
             {currentQuestionIndex < questions.length - 1 ? (
               // 마지막 문제가 아닌 경우: 다음문제 버튼
               <button 
-                onClick={() => {
+                onClick={async () => {
                   // 녹음 중인지 확인
                   if (isRecording) {
                     alert('녹음이 진행 중입니다. 녹음을 정지한 후 다음 문제로 넘어가주세요.')
                     return
+                  }
+                  
+                  // 녹음 파일이 있으면 Storage에 업로드
+                  let uploadedPath = null
+                  if (recordedBlob) {
+                    uploadedPath = await uploadRecording(recordedBlob, currentQuestionIndex)
                   }
                   
                   // STT 텍스트와 녹음 데이터를 로컬 스토리지에 저장
@@ -946,7 +1015,8 @@ export default function TestPage() {
                     qSeq: currentQuestion?.q_seq,
                     theme: getTheme(currentQuestion),
                     answer: sttText || "음성 인식된 답변이 없습니다. 녹음을 다시 시도해주세요.",
-                    recordedBlob: recordedBlob
+                    recordedBlob: recordedBlob,
+                    uploadedPath: uploadedPath // 업로드된 파일 경로 추가
                   }
                   
                   // 기존 답변들 가져오기
@@ -965,22 +1035,33 @@ export default function TestPage() {
                   window.scrollTo({ top: 0, behavior: 'smooth' })
                 }}
                 className={`px-8 py-3 rounded-lg font-medium transition-colors ${
-                  isRecording 
+                  isRecording || isUploading
                     ? 'bg-gray-400 text-white cursor-not-allowed' 
                     : 'bg-green-600 hover:bg-green-700 text-white'
                 }`}
-                disabled={isRecording}
+                disabled={isRecording || isUploading}
               >
-                {isRecording ? '녹음 중...' : '다음문제'}
+                {isRecording ? '녹음 중...' : isUploading ? (
+                  <span className="flex items-center justify-center gap-2">
+                    <span className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></span>
+                    다음문제
+                  </span>
+                ) : '다음문제'}
               </button>
             ) : (
               // 마지막 문제인 경우: 답변제출 및 피드백받기 버튼
               <button 
-                onClick={() => {
+                onClick={async () => {
                   // 녹음 중인지 확인
                   if (isRecording) {
                     alert('녹음이 진행 중입니다. 녹음을 정지한 후 답변을 제출해주세요.')
                     return
+                  }
+                  
+                  // 녹음 파일이 있으면 Storage에 업로드
+                  let uploadedPath = null
+                  if (recordedBlob) {
+                    uploadedPath = await uploadRecording(recordedBlob, currentQuestionIndex)
                   }
                   
                   const currentTheme = getTheme(currentQuestion)
@@ -993,7 +1074,8 @@ export default function TestPage() {
                     qSeq: currentQuestion?.q_seq,
                     theme: currentTheme,
                     answer: userAnswer,
-                    recordedBlob: recordedBlob
+                    recordedBlob: recordedBlob,
+                    uploadedPath: uploadedPath // 업로드된 파일 경로 추가
                   }
                   
                   const existingAnswers = JSON.parse(localStorage.getItem('testAnswers') || '[]')
@@ -1004,13 +1086,18 @@ export default function TestPage() {
                   router.push(feedbackUrl)
                 }}
                 className={`px-8 py-3 rounded-lg font-medium transition-colors ${
-                  isRecording 
+                  isRecording || isUploading
                     ? 'bg-gray-400 text-white cursor-not-allowed' 
                     : 'bg-blue-600 hover:bg-blue-700 text-white'
                 }`}
-                disabled={isRecording}
+                disabled={isRecording || isUploading}
               >
-                {isRecording ? '녹음 중...' : '답변제출 및 피드백받기'}
+                {isRecording ? '녹음 중...' : isUploading ? (
+                  <span className="flex items-center justify-center gap-2">
+                    <span className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></span>
+                    답변제출 및 피드백받기
+                  </span>
+                ) : '답변제출 및 피드백받기'}
               </button>
             )}
           </div>

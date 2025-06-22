@@ -116,7 +116,12 @@ export default function MyPage() {
                   <div className="text-xs text-gray-500 mb-2">{new Date(row.started_at).toLocaleDateString()}</div>
                   <p className="text-sm text-gray-700 break-all"><strong>내 답변:</strong> {row.first_answer?.slice(0, 50) || '-'}...</p>
                 </div>
-                <button className="mt-3 w-full bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded font-medium text-sm">결과 상세보기</button>
+                <button 
+                  onClick={() => router.push(`/mypage/session/${row.id}`)}
+                  className="mt-3 w-full bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded font-medium text-sm"
+                >
+                  결과 상세보기
+                </button>
               </div>
             ))}
           </div>
@@ -137,7 +142,14 @@ export default function MyPage() {
                     <td className="px-4 py-2 text-gray-700">{new Date(row.started_at).toLocaleDateString()}</td>
                     <td className="px-4 py-2 text-gray-700">{row.type} ({row.theme})</td>
                     <td className="px-4 py-2 text-gray-600 truncate max-w-sm">{row.first_answer || '-'}</td>
-                    <td className="px-4 py-2"><button className="text-blue-600 hover:underline font-medium">결과 보기</button></td>
+                    <td className="px-4 py-2">
+                      <button 
+                        onClick={() => router.push(`/mypage/session/${row.id}`)}
+                        className="text-blue-600 hover:underline font-medium"
+                      >
+                        결과 보기
+                      </button>
+                    </td>
                   </tr>
                 ))}
               </tbody>
