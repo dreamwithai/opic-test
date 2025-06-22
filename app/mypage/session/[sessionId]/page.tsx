@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useEffect, useState } from 'react'
+import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { useRouter, useParams } from 'next/navigation'
 import { supabase } from '@/lib/supabase'
@@ -8,7 +8,6 @@ import { useSession } from 'next-auth/react'
 import { ArrowLeft, Play, Pause, RotateCcw } from 'lucide-react'
 import Breadcrumb from '@/app/components/Breadcrumb'
 import FullScreenLoader from '@/app/components/FullScreenLoader'
-import LoadingSpinner from '@/app/components/LoadingSpinner'
 
 interface SessionData {
   id: string
@@ -100,7 +99,7 @@ export default function SessionDetailPage() {
     fetchSessionData()
   }, [sessionId, status, session])
 
-  const playAudio = (audioUrl: string | null) => {
+  const playAudio = async (audioUrl: string | null) => {
     if (currentAudio) {
       currentAudio.pause();
       currentAudio.currentTime = 0;
@@ -111,40 +110,55 @@ export default function SessionDetailPage() {
       return;
     }
 
-    // audioUrl은 이제 'permanent/...' 형태의 올바른 상대 경로
-    const { data: urlData } = supabase.storage.from('recordings').getPublicUrl(audioUrl);
-    
-    // getPublicUrl이 반환하는 URL에서 '/render/raw' 경로 제거
-    const fullAudioUrl = urlData.publicUrl.replace('/render/raw', '');
+    try {
+      // 1. 백엔드 API에 서명된 URL 요청
+      const response = await fetch('/api/get-signed-audio-url', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ filePath: audioUrl }),
+      });
 
-    console.log('Playing audio from relative path:', audioUrl);
-    console.log('Final public URL:', fullAudioUrl);
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || '오디오 URL을 가져오지 못했습니다.');
+      }
 
-    const audio = new Audio(fullAudioUrl);
-    
-    audio.addEventListener('error', (e) => {
-      console.error('Audio error:', e)
-      console.error('Audio error details:', audio.error)
-      alert('오디오 파일을 재생할 수 없습니다.')
-      setIsPlaying(false)
-      setCurrentAudio(null);
-    })
-    
-    audio.addEventListener('ended', () => {
+      const { signedUrl } = await response.json();
+      
+      console.log('Playing audio from signed URL:', signedUrl);
+
+      const audio = new Audio(signedUrl);
+      
+      audio.addEventListener('error', (e) => {
+        console.error('Audio error:', e)
+        console.error('Audio error details:', audio.error)
+        alert('오디오 파일을 재생할 수 없습니다. 파일이 존재하지 않거나 접근 권한이 없을 수 있습니다.')
+        setIsPlaying(false)
+        setCurrentAudio(null);
+      })
+      
+      audio.addEventListener('ended', () => {
+        setIsPlaying(false);
+        setCurrentAudio(null);
+      });
+      audio.addEventListener('play', () => setIsPlaying(true))
+      audio.addEventListener('pause', () => setIsPlaying(false))
+      
+      audio.play().catch((error) => {
+        console.error('Audio play error:', error)
+        alert('오디오 재생에 실패했습니다.')
+        setIsPlaying(false)
+        setCurrentAudio(null);
+      })
+      
+      setCurrentAudio(audio)
+    } catch (error) {
+      console.error('Failed to get signed URL:', error);
+      alert(error instanceof Error ? error.message : '오디오 재생 중 오류가 발생했습니다.');
       setIsPlaying(false);
-      setCurrentAudio(null);
-    });
-    audio.addEventListener('play', () => setIsPlaying(true))
-    audio.addEventListener('pause', () => setIsPlaying(false))
-    
-    audio.play().catch((error) => {
-      console.error('Audio play error:', error)
-      alert('오디오 재생에 실패했습니다.')
-      setIsPlaying(false)
-      setCurrentAudio(null);
-    })
-    
-    setCurrentAudio(audio)
+    }
   }
 
   const stopAudio = () => {
@@ -211,22 +225,21 @@ export default function SessionDetailPage() {
           <Breadcrumb items={[
             { href: '/', label: '홈' }, 
             { href: '/mypage', label: '마이페이지' }, 
-            { label: '결과 상세보기' }
+            { label: '내 답변 다시보기' }
           ]} />
-          <div className="flex items-center justify-between mt-4">
-            <div>
-              <h1 className="text-3xl font-bold text-gray-800">결과 상세보기</h1>
-              <p className="text-gray-600 mt-2">
-                {sessionData.type} ({sessionData.theme}) - {new Date(sessionData.started_at).toLocaleDateString()}
-              </p>
-            </div>
-            <Link
-              href="/mypage"
-              className="flex items-center gap-2 px-4 py-2 text-gray-600 hover:text-gray-800 transition-colors"
-            >
-              <ArrowLeft size={20} />
-              마이페이지로 돌아가기
-            </Link>
+          <div className="mt-4">
+            <h1 className="text-3xl font-bold text-gray-800 flex items-baseline justify-between">
+              <span>
+                {
+                  sessionData.type === '롤플레이' && sessionData.theme ? `롤플레이_${sessionData.theme.slice(-2)}` :
+                  sessionData.type === '모의고사' && sessionData.theme ? `모의고사 ${sessionData.theme.slice(-3)}회` :
+                  `${sessionData.type} (${sessionData.theme})`
+                }
+              </span>
+              <span className="text-xl font-normal text-gray-600">
+                {new Date(sessionData.started_at).getFullYear()}.{String(new Date(sessionData.started_at).getMonth() + 1).padStart(2, '0')}.{String(new Date(sessionData.started_at).getDate()).padStart(2, '0')}
+              </span>
+            </h1>
           </div>
         </div>
 
@@ -239,7 +252,7 @@ export default function SessionDetailPage() {
               <div key={answer.id} className="bg-white rounded-lg shadow-sm border p-6">
                 <div className="flex items-center justify-between mb-4">
                   <h3 className="text-xl font-semibold text-gray-800">
-                    문제 {index + 1} (Q{answer.q_id}-{answer.q_seq})
+                    문제 {index + 1}
                   </h3>
                   {answer.answer_url && (
                     <div className="flex items-center gap-2">
@@ -266,7 +279,6 @@ export default function SessionDetailPage() {
 
                 {/* 답변 내용 */}
                 <div className="mb-4">
-                  <h4 className="font-medium text-gray-700 mb-2">내 답변:</h4>
                   <div className="bg-gray-50 rounded-lg p-4">
                     <p className="text-gray-800 leading-relaxed">{answer.answer_text}</p>
                   </div>

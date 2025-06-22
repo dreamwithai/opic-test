@@ -58,9 +58,6 @@ export default function LoginInfoHeader() {
                   onClick={() => setIsDropdownOpen(!isDropdownOpen)}
                   className="flex items-center gap-2"
                 >
-                  <span className="hidden sm:inline text-gray-700 font-medium text-sm">
-                    {user.name} 님
-                  </span>
                   <div className="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center overflow-hidden">
                     {user.image ? (
                       <img src={user.image} alt="프로필" className="w-full h-full object-cover" />

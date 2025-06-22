@@ -110,44 +110,74 @@ export default function MyPage() {
         ) : viewType === 'card' ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {sessions.map((row) => (
-              <div key={row.id} className="border rounded-lg p-4 shadow-sm bg-white hover:shadow-md transition-shadow duration-300 flex flex-col justify-between">
-                <div>
-                  <div className="font-semibold text-blue-700">{row.type} ({row.theme})</div>
-                  <div className="text-xs text-gray-500 mb-2">{new Date(row.started_at).toLocaleDateString()}</div>
-                  <p className="text-sm text-gray-700 break-all"><strong>내 답변:</strong> {row.first_answer?.slice(0, 50) || '-'}...</p>
-                </div>
-                <button 
+              <div key={row.id} className="border rounded-lg p-4 shadow-sm bg-white hover:shadow-md transition-shadow duration-300">
+                <div 
+                  className="cursor-pointer"
                   onClick={() => router.push(`/mypage/session/${row.id}`)}
-                  className="mt-3 w-full bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded font-medium text-sm"
                 >
-                  결과 상세보기
-                </button>
+                  <div className="flex justify-between items-center">
+                    <span className="text-xs text-gray-500">{new Date(row.started_at).toLocaleDateString()}</span>
+                    <span className="text-sm text-blue-600 hover:underline">상세보기 &gt;</span>
+                  </div>
+                  <hr className="my-2" />
+                  <div className="font-semibold text-gray-800">
+                    {
+                      row.type === '롤플레이' && row.theme ? `롤플레이_${row.theme.slice(-2)}` :
+                      row.type === '모의고사' && row.theme ? `모의고사 ${row.theme.slice(-3)}회` :
+                      `${row.type} (${row.theme})`
+                    }
+                  </div>
+                  <div className="flex text-sm text-gray-700 mt-2">
+                    <strong className="flex-shrink-0 mr-1">내 답변:</strong>
+                    <span className="truncate">{row.first_answer || '-'}</span>
+                  </div>
+                  <div className="flex text-sm text-gray-700 mt-1">
+                    <strong className="flex-shrink-0 mr-1">전문가 피드백:</strong>
+                    <span className="truncate">{row.first_feedback || '-'}</span>
+                  </div>
+                </div>
               </div>
             ))}
           </div>
         ) : (
           <div className="bg-white border rounded-lg shadow-sm overflow-x-auto">
-            <table className="min-w-full text-sm text-left">
+            <table className="min-w-full text-sm text-left table-fixed">
               <thead className="bg-gray-50">
                 <tr>
-                  <th className="px-4 py-3 font-medium text-gray-600">일자</th>
-                  <th className="px-4 py-3 font-medium text-gray-600">유형</th>
-                  <th className="px-4 py-3 font-medium text-gray-600">첫 답변</th>
-                  <th className="px-4 py-3 font-medium text-gray-600">상세</th>
+                  <th className="px-4 py-3 font-medium text-gray-600 w-[15%]">일자</th>
+                  <th className="px-4 py-3 font-medium text-gray-600 w-[20%]">유형</th>
+                  <th className="px-4 py-3 font-medium text-gray-600 w-[30%]">내 답변</th>
+                  <th className="px-4 py-3 font-medium text-gray-600 w-[25%]">전문가 피드백</th>
+                  <th className="px-4 py-3 font-medium text-gray-600 w-[10%]">상세</th>
                 </tr>
               </thead>
               <tbody>
                 {sessions.map((row) => (
                   <tr key={row.id} className="border-t hover:bg-gray-50 transition-colors">
-                    <td className="px-4 py-2 text-gray-700">{new Date(row.started_at).toLocaleDateString()}</td>
-                    <td className="px-4 py-2 text-gray-700">{row.type} ({row.theme})</td>
-                    <td className="px-4 py-2 text-gray-600 truncate max-w-sm">{row.first_answer || '-'}</td>
-                    <td className="px-4 py-2">
+                    <td className="px-4 py-2 text-gray-700 align-top whitespace-nowrap">{new Date(row.started_at).toLocaleDateString()}</td>
+                    <td className="px-4 py-2 text-gray-700 align-top whitespace-nowrap">
+                      {
+                        row.type === '롤플레이' && row.theme ? `롤플레이_${row.theme.slice(-2)}` :
+                        row.type === '모의고사' && row.theme ? `모의고사 ${row.theme.slice(-3)}회` :
+                        `${row.type} (${row.theme})`
+                      }
+                    </td>
+                    <td className="px-4 py-2 text-gray-600 align-top max-w-0">
+                      <div className="truncate" title={row.first_answer || ''}>
+                        {row.first_answer || '-'}
+                      </div>
+                    </td>
+                    <td className="px-4 py-2 text-gray-600 align-top max-w-0">
+                      <div className="truncate" title={row.first_feedback || ''}>
+                        {row.first_feedback || '-'}
+                      </div>
+                    </td>
+                    <td className="px-4 py-2 align-top whitespace-nowrap">
                       <button 
                         onClick={() => router.push(`/mypage/session/${row.id}`)}
                         className="text-blue-600 hover:underline font-medium"
                       >
-                        결과 보기
+                        상세보기
                       </button>
                     </td>
                   </tr>
