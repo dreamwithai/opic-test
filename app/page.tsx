@@ -175,7 +175,10 @@ export default function Home() {
   return (
     <div className="min-h-screen bg-white font-sans" style={{ fontFamily: "'Noto Sans KR', 'Malgun Gothic', 'Apple SD Gothic Neo', sans-serif" }}>
       {/* Hero Section */}
-      <section className="w-screen relative overflow-hidden h-[320px] md:h-[512px] flex items-center justify-center p-0 m-0">
+      <section
+        className="w-screen relative overflow-hidden flex items-center justify-center p-0 m-0 md:h-[364px]"
+        style={{ aspectRatio: '1079/861' }}
+      >
         {/* PC용 와이드 이미지 */}
         <img
           src="/info_pc.png"
