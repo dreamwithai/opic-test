@@ -359,7 +359,7 @@ export default function FeedbackPage() {
                     {allAnswers.map((answer, index) => (
                       <div key={index}>
                         <h4 className="font-semibold text-gray-700 mb-2">{index + 1}/3</h4>
-                        <div className="text-gray-600 text-sm leading-relaxed">
+                        <div className="text-gray-600 text-sm leading-relaxed max-h-[11.5em] overflow-y-auto break-words" style={{ display: 'block', WebkitLineClamp: 7, WebkitBoxOrient: 'vertical', overflow: 'auto' }}>
                           {answer.answer}
                         </div>
                       </div>
@@ -372,7 +372,7 @@ export default function FeedbackPage() {
                     <h3 className="text-lg font-bold">내 답변 - {questionInfo.theme}</h3>
                   </div>
                   <div className="bg-gray-50 border border-gray-200 rounded-b-xl p-6">
-                    <div className="text-gray-800 leading-relaxed">
+                    <div className="text-gray-800 leading-relaxed max-h-[11.5em] overflow-y-auto break-words" style={{ display: 'block', WebkitLineClamp: 7, WebkitBoxOrient: 'vertical', overflow: 'auto' }}>
                       {userAnswer}
                     </div>
                   </div>
@@ -389,7 +389,7 @@ export default function FeedbackPage() {
                 {/* 종합 평가 */}
                 <div className="mb-6">
                   <h4 className="font-semibold text-gray-700 mb-2">종합 평가</h4>
-                  <p className="text-gray-600 text-sm leading-relaxed">
+                  <p className="text-gray-600 text-sm leading-relaxed max-h-[11.5em] overflow-y-auto break-words" style={{ display: 'block', WebkitLineClamp: 7, WebkitBoxOrient: 'vertical', overflow: 'auto' }}>
                     {feedbackData.overallComment}
                   </p>
                 </div>
@@ -399,7 +399,7 @@ export default function FeedbackPage() {
                   <h4 className="font-semibold text-gray-700 mb-3">문법 피드백</h4>
                   <ul className="space-y-2">
                     {feedbackData.grammarFeedback.map((feedback, index) => (
-                      <li key={index} className="text-gray-600 text-sm leading-relaxed flex items-start">
+                      <li key={index} className="text-gray-600 text-sm leading-relaxed flex items-start max-h-[11.5em] overflow-y-auto break-words" style={{ display: 'block', WebkitLineClamp: 7, WebkitBoxOrient: 'vertical', overflow: 'auto' }}>
                         <span className="text-blue-500 mr-2 mt-1">•</span>
                         <span>{feedback}</span>
                       </li>
@@ -412,7 +412,7 @@ export default function FeedbackPage() {
                   <h4 className="font-semibold text-gray-700 mb-3">발음 피드백</h4>
                   <ul className="space-y-2">
                     {feedbackData.pronunciationFeedback.map((feedback, index) => (
-                      <li key={index} className="text-gray-600 text-sm leading-relaxed flex items-start">
+                      <li key={index} className="text-gray-600 text-sm leading-relaxed flex items-start max-h-[11.5em] overflow-y-auto break-words" style={{ display: 'block', WebkitLineClamp: 7, WebkitBoxOrient: 'vertical', overflow: 'auto' }}>
                         <span className="text-blue-500 mr-2 mt-1">•</span>
                         <span>{feedback}</span>
                       </li>

@@ -917,8 +917,8 @@ export default function TestPage() {
                         : 'border-gray-400 bg-gray-400 hover:bg-gray-500 text-white'
                     }`}
                   >
-                    <span className="text-xl mb-1">⏸️</span>
-                    <span className="text-sm font-medium text-center leading-tight">녹음<br />정지</span>
+                    <span className="text-xl mb-1">✅</span>
+                    <span className="text-sm font-medium text-center leading-tight">녹음<br />완료</span>
                   </button>
                   
                   <button 

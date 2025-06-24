@@ -35,7 +35,7 @@ export async function POST(request: NextRequest) {
     // 4. 서명된 URL 생성 (유효시간: 60초)
     const { data, error } = await supabase.storage
       .from('recordings')
-      .createSignedUrl(filePath, 60) // 60초 동안 유효
+      .createSignedUrl(filePath, 60, { download: true }) // 60초 동안 유효, 다운로드 강제
 
     if (error) {
       console.error('Error creating signed URL:', error)

@@ -175,46 +175,21 @@ export default function Home() {
   return (
     <div className="min-h-screen bg-white font-sans" style={{ fontFamily: "'Noto Sans KR', 'Malgun Gothic', 'Apple SD Gothic Neo', sans-serif" }}>
       {/* Hero Section */}
-      <section className="container mx-auto px-4 py-8">
-        <div className="rounded-2xl text-white p-8 md:p-12 mb-8 max-w-4xl mx-auto" style={{ backgroundColor: '#063ff9' }}>
-          <div className="flex flex-col md:flex-row justify-between items-end mb-4">
-            <div className="flex items-start w-full md:w-auto">
-              <img 
-                src="/4hour-opic-title.png" 
-                alt="4시간오픽 모의고사" 
-                className="max-w-full h-auto"
-                style={{ maxHeight: '180px' }}
-              />
-            </div>
-            <div className="mt-4 md:mt-12 w-full md:w-auto">
-              <p className="text-base md:text-lg text-left pl-4 md:pl-0">
-                오픽시험전 전략적 필수 테스트로<br />
-                <span className="text-base md:text-lg">84,000원 아끼세요!</span>
-              </p>
-            </div>
-          </div>
-          
-          <div className="mb-8 mt-12 pl-4 md:pl-0">
-            <h3 className="text-2xl md:text-3xl font-bold mb-6 text-left">
-              왜? 4시간오픽 모의고사
-            </h3>
-            
-            <div className="space-y-2">
-              <div className="flex items-start space-x-2">
-                <span className="flex-shrink-0 text-xl">✅</span>
-                <span className="text-base md:text-lg font-medium">내가 약한 유형 집중 연습 (선택, 롤플레이, 돌발, 풀세트 선택 연습)</span>
-              </div>
-              <div className="flex items-start space-x-2">
-                <span className="flex-shrink-0 text-xl">✅</span>
-                <span className="text-base md:text-lg font-medium">모든 연습 녹음 저장 → 내 실력 추적 관리</span>
-              </div>
-              <div className="flex items-start space-x-2">
-                <span className="flex-shrink-0 text-xl">✅</span>
-                <span className="text-base md:text-lg font-medium">오픽 점수를 올리고 싶은 취준생·직장인 필수 시험 점검 툴</span>
-              </div>
-            </div>
-          </div>
-        </div>
+      <section className="w-full relative overflow-hidden aspect-square md:aspect-[25/8]">
+        {/* PC용 와이드 이미지 */}
+        <img
+          src="/info_pc.png"
+          alt="4시간 오픽 가이드"
+          className="hidden md:block absolute inset-0 w-full h-full object-cover"
+          draggable={false}
+        />
+        {/* 모바일용 와이드 이미지 */}
+        <img
+          src="/info_mb.png"
+          alt="4시간 오픽 가이드"
+          className="block md:hidden absolute inset-0 w-full h-full object-cover object-bottom bg-black"
+          draggable={false}
+        />
       </section>
 
       {/* 해당 모의고사는 Section */}
@@ -637,45 +612,6 @@ export default function Home() {
                   </p>
                 </div>
               </LevelLink>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Why Choose Us Section */}
-      <section className="container mx-auto px-4 py-16">
-        <div className="max-w-6xl mx-auto">
-          <h3 className="text-3xl font-bold text-gray-800 mb-6">왜 저희와 함께 연습해야 할까요?</h3>
-          
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div className="text-left">
-              <div className="flex items-start space-x-3 mb-3">
-                <span className="text-blue-600 flex-shrink-0 text-xl mt-1">✓</span>
-                <div>
-                  <h4 className="text-xl font-bold text-gray-800 mb-2">실제 시험 환경</h4>
-                  <p className="text-gray-600 font-medium">실제 OPIc 시험 형식과 타이밍을 시뮬레이션하는 환경에서 연습하세요.</p>
-                </div>
-              </div>
-            </div>
-            
-            <div className="text-left">
-              <div className="flex items-start space-x-3 mb-3">
-                <span className="text-blue-600 flex-shrink-0 text-xl mt-1">✓</span>
-                <div>
-                  <h4 className="text-xl font-bold text-gray-800 mb-2">AI 기반 피드백</h4>
-                  <p className="text-gray-600 font-medium">개선이 필요한 연결을 식별하기 위한 답변에 대한 즉각적인 피드백을 받으세요.</p>
-                </div>
-              </div>
-            </div>
-            
-            <div className="text-left md:col-span-2">
-              <div className="flex items-start space-x-3 mb-3">
-                <span className="text-blue-600 flex-shrink-0 text-xl mt-1">✓</span>
-                <div>
-                  <h4 className="text-xl font-bold text-gray-800 mb-2">모든 OPIc 질문 유형</h4>
-                  <p className="text-gray-600 font-medium">선택 주제, 역할 플레이 및 예상치 못한 질문으로 연습하세요.</p>
-                </div>
-              </div>
             </div>
           </div>
         </div>
