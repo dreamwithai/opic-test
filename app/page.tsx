@@ -175,19 +175,19 @@ export default function Home() {
   return (
     <div className="min-h-screen bg-white font-sans" style={{ fontFamily: "'Noto Sans KR', 'Malgun Gothic', 'Apple SD Gothic Neo', sans-serif" }}>
       {/* Hero Section */}
-      <section className="w-full relative overflow-hidden aspect-square md:aspect-[25/8]">
+      <section className="w-screen relative overflow-hidden h-[320px] md:h-[512px] flex items-center justify-center p-0 m-0">
         {/* PC용 와이드 이미지 */}
         <img
           src="/info_pc.png"
           alt="4시간 오픽 가이드"
-          className="hidden md:block absolute inset-0 w-full h-full object-cover"
+          className="hidden md:block absolute inset-0 w-full h-full object-cover object-center select-none"
           draggable={false}
         />
         {/* 모바일용 와이드 이미지 */}
         <img
           src="/info_mb.png"
           alt="4시간 오픽 가이드"
-          className="block md:hidden absolute inset-0 w-full h-full object-cover object-bottom bg-black"
+          className="block md:hidden absolute inset-0 w-full h-full object-cover object-bottom bg-black select-none"
           draggable={false}
         />
       </section>
