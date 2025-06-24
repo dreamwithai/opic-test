@@ -7,9 +7,9 @@ import Link from 'next/link'
 export default function AdminPage() {
   const adminFeatures = [
     {
-      title: '회원등록',
-      description: '관리자/일반회원 등록 및 관리',
-      href: '/admin/auth-test',
+      title: '회원조회',
+      description: '일자별로 등록한 회원을 조회합니다',
+      href: '/admin/member-list',
       icon: undefined,
     },
     {

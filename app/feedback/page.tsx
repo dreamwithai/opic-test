@@ -5,6 +5,8 @@ import Link from 'next/link'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { supabase } from '@/lib/supabase'
 import { useSession } from 'next-auth/react'
+import { Play, Pause } from 'lucide-react'
+import JSZip from 'jszip'
 
 // 샘플 질문 데이터
 const sampleQuestions = [
@@ -94,6 +96,8 @@ export default function FeedbackPage() {
 
   const [saveResult, setSaveResult] = useState('');
   const [isSaving, setIsSaving] = useState(false);
+  const [currentAudio, setCurrentAudio] = useState<HTMLAudioElement | null>(null);
+  const [isPlaying, setIsPlaying] = useState(false);
 
   const handleSave = async () => {
     if (isSaving) return;
@@ -308,6 +312,125 @@ export default function FeedbackPage() {
     return isLast
   })()
 
+  const playAudio = async (uploadedPath: string | null) => {
+    if (currentAudio) {
+      currentAudio.pause();
+      currentAudio.currentTime = 0;
+    }
+    if (!uploadedPath) {
+      alert('재생할 오디오 파일이 없습니다.');
+      return;
+    }
+    try {
+      // signedUrl 요청
+      const response = await fetch('/api/get-signed-audio-url', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ filePath: `temp/${uploadedPath}` }),
+      });
+      if (!response.ok) {
+        alert('오디오 URL을 가져오지 못했습니다.');
+        return;
+      }
+      const { signedUrl } = await response.json();
+      if (!signedUrl) {
+        alert('오디오 URL이 비어 있습니다.');
+        return;
+      }
+      let audio = new Audio(signedUrl);
+      audio.addEventListener('error', () => {
+        alert('오디오 파일을 재생할 수 없습니다.');
+        setIsPlaying(false);
+        setCurrentAudio(null);
+      });
+      audio.addEventListener('ended', () => {
+        setIsPlaying(false);
+        setCurrentAudio(null);
+      });
+      audio.addEventListener('play', () => setIsPlaying(true));
+      audio.addEventListener('pause', () => setIsPlaying(false));
+      await audio.play();
+      setCurrentAudio(audio);
+    } catch (error) {
+      alert('오디오 재생 중 오류가 발생했습니다.');
+      setIsPlaying(false);
+    }
+  };
+  const stopAudio = () => {
+    if (currentAudio) {
+      currentAudio.pause();
+      currentAudio.currentTime = 0;
+      setIsPlaying(false);
+      setCurrentAudio(null);
+    }
+  };
+
+  // 다운로드 핸들러 함수 분리
+  const handleDownload = async (uploadedPath: string | null, index: number) => {
+    if (!uploadedPath) return;
+    const response = await fetch('/api/get-signed-audio-url', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ filePath: `temp/${uploadedPath}` }),
+    });
+    if (!response.ok) {
+      alert('다운로드 URL을 가져오지 못했습니다.');
+      return;
+    }
+    const { signedUrl } = await response.json();
+    const a = document.createElement('a');
+    a.href = signedUrl;
+    a.download = `answer_${index + 1}.webm`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+  };
+
+  // 전체 오디오(zip) 다운로드 핸들러
+  const handleDownloadAllAudio = async () => {
+    if (!allAnswers.length) return alert('다운로드할 답변이 없습니다.');
+    const zip = new JSZip();
+    let hasAudio = false;
+    for (let i = 0; i < allAnswers.length; i++) {
+      const answer = allAnswers[i];
+      if (!answer.uploadedPath) continue;
+      // signedUrl 요청
+      const response = await fetch('/api/get-signed-audio-url', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ filePath: `temp/${answer.uploadedPath}` }),
+      });
+      if (!response.ok) continue;
+      const { signedUrl } = await response.json();
+      const audioRes = await fetch(signedUrl);
+      if (!audioRes.ok) continue;
+      const blob = await audioRes.blob();
+      zip.file(`answer_${i + 1}.webm`, blob);
+      hasAudio = true;
+    }
+    if (!hasAudio) return alert('다운로드할 음성파일이 없습니다.');
+    const zipBlob = await zip.generateAsync({ type: 'blob' });
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(zipBlob);
+    a.download = `answers_audio.zip`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+  };
+
+  // 전체 텍스트(txt) 다운로드 핸들러
+  const handleDownloadAllText = () => {
+    if (!allAnswers.length) return alert('다운로드할 답변이 없습니다.');
+    const text = allAnswers.map((a, i) => `문제 ${i + 1}\n${a.answer}\n`).join('\n');
+    const blob = new Blob([text], { type: 'text/plain' });
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = 'answers.txt';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+  };
+
   // TODO: API 연동 시 수정 필요
   // 향후 API에서 다음과 같은 데이터를 받아올 예정:
   // - 사용자 답변 텍스트 (현재: STT 변환 텍스트)
@@ -351,14 +474,91 @@ export default function FeedbackPage() {
             {/* Left Column - 내 답변들 */}
             <div>
               {allAnswers.length > 0 ? (
-                <div>
+                <div className="relative">
+                  <div className="absolute top-4 right-4 flex gap-2 z-10">
+                    {/* 전체 오디오 다운로드 */}
+                    <button
+                      className="flex items-center justify-center min-w-[32px] min-h-[32px] rounded-full bg-gray-100 hover:bg-blue-600 hover:text-white text-blue-600 transition-colors shadow"
+                      aria-label="전체 음성파일 다운로드"
+                      onClick={handleDownloadAllAudio}
+                    >
+                      <svg width="22" height="22" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <rect x="3" y="7" width="18" height="11" rx="2" fill="#e0e7ef" stroke="#2563eb" strokeWidth="1.5"/>
+                        <path d="M12 10v5m0 0l-2-2m2 2l2-2" stroke="#2563eb" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                        <path d="M3 7l2.5-3h13L21 7" stroke="#2563eb" strokeWidth="1.5" fill="none"/>
+                      </svg>
+                    </button>
+                    {/* 전체 텍스트 다운로드 */}
+                    <button
+                      className="flex items-center justify-center min-w-[32px] min-h-[32px] rounded-full bg-gray-100 text-purple-600 hover:bg-purple-50 transition-colors shadow"
+                      aria-label="전체 답변 텍스트 다운로드"
+                      onClick={handleDownloadAllText}
+                    >
+                      <svg width="22" height="22" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <rect x="4" y="7" width="14" height="10" rx="2" fill="#ede9fe" stroke="#7c3aed" strokeWidth="1.5"/>
+                        <rect x="7" y="4" width="14" height="10" rx="2" fill="#fff" stroke="#7c3aed" strokeWidth="1.5"/>
+                        <path d="M10 9h8M10 12h8M10 15h4" stroke="#7c3aed" strokeWidth="1.2"/>
+                      </svg>
+                    </button>
+                  </div>
                   <div className="bg-black text-white p-4 rounded-t-xl">
                     <h3 className="text-lg font-bold">내 답변 - {allAnswers[0]?.theme || questionInfo.theme}</h3>
                   </div>
                   <div className="bg-gray-50 border border-gray-200 rounded-b-xl p-6 space-y-6">
                     {allAnswers.map((answer, index) => (
                       <div key={index}>
-                        <h4 className="font-semibold text-gray-700 mb-2">{index + 1}/3</h4>
+                        <div className="flex items-center justify-between mb-2">
+                          <h4 className="font-semibold text-gray-700">{index + 1}/3</h4>
+                          <div className="flex items-center gap-2">
+                            {answer.uploadedPath && (
+                              <>
+                                {isPlaying ? (
+                                  <button
+                                    onClick={stopAudio}
+                                    className="flex items-center justify-center min-h-[28px] min-w-[28px] px-0 py-0 bg-red-500 text-white rounded-full text-base hover:bg-red-600 transition-colors"
+                                    aria-label="정지"
+                                  >
+                                    <Pause size={18} />
+                                  </button>
+                                ) : (
+                                  <button
+                                    onClick={() => playAudio(answer.uploadedPath)}
+                                    className="flex items-center justify-center min-h-[28px] min-w-[28px] px-0 py-0 bg-green-500 text-white rounded-full text-base hover:bg-green-600 transition-colors"
+                                    aria-label="재생"
+                                  >
+                                    <Play size={18} />
+                                  </button>
+                                )}
+                                {/* 다운로드 버튼 */}
+                                <button
+                                  onClick={() => handleDownload(answer.uploadedPath, index)}
+                                  className="flex items-center justify-center min-h-[28px] min-w-[28px] px-0 py-0 bg-blue-500 text-white rounded-full text-base hover:bg-blue-600 transition-colors"
+                                  aria-label="다운로드"
+                                >
+                                  <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v12m0 0l-4-4m4 4l4-4m-8 8h8" /></svg>
+                                </button>
+                              </>
+                            )}
+                            {/* 텍스트 복사 버튼 */}
+                            <button
+                              onClick={() => {
+                                navigator.clipboard.writeText(answer.answer)
+                                  .then(() => alert('답변이 복사되었습니다!'))
+                                  .catch(() => alert('복사에 실패했습니다.'))
+                              }}
+                              className="flex items-center justify-center min-h-[28px] min-w-[28px] px-0 py-0 bg-purple-600 text-white rounded-full text-base hover:bg-purple-700 transition-colors"
+                              aria-label="복사"
+                            >
+                              <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+                                <rect x="5" y="4" width="10" height="16" rx="2" stroke="#fff" strokeWidth="1.7" fill="none"/>
+                                <polyline points="13,4 15,4 15,6" stroke="#fff" strokeWidth="1.7" fill="none"/>
+                                <line x1="7" y1="9" x2="13" y2="9" stroke="#fff" strokeWidth="1.2"/>
+                                <line x1="7" y1="12" x2="13" y2="12" stroke="#fff" strokeWidth="1.2"/>
+                                <line x1="7" y1="15" x2="11" y2="15" stroke="#fff" strokeWidth="1.2"/>
+                              </svg>
+                            </button>
+                          </div>
+                        </div>
                         <div className="text-gray-600 text-sm leading-relaxed max-h-[11.5em] overflow-y-auto break-words" style={{ display: 'block', WebkitLineClamp: 7, WebkitBoxOrient: 'vertical', overflow: 'auto' }}>
                           {answer.answer}
                         </div>
