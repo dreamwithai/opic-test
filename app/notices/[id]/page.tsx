@@ -81,21 +81,21 @@ export default function NoticeDetailPage() {
     switch (priority) {
       case 2:
         return (
-          <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-red-100 text-red-800">
+          <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-red-100 text-red-800">
             <AlertTriangle className="w-4 h-4 mr-1" />
             긴급
           </span>
         )
       case 1:
         return (
-          <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-yellow-100 text-yellow-800">
+          <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800">
             <AlertTriangle className="w-4 h-4 mr-1" />
             중요
           </span>
         )
       default:
         return (
-          <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-gray-100 text-gray-800">
+          <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
             <FileText className="w-4 h-4 mr-1" />
             일반
           </span>
@@ -181,6 +181,7 @@ export default function NoticeDetailPage() {
                 <div className="flex items-center">{notice.author_name}</div>
                 <div className="flex items-center"><Calendar className="w-4 h-4 mr-1" />{dayjs(notice.created_at).format('YYYY.MM.DD HH:mm')}</div>
               </div>
+              <div className="border-t border-gray-200 my-4" />
             </div>
 
             {/* 본문 */}

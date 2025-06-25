@@ -311,7 +311,7 @@ export default function InquiriesPage() {
                             {dayjs(inquiry.created_at).format('YYYY.MM.DD')}
                           </span>
                         </div>
-                        <div className="mt-1">
+                        <div className="mt-2">
                           <span className="block text-sm font-medium text-gray-900 truncate">
                             {inquiry.title}
                           </span>

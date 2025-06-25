@@ -114,7 +114,7 @@ export default function NoticesPage() {
                   <div key={notice.id} className="p-4 hover:bg-gray-50 transition-colors">
                     <Link href={`/notices/${notice.id}`} className="block">
                       {/* 1행: 중요도, 작성자|작성일 */}
-                      <div className="flex items-center justify-between mb-1">
+                      <div className="flex items-center justify-between mb-2">
                         <div className="flex-shrink-0">
                           {getPriorityBadge(notice.priority)}
                         </div>
