@@ -191,11 +191,11 @@ export default function NoticeDetailPage() {
               />
             </div>
             {/* 닫기 버튼 */}
-            <div className="mt-8 flex justify-center">
+            <div className="flex justify-center mt-10 mb-6">
               <button
                 type="button"
                 onClick={() => router.back()}
-                className="px-5 py-2 bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300 text-sm font-medium"
+                className="px-6 py-3 bg-gray-200 hover:bg-gray-300 text-gray-700 rounded-lg font-semibold shadow transition-colors"
               >
                 ← 목록
               </button>
