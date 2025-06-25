@@ -192,10 +192,10 @@ export default function SessionDetailPage() {
         <div className="text-center">
           <p className="text-xl font-semibold text-gray-700 mb-4">{error}</p>
           <button
-            onClick={() => router.push('/mypage')}
-            className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg font-semibold"
+            onClick={() => router.back()}
+            className="bg-gray-200 hover:bg-gray-300 text-gray-700 px-6 py-2 rounded-lg font-semibold"
           >
-            마이페이지로 돌아가기
+            ← 목록
           </button>
         </div>
       </div>
@@ -208,10 +208,10 @@ export default function SessionDetailPage() {
         <div className="text-center">
           <p className="text-xl font-semibold text-gray-700 mb-4">세션을 찾을 수 없습니다.</p>
           <button
-            onClick={() => router.push('/mypage')}
-            className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg font-semibold"
+            onClick={() => router.back()}
+            className="bg-gray-200 hover:bg-gray-300 text-gray-700 px-6 py-2 rounded-lg font-semibold"
           >
-            마이페이지로 돌아가기
+            ← 목록
           </button>
         </div>
       </div>
@@ -403,10 +403,12 @@ export default function SessionDetailPage() {
                 </div>
 
                 {/* 피드백 */}
-                {feedback && (
+                {feedback &&
+                  feedback.overallComment &&
+                  feedback.overallComment !== '피드백 준비 중...' &&
+                  (feedback.overallComment.trim() !== '' || (feedback.grammarFeedback && feedback.grammarFeedback.length > 0) || (feedback.pronunciationFeedback && feedback.pronunciationFeedback.length > 0)) && (
                   <div className="border-t pt-4">
                     <h4 className="font-medium text-gray-700 mb-3">피드백:</h4>
-                    
                     {feedback.overallComment && (
                       <div className="mb-4">
                         <h5 className="font-medium text-blue-600 mb-2">전체 평가:</h5>
@@ -415,7 +417,6 @@ export default function SessionDetailPage() {
                         </p>
                       </div>
                     )}
-
                     {feedback.grammarFeedback && feedback.grammarFeedback.length > 0 && (
                       <div className="mb-4">
                         <h5 className="font-medium text-green-600 mb-2">문법 피드백:</h5>
@@ -428,7 +429,6 @@ export default function SessionDetailPage() {
                         </ul>
                       </div>
                     )}
-
                     {feedback.pronunciationFeedback && feedback.pronunciationFeedback.length > 0 && (
                       <div className="mb-4">
                         <h5 className="font-medium text-purple-600 mb-2">발음 피드백:</h5>
@@ -459,9 +459,9 @@ export default function SessionDetailPage() {
         <div className="flex justify-center mt-10 mb-6">
           <button
             onClick={() => router.back()}
-            className="px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-semibold shadow transition-colors"
+            className="px-6 py-3 bg-gray-200 hover:bg-gray-300 text-gray-700 rounded-lg font-semibold shadow transition-colors"
           >
-            마이페이지로 돌아가기
+            ← 목록
           </button>
         </div>
       </div>

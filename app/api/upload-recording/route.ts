@@ -6,6 +6,30 @@ const supabase = createClient(
   process.env.SUPABASE_SERVICE_ROLE_KEY!
 )
 
+// 재시도 로직을 위한 헬퍼 함수
+async function retryOperation<T>(
+  operation: () => Promise<T>,
+  maxRetries: number = 3,
+  delay: number = 1000
+): Promise<T> {
+  let lastError: Error;
+  
+  for (let i = 0; i < maxRetries; i++) {
+    try {
+      return await operation();
+    } catch (error) {
+      lastError = error as Error;
+      console.warn(`Upload operation failed (attempt ${i + 1}/${maxRetries}):`, error);
+      
+      if (i < maxRetries - 1) {
+        await new Promise(resolve => setTimeout(resolve, delay * (i + 1)));
+      }
+    }
+  }
+  
+  throw lastError!;
+}
+
 export async function POST(request: NextRequest) {
   try {
     console.log('Upload recording API called')
@@ -86,25 +110,38 @@ export async function POST(request: NextRequest) {
 
     // Supabase Storage에 temp 폴더에 업로드
     console.log('Uploading file to:', `${tempFolderPath}/${fileName}`)
-    const { data, error } = await supabase.storage
-      .from('recordings')
-      .upload(`${tempFolderPath}/${fileName}`, uint8Array, {
-        contentType: contentType,
-        upsert: true,
-        metadata: {
-          status: 'temp',
-          expires_at: expiresAt,
-          original_type: file.type, // 원본 파일 타입도 저장
-          detected_type: contentType // 감지된 타입도 저장
-        }
-      })
+    
+    let data, error;
+    try {
+      const result = await retryOperation(async () => {
+        const result = await supabase.storage
+          .from('recordings')
+          .upload(`${tempFolderPath}/${fileName}`, uint8Array, {
+            contentType: contentType,
+            upsert: true,
+            metadata: {
+              status: 'temp',
+              expires_at: expiresAt,
+              original_type: file.type, // 원본 파일 타입도 저장
+              detected_type: contentType // 감지된 타입도 저장
+            }
+          })
+        
+        if (result.error) throw result.error;
+        return result;
+      });
+      data = result.data;
+      error = result.error;
+    } catch (err) {
+      error = err as any;
+    }
 
     if (error) {
       console.error('Storage upload error:', error)
-      return NextResponse.json({ error: error.message }, { status: 500 })
+      return NextResponse.json({ error: error?.message || 'Upload failed' }, { status: 500 })
     }
 
-    console.log('Upload successful:', data.path)
+    console.log('Upload successful:', data?.path)
     
     const relativePath = `${memberId}/${fileName}`;
 

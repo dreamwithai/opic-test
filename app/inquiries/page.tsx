@@ -184,7 +184,7 @@ export default function InquiriesPage() {
           ]} 
         />
 
-        <div className="max-w-2xl mx-auto mt-8">
+        <div className="max-w-2xl mx-auto">
           <div className="bg-white rounded-lg shadow-sm border">
             {/* 헤더 */}
             <div className="px-6 py-4 border-b border-gray-200">

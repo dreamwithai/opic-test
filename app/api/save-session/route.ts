@@ -8,6 +8,30 @@ const supabase = createClient(
   process.env.SUPABASE_SERVICE_ROLE_KEY!
 )
 
+// 재시도 로직을 위한 헬퍼 함수
+async function retryOperation<T>(
+  operation: () => Promise<T>,
+  maxRetries: number = 3,
+  delay: number = 1000
+): Promise<T> {
+  let lastError: Error;
+  
+  for (let i = 0; i < maxRetries; i++) {
+    try {
+      return await operation();
+    } catch (error) {
+      lastError = error as Error;
+      console.warn(`Operation failed (attempt ${i + 1}/${maxRetries}):`, error);
+      
+      if (i < maxRetries - 1) {
+        await new Promise(resolve => setTimeout(resolve, delay * (i + 1)));
+      }
+    }
+  }
+  
+  throw lastError!;
+}
+
 export async function POST(request: NextRequest) {
   try {
     console.log('Save session API called')
@@ -49,57 +73,89 @@ export async function POST(request: NextRequest) {
         
         console.log(`Processing file: from ${tempPath} to ${permanentPath}`)
 
-        // 1. temp에서 파일 다운로드
-        const { data: blob, error: downloadError } = await supabase.storage
-          .from('recordings')
-          .download(tempPath)
-        
-        if (downloadError) {
-          console.error(`Download failed for ${tempPath}:`, downloadError)
-          continue; // 이 파일은 건너뛰고 다음 파일 처리
-        }
-
-        // 2. permanent에 올바른 MIME 타입으로 재업로드
-        const { error: uploadError } = await supabase.storage
-          .from('recordings')
-          .upload(permanentPath, blob, {
-            contentType: 'audio/webm',
-            upsert: true, // 이미 파일이 있다면 덮어쓰기
-          })
-
-        if (uploadError) {
-          console.error(`Re-upload failed for ${permanentPath}:`, uploadError)
-          continue; // 이 파일은 건너뛰고 다음 파일 처리
-        }
-        
-        console.log(`File successfully moved and corrected: ${permanentPath}`)
-
-        // 3. temp에서 원본 파일 삭제
-        const { error: removeError } = await supabase.storage
-          .from('recordings')
-          .remove([tempPath])
+        try {
+          // 재시도 로직으로 파일 다운로드
+          const { data: blob, error: downloadError } = await retryOperation(async () => {
+            const result = await supabase.storage
+              .from('recordings')
+              .download(tempPath)
+            
+            if (result.error) throw result.error;
+            return result;
+          });
           
-        if (removeError) {
-          console.error(`Failed to remove temp file ${tempPath}:`, removeError)
-          // 삭제 실패는 치명적이지 않으므로 로그만 남기고 계속 진행
+          if (downloadError) {
+            console.error(`Download failed for ${tempPath}:`, downloadError)
+            continue; // 이 파일은 건너뛰고 다음 파일 처리
+          }
+
+          // 재시도 로직으로 파일 업로드
+          const { error: uploadError } = await retryOperation(async () => {
+            const result = await supabase.storage
+              .from('recordings')
+              .upload(permanentPath, blob, {
+                contentType: 'audio/webm',
+                upsert: true, // 이미 파일이 있다면 덮어쓰기
+              })
+            
+            if (result.error) throw result.error;
+            return result;
+          });
+
+          if (uploadError) {
+            console.error(`Re-upload failed for ${permanentPath}:`, uploadError)
+            continue; // 이 파일은 건너뛰고 다음 파일 처리
+          }
+          
+          console.log(`File successfully moved and corrected: ${permanentPath}`)
+
+          // 재시도 로직으로 temp 파일 삭제
+          const { error: removeError } = await retryOperation(async () => {
+            const result = await supabase.storage
+              .from('recordings')
+              .remove([tempPath])
+            
+            if (result.error) throw result.error;
+            return result;
+          });
+          
+          if (removeError) {
+            console.error(`Failed to remove temp file ${tempPath}:`, removeError)
+            // 삭제 실패는 치명적이지 않으므로 로그만 남기고 계속 진행
+          }
+        } catch (error) {
+          console.error(`Failed to process file ${tempPath}:`, error)
+          continue; // 이 파일은 건너뛰고 다음 파일 처리
         }
       }
     }
 
     // 2. test_session에 저장
     console.log('Saving to test_session...')
-    const { data: sessionResult, error: sessionError } = await supabase
-      .from('test_session')
-      .insert([{
-        member_id: session.user.id,
-        type: sessionData.type,
-        theme: sessionData.theme,
-        level: sessionData.level,
-        first_answer: sessionData.first_answer,
-        first_feedback: sessionData.first_feedback
-      }])
-      .select('id')
-      .single()
+    let sessionResult, sessionError;
+    try {
+      const result = await retryOperation(async () => {
+        const result = await supabase
+          .from('test_session')
+          .insert([{
+            member_id: session.user.id,
+            type: sessionData.type,
+            theme: sessionData.theme,
+            level: sessionData.level,
+            first_answer: sessionData.first_answer,
+            first_feedback: sessionData.first_feedback
+          }])
+          .select('id')
+          .single()
+        
+        if (result.error) throw result.error;
+        return result;
+      });
+      sessionResult = result.data;
+      sessionError = result.error;
+    } catch (error) {
+      sessionError = error as any;
+    }
 
     if (sessionError || !sessionResult) {
       console.error('Session save error:', sessionError)
@@ -129,14 +185,25 @@ export async function POST(request: NextRequest) {
     console.log('Answers to insert:', answersToInsert.length);
     console.log('Sample answer to insert:', answersToInsert[0]);
 
-    const { error: answersError } = await supabase
-      .from('test_answers')
-      .insert(answersToInsert)
+    let answersError;
+    try {
+      const result = await retryOperation(async () => {
+        const result = await supabase
+          .from('test_answers')
+          .insert(answersToInsert)
+        
+        if (result.error) throw result.error;
+        return result;
+      });
+      answersError = result.error;
+    } catch (error) {
+      answersError = error as any;
+    }
 
     if (answersError) {
       console.error('Answers save error:', answersError)
       return NextResponse.json({ 
-        error: 'Answers save failed: ' + answersError.message 
+        error: 'Answers save failed: ' + (answersError?.message || 'Unknown error') 
       }, { status: 500 })
     }
 

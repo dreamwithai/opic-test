@@ -134,13 +134,13 @@ export default function NoticeDetailPage() {
             <AlertTriangle className="w-16 h-16 text-red-500 mx-auto mb-4" />
             <h2 className="text-xl font-semibold text-gray-900 mb-2">오류</h2>
             <p className="text-gray-600 mb-6">{error || '공지사항을 찾을 수 없습니다.'}</p>
-            <Link 
-              href="/notices"
-              className="inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
+            <button
+              onClick={() => router.back()}
+              className="inline-flex items-center px-4 py-2 bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300"
             >
               <ArrowLeft className="w-4 h-4 mr-2" />
-              목록으로 돌아가기
-            </Link>
+              ← 목록
+            </button>
           </div>
         </div>
       </div>
@@ -165,23 +165,21 @@ export default function NoticeDetailPage() {
           {/* 공지사항 내용 */}
           <div className="p-6">
             <div className="mb-6">
-              <div className="flex items-center space-x-3 mb-4">
-                {getPriorityBadge(notice.priority)}
-                <h1 className="text-lg font-bold text-gray-900">{notice.title}</h1>
+              {/* 상단: 중요도-조회수 */}
+              <div className="flex justify-between items-center mb-2">
+                <div>{getPriorityBadge(notice.priority)}</div>
+                <div className="flex items-center text-xs text-gray-500">
+                  <Eye className="w-4 h-4 mr-1" />조회 {notice.view_count}
+                </div>
               </div>
-              
-              <div className="flex items-center space-x-6 text-sm text-gray-500 mb-6">
-                <div className="flex items-center">
-                   {notice.author_name}
-                </div>
-                <div className="flex items-center">
-                  <Calendar className="w-4 h-4 mr-1" />
-                  {dayjs(notice.created_at).format('YYYY.MM.DD HH:mm')}
-                </div>
-                <div className="flex items-center">
-                  <Eye className="w-4 h-4 mr-1" />
-                  조회 {notice.view_count}
-                </div>
+              {/* 타이틀 */}
+              <div className="mb-2">
+                <h1 className="text-lg font-bold text-gray-900 break-words">{notice.title}</h1>
+              </div>
+              {/* 하단: 작성자-일자 */}
+              <div className="flex justify-between items-center text-xs text-gray-500 mb-6">
+                <div className="flex items-center">{notice.author_name}</div>
+                <div className="flex items-center"><Calendar className="w-4 h-4 mr-1" />{dayjs(notice.created_at).format('YYYY.MM.DD HH:mm')}</div>
               </div>
             </div>
 
@@ -199,7 +197,7 @@ export default function NoticeDetailPage() {
                 onClick={() => router.back()}
                 className="px-5 py-2 bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300 text-sm font-medium"
               >
-                닫기
+                ← 목록
               </button>
             </div>
           </div>

@@ -180,7 +180,7 @@ export default function ProfilePage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 font-sans">
+    <div className="min-h-screen bg-gray-50 font-sans text-sm">
       <div className="max-w-7xl mx-auto py-10 px-4">
         {/* 헤더 */}
         <div className="mb-8">

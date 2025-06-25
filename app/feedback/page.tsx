@@ -96,58 +96,46 @@ export default function FeedbackPage() {
 
   const [saveResult, setSaveResult] = useState('');
   const [isSaving, setIsSaving] = useState(false);
+  const [saveProgress, setSaveProgress] = useState('');
   const [currentAudio, setCurrentAudio] = useState<HTMLAudioElement | null>(null);
   const [isPlaying, setIsPlaying] = useState(false);
 
   const handleSave = async () => {
     if (isSaving) return;
+    
     setIsSaving(true);
     setSaveResult('');
-
+    setSaveProgress('데이터 준비 중...');
+    
     try {
-      if (status === 'loading') {
-        setSaveResult('🤔 로그인 정보를 확인 중입니다. 잠시 후 다시 시도해주세요.');
-        setIsSaving(false);
-        return;
-      }
-
-      if (status !== 'authenticated' || !session) {
-        setSaveResult('❌ 로그인이 필요합니다. 로그인 후 다시 시도해주세요.');
-        setIsSaving(false);
-        return;
-      }
-
-      // localStorage에서 모든 답변 가져오기
       const storedAnswers = JSON.parse(localStorage.getItem('testAnswers') || '[]');
-      if (storedAnswers.length === 0) {
-        setSaveResult('❌ 저장할 답변이 없습니다.');
-        setIsSaving(false);
-        return;
+      if (!storedAnswers.length) {
+        throw new Error('저장할 답변이 없습니다.');
       }
 
-      // 첫 번째 답변/피드백 일부 추출 (미리보기용)
-      const firstAnswer = storedAnswers[0]?.answer || '';
-      const firstFeedback = storedAnswers[0]?.feedback || '';
-
-      // save-session API 호출을 위한 데이터 준비
+      setSaveProgress('세션 정보 생성 중...');
+      
+      // 세션 데이터 준비
       const sessionData = {
         type: selectedType,
-        theme: storedAnswers[0]?.theme || currentTheme,
+        theme: currentTheme,
         level: selectedLevel,
-        first_answer: firstAnswer,
-        first_feedback: typeof firstFeedback === 'string' ? firstFeedback : JSON.stringify(firstFeedback)
+        first_answer: storedAnswers[0]?.answer || '',
+        first_feedback: '피드백 준비 중...'
       };
 
+      setSaveProgress('답변 데이터 정리 중...');
+      
       // 답변 데이터 준비
-      const answersData = storedAnswers
-        .filter((answer: any) => answer && answer.answer)
-        .map((answer: any) => ({
-          q_id: answer.qId || 0,
-          q_seq: answer.qSeq || 0,
-          answer_text: answer.answer,
-          answer_url: answer.uploadedPath || null, // temp 폴더의 상대 경로
-          feedback: answer.feedback ? (typeof answer.feedback === 'string' ? answer.feedback : JSON.stringify(answer.feedback)) : null
-        }));
+      const answersData = storedAnswers.map((answer: any) => ({
+        q_id: answer.qid || 0,
+        q_seq: answer.qseq || 0,
+        answer_text: answer.answer || '',
+        answer_url: answer.uploadedPath || null,
+        feedback: '피드백 준비 중...'
+      }));
+
+      setSaveProgress('녹음 파일 정보 정리 중...');
 
       // 녹음 파일 정보 준비
       const recordingFiles = storedAnswers
@@ -155,6 +143,8 @@ export default function FeedbackPage() {
         .map((answer: any) => ({
           path: answer.uploadedPath // 'USER_ID/FILENAME.webm' 형태
         }));
+
+      setSaveProgress('서버에 데이터 전송 중...');
 
       // save-session API 호출
       const response = await fetch('/api/save-session', {
@@ -177,6 +167,7 @@ export default function FeedbackPage() {
       const result = await response.json();
       
       if (result.success) {
+        setSaveProgress('저장 완료!');
         setSaveResult(`✅ 시험 세트 및 ${result.savedAnswers}개 답변이 모두 저장되었습니다.`);
         localStorage.removeItem('testAnswers');
         
@@ -193,7 +184,10 @@ export default function FeedbackPage() {
       setSaveResult('❌ 저장 중 오류 발생: ' + (e instanceof Error ? e.message : '알 수 없는 오류'));
     } finally {
       // isSaving 상태는 성공/실패 여부와 관계없이 1.5초 후에 풀어줌
-      setTimeout(() => setIsSaving(false), 1500);
+      setTimeout(() => {
+        setIsSaving(false);
+        setSaveProgress('');
+      }, 1500);
     }
   };
 
@@ -643,20 +637,14 @@ export default function FeedbackPage() {
             >
               {isSaving && <span className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></span>}
               <span className="leading-tight">
-                저장 및 응시
-                <br />
-                리스트 보기
+                {isSaving ? saveProgress : '저장 및 응시\n리스트 보기'}
               </span>
             </button>
             <button
               onClick={handleNextQuestion}
               className="w-1/2 flex items-center justify-center text-center bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-bold transition-colors duration-300"
             >
-              <span className="leading-tight">
-                다른 문제
-                <br />
-                풀기
-              </span>
+              <span className="leading-tight text-center w-full">다른 문제 풀기</span>
             </button>
           </div>
           {saveResult && (
