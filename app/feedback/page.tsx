@@ -625,26 +625,25 @@ export default function FeedbackPage() {
           </div>
 
           {/* 하단 버튼 영역 */}
-          <div className="sticky bottom-0 left-0 right-0 bg-white p-4 border-t border-gray-200 shadow-md flex items-center gap-4">
+          <div className="sticky bottom-0 left-0 right-0 bg-white p-4 border-t border-gray-200 shadow-md flex gap-4 items-stretch">
             <button
               onClick={handleSave}
-              className={`w-1/2 flex items-center justify-center text-center gap-2 px-6 py-3 rounded-lg font-bold text-white transition-colors duration-300 ${
-                isSaving
-                  ? 'bg-gray-400 cursor-not-allowed'
-                  : 'bg-green-600 hover:bg-green-700'
-              }`}
+              className={[
+                'flex-1 flex items-center justify-center text-center px-6 py-3 rounded-lg font-bold text-white transition-colors duration-300 min-h-[48px] bg-green-600 hover:bg-green-700 break-words',
+                isSaving ? 'bg-gray-400 cursor-not-allowed' : 'bg-green-600 hover:bg-green-700'
+              ].join(' ')}
               disabled={isSaving}
             >
               {isSaving && <span className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></span>}
-              <span className="leading-tight">
-                {isSaving ? saveProgress : '저장 및 응시\n리스트 보기'}
+              <span className="leading-tight text-base md:text-lg w-full">
+                저장 및 응시 리스트 보기
               </span>
             </button>
             <button
               onClick={handleNextQuestion}
-              className="w-1/2 flex items-center justify-center text-center bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-bold transition-colors duration-300"
+              className="flex-1 flex items-center justify-center text-center bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-bold transition-colors duration-300 min-h-[48px] break-words"
             >
-              <span className="leading-tight text-center w-full">다른 문제 풀기</span>
+              <span className="leading-tight text-base md:text-lg w-full">다른 문제 풀기</span>
             </button>
           </div>
           {saveResult && (
