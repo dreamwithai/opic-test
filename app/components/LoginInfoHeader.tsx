@@ -61,7 +61,14 @@ export default function LoginInfoHeader() {
                 >
                   <div className="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center overflow-hidden">
                     {user.image ? (
-                      <img src={user.image} alt="프로필" className="w-full h-full object-cover" />
+                      <Image 
+                        src={user.image} 
+                        alt="프로필" 
+                        width={32}
+                        height={32}
+                        className="w-full h-full object-cover rounded-full"
+                        priority
+                      />
                     ) : (
                       <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-gray-500" viewBox="0 0 20 20" fill="currentColor">
                         <path fillRule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clipRule="evenodd" />

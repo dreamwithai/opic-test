@@ -8,6 +8,36 @@ const nextConfig = {
     buildActivity: false,
   },
   
+  // 이미지 도메인 설정 (소셜 로그인 프로필 이미지용)
+  images: {
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'lh3.googleusercontent.com',
+        port: '',
+        pathname: '/**',
+      },
+      {
+        protocol: 'https',
+        hostname: 'k.kakaocdn.net',
+        port: '',
+        pathname: '/**',
+      },
+      {
+        protocol: 'https',
+        hostname: 'ssl.pstatic.net',
+        port: '',
+        pathname: '/**',
+      },
+      {
+        protocol: 'https',
+        hostname: 'graph.facebook.com',
+        port: '',
+        pathname: '/**',
+      },
+    ],
+  },
+  
   // 성능 최적화
   experimental: {
     optimizePackageImports: ['lucide-react'],

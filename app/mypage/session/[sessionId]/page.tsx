@@ -383,11 +383,11 @@ export default function SessionDetailPage() {
                     >
                       {/* 더 깔끔한 문서(폴드, 얇은 라인) 아이콘 */}
                       <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
-                        <rect x="5" y="4" width="10" height="16" rx="2" stroke="#fff" stroke-width="1.7" fill="none"/>
-                        <polyline points="13,4 15,4 15,6" stroke="#fff" stroke-width="1.7" fill="none"/>
-                        <line x1="7" y1="9" x2="13" y2="9" stroke="#fff" stroke-width="1.2"/>
-                        <line x1="7" y1="12" x2="13" y2="12" stroke="#fff" stroke-width="1.2"/>
-                        <line x1="7" y1="15" x2="11" y2="15" stroke="#fff" stroke-width="1.2"/>
+                        <rect x="5" y="4" width="10" height="16" rx="2" stroke="#fff" strokeWidth="1.7" fill="none"/>
+                        <polyline points="13,4 15,4 15,6" stroke="#fff" strokeWidth="1.7" fill="none"/>
+                        <line x1="7" y1="9" x2="13" y2="9" stroke="#fff" strokeWidth="1.2"/>
+                        <line x1="7" y1="12" x2="13" y2="12" stroke="#fff" strokeWidth="1.2"/>
+                        <line x1="7" y1="15" x2="11" y2="15" stroke="#fff" strokeWidth="1.2"/>
                       </svg>
                     </button>
                   </div>
@@ -454,6 +454,16 @@ export default function SessionDetailPage() {
             <p className="text-gray-600">이 세션에는 저장된 답변이 없습니다.</p>
           </div>
         )}
+
+        {/* 마이페이지로 돌아가기 버튼 */}
+        <div className="flex justify-center mt-10 mb-6">
+          <button
+            onClick={() => window.location.href = '/mypage'}
+            className="px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-semibold shadow transition-colors"
+          >
+            마이페이지로 돌아가기
+          </button>
+        </div>
       </div>
     </div>
   )
