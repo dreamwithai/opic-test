@@ -239,7 +239,7 @@ export default function SessionDetailPage() {
             </div>
             {/* 오른쪽: 날짜(윗줄) + 버튼(아랫줄) 2줄, 오른쪽 정렬 */}
             <div className="flex flex-col items-end gap-1 min-w-[120px]">
-              <div className="text-xl font-normal text-gray-600">
+              <div className="text-lg font-normal text-gray-600">
                 {new Date(sessionData.started_at).getFullYear()}.{String(new Date(sessionData.started_at).getMonth() + 1).padStart(2, '0')}.{String(new Date(sessionData.started_at).getDate()).padStart(2, '0')}
               </div>
               <div className="flex gap-2 mt-1">
@@ -458,7 +458,7 @@ export default function SessionDetailPage() {
         {/* 마이페이지로 돌아가기 버튼 */}
         <div className="flex justify-center mt-10 mb-6">
           <button
-            onClick={() => window.location.href = '/mypage'}
+            onClick={() => router.back()}
             className="px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-semibold shadow transition-colors"
           >
             마이페이지로 돌아가기

@@ -18,6 +18,14 @@ export default function LoginInfoHeader() {
     signOut({ callbackUrl: '/' });
   };
 
+  // 로고 클릭 시 홈으로 이동
+  const handleLogoClick = (e: React.MouseEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    
+    // 현재 페이지를 홈으로 교체
+    window.location.replace('/');
+  };
+
   // 드롭다운 메뉴 닫기 함수
   const closeDropdown = () => {
     setIsDropdownOpen(false);
@@ -39,7 +47,7 @@ export default function LoginInfoHeader() {
   return (
     <header className="bg-white border-b border-gray-200">
       <div className="max-w-5xl mx-auto px-4 flex justify-between items-center h-16">
-        <Link href="/">
+        <div onClick={handleLogoClick} className="cursor-pointer">
           <Image
             src="/logo.png"
             alt="OPIc 모의테스트 로고"
@@ -47,7 +55,7 @@ export default function LoginInfoHeader() {
             height={40}
             priority
           />
-        </Link>
+        </div>
         
         {pathname !== '/login' && (
           <>
