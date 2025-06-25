@@ -132,7 +132,7 @@ export async function POST(request: NextRequest) {
 
     // 2. test_session에 저장
     console.log('Saving to test_session...')
-    let sessionResult, sessionError;
+    let sessionResult: any, sessionError: any;
     try {
       const result = await retryOperation(async () => {
         const result = await supabase
