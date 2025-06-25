@@ -1,6 +1,6 @@
 'use client'
 
-import { Settings, Mic, Smartphone } from 'lucide-react'
+import { Settings, Mic, Smartphone, FileText, MessageSquare } from 'lucide-react'
 import AdminGuard from '@/components/AdminGuard'
 import Link from 'next/link'
 
@@ -11,6 +11,18 @@ export default function AdminPage() {
       description: '일자별로 등록한 회원을 조회합니다',
       href: '/admin/member-list',
       icon: undefined,
+    },
+    {
+      title: '공지사항 관리',
+      description: '공지사항을 작성하고 관리합니다',
+      href: '/admin/notices',
+      icon: FileText,
+    },
+    {
+      title: '1:1 문의하기 관리',
+      description: '사용자 1:1 문의사항을 확인하고 답변할 수 있습니다',
+      href: '/admin/inquiries',
+      icon: MessageSquare,
     },
     {
       title: '오디오파일 업로드',

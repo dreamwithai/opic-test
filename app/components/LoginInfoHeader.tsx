@@ -4,7 +4,7 @@ import { useSession, signOut } from "next-auth/react";
 import { useState, useEffect, useRef } from "react";
 import { usePathname } from 'next/navigation';
 import Image from 'next/image';
-import { LogOut, User, Settings, ClipboardList } from 'lucide-react';
+import { LogOut, User, Settings, ClipboardList, FileText, HelpCircle, MessageSquare } from 'lucide-react';
 
 export default function LoginInfoHeader() {
   const { data: session, status } = useSession();
@@ -48,6 +48,7 @@ export default function LoginInfoHeader() {
             priority
           />
         </Link>
+        
         {pathname !== '/login' && (
           <>
             {status === "loading" ? (
@@ -87,6 +88,27 @@ export default function LoginInfoHeader() {
                       <Settings className="h-4 w-4" />
                       설정
                     </Link>
+                    
+                    {/* 게시판 메뉴 */}
+                    <div className="border-t border-gray-100 pt-1">
+                      <Link 
+                        href="/notices" 
+                        className="flex items-center gap-3 px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                        onClick={closeDropdown}
+                      >
+                        <FileText className="h-4 w-4" />
+                        공지사항
+                      </Link>
+                      <Link 
+                        href="/inquiries" 
+                        className="flex items-center gap-3 px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                        onClick={closeDropdown}
+                      >
+                        <MessageSquare className="h-4 w-4" />
+                        1:1 문의하기
+                      </Link>
+                    </div>
+                    
                     {user.type === 'admin' && (
                       <Link 
                         href="/admin" 
@@ -98,7 +120,7 @@ export default function LoginInfoHeader() {
                     )}
                     <button
                       onClick={handleLogout}
-                      className="w-full text-left block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                      className="w-full text-left block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 border-t border-gray-100"
                     >
                       로그아웃
                     </button>

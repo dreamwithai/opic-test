@@ -11,6 +11,8 @@
     "@auth/supabase-adapter": "^1.9.1",
     "@supabase/auth-helpers-nextjs": "^0.10.0",
     "@supabase/supabase-js": "^2.49.8",
+    "@toast-ui/editor": "^3.2.2",
+    "@toast-ui/react-editor": "^3.2.3",
     "@types/jsonwebtoken": "^9.0.10",
     "dayjs": "^1.11.13",
     "jsonwebtoken": "^9.0.2",
