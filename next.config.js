@@ -18,9 +18,7 @@ const nextConfig = {
         pathname: '/**',
       },
       {
-        protocol: 'https',
         hostname: 'k.kakaocdn.net',
-        port: '',
         pathname: '/**',
       },
       {

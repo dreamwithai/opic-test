@@ -28,7 +28,8 @@ export async function POST(request: NextRequest) {
     const pathParts = filePath.split('/');
     const ownerId = pathParts.length > 1 ? pathParts[1] : null;
 
-    if (ownerId !== session.user.id) {
+    const isAdmin = session.user.type === 'admin';
+    if (!isAdmin && ownerId !== session.user.id) {
         return NextResponse.json({ error: '접근 권한이 없습니다.' }, { status: 403 });
     }
 

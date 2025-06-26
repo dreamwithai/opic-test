@@ -1,6 +1,6 @@
 'use client'
 
-import { Settings, Mic, Smartphone, FileText, MessageSquare } from 'lucide-react'
+import { Settings, Mic, Smartphone, FileText, MessageSquare, BarChart3 } from 'lucide-react'
 import AdminGuard from '@/components/AdminGuard'
 import Link from 'next/link'
 
@@ -11,6 +11,12 @@ export default function AdminPage() {
       description: '일자별로 등록한 회원을 조회합니다',
       href: '/admin/member-list',
       icon: undefined,
+    },
+    {
+      title: '시험 응시 데이터',
+      description: '시험 응시 데이터를 조회하고 다운로드합니다',
+      href: '/admin/test-results',
+      icon: BarChart3,
     },
     {
       title: '공지사항 관리',

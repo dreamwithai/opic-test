@@ -57,6 +57,27 @@ CREATE TABLE IF NOT EXISTS post_views (
     UNIQUE(post_type, post_id, member_id)
 );
 
+-- 후기(리뷰) 게시판 테이블
+CREATE TABLE IF NOT EXISTS reviews (
+    id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+    member_id UUID NOT NULL REFERENCES members(id) ON DELETE CASCADE,
+    title VARCHAR(255) NOT NULL,
+    content TEXT NOT NULL,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+    updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
+-- 후기 댓글/대댓글 테이블
+CREATE TABLE IF NOT EXISTS review_comments (
+    id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+    review_id UUID NOT NULL REFERENCES reviews(id) ON DELETE CASCADE,
+    member_id UUID NOT NULL REFERENCES members(id) ON DELETE CASCADE,
+    parent_id UUID REFERENCES review_comments(id) ON DELETE CASCADE, -- NULL이면 댓글, 있으면 대댓글
+    content TEXT NOT NULL,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+    updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
 -- 인덱스 생성
 CREATE INDEX IF NOT EXISTS idx_notices_priority ON notices(priority DESC, created_at DESC);
 CREATE INDEX IF NOT EXISTS idx_notices_published ON notices(is_published, created_at DESC);
