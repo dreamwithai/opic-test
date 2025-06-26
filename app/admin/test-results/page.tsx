@@ -51,6 +51,20 @@ function getTodayString() {
   return `${yyyy}-${mm}-${dd}`;
 }
 
+// 날짜 표기 부분에서
+// {new Date(session.started_at).toLocaleString()}
+// ->
+// {formatDateTime(session.started_at)}
+function formatDateTime(dateString: string) {
+  const d = new Date(dateString);
+  const yyyy = d.getFullYear();
+  const mm = String(d.getMonth() + 1).padStart(2, '0');
+  const dd = String(d.getDate()).padStart(2, '0');
+  const hh = String(d.getHours()).padStart(2, '0');
+  const min = String(d.getMinutes()).padStart(2, '0');
+  return `${yyyy}.${mm}.${dd} ${hh}:${min}`;
+}
+
 export default function TestResultsPage() {
   const [sessions, setSessions] = useState<TestSession[]>([])
   const [loading, setLoading] = useState(true)
@@ -346,19 +360,9 @@ export default function TestResultsPage() {
             <p className="text-gray-600">모든 고객의 시험 응시 데이터를 조회하고 다운로드할 수 있습니다.</p>
           </div>
 
-          {/* 필터 및 검색 */}
-          <div className="bg-white rounded-lg shadow-sm border p-6 mb-6">
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
-              <div className="relative">
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
-                <input
-                  type="text"
-                  placeholder="이메일, 이름, 테마 검색..."
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                  className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                />
-              </div>
+          {/* 검색(서버) 영역 */}
+          <div className="bg-white rounded-lg shadow-sm border p-6 mb-2">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
               <div>
                 <input
                   type="date"
@@ -397,6 +401,22 @@ export default function TestResultsPage() {
             </div>
           </div>
 
+          {/* 필터(클라이언트) 영역 */}
+          <div className="bg-white rounded-lg shadow-sm border p-6 mb-6 mt-2">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-1 gap-4">
+              <div className="relative max-w-md">
+                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
+                <input
+                  type="text"
+                  placeholder="이메일, 이름, 테마로 필터링..."
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                />
+              </div>
+            </div>
+          </div>
+
           {/* 전체 다운로드 버튼 */}
           <div className="mb-6">
             <button
@@ -414,7 +434,7 @@ export default function TestResultsPage() {
             <div className="grid grid-cols-1 md:grid-cols-4 gap-4 text-center">
               <div>
                 <div className="text-2xl font-bold text-blue-600">{filteredSessions.length}</div>
-                <div className="text-sm text-gray-600">총 세션 수</div>
+                <div className="text-sm text-gray-600">총 응시 수</div>
               </div>
               <div>
                 <div className="text-2xl font-bold text-green-600">
@@ -431,7 +451,7 @@ export default function TestResultsPage() {
               <div>
                 <div className="text-2xl font-bold text-orange-600">
                   {filteredSessions.length > 0 ? 
-                    new Date(filteredSessions[0].started_at).toLocaleDateString() : '-'
+                    formatDateTime(filteredSessions[0].started_at) : '-'
                   }
                 </div>
                 <div className="text-sm text-gray-600">최근 응시일</div>
@@ -459,7 +479,7 @@ export default function TestResultsPage() {
                 <div key={session.id} className="bg-white rounded-lg shadow-sm border">
                   {/* 세션 헤더 */}
                   <div className="p-6 border-b border-gray-200">
-                    <div className="flex items-center justify-between">
+                    <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-3">
                       <div className="flex-1">
                         <div className="flex items-center gap-4 mb-2">
                           <h3 className="text-lg font-semibold text-gray-900">
@@ -476,7 +496,7 @@ export default function TestResultsPage() {
                           </div>
                           <div className="flex items-center gap-1">
                             <Calendar className="w-4 h-4" />
-                            {new Date(session.started_at).toLocaleString()}
+                            {formatDateTime(session.started_at)}
                           </div>
                           <div className="flex items-center gap-1">
                             <FileText className="w-4 h-4" />
@@ -503,7 +523,7 @@ export default function TestResultsPage() {
                           onClick={() => setExpandedSession(expandedSession === session.id ? null : session.id)}
                           className="px-3 py-1 bg-gray-100 text-gray-700 rounded hover:bg-gray-200 text-sm"
                         >
-                          {expandedSession === session.id ? '접기' : '상세보기'}
+                          {expandedSession === session.id ? '접기' : '상세'}
                         </button>
                       </div>
                     </div>
