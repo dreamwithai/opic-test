@@ -292,27 +292,29 @@ export default function ProfilePage() {
             {memberInfo?.type === 'admin' && (
               <div className="bg-white rounded-lg shadow-sm p-6 flex flex-col mt-6">
                 <h2 className="text-lg font-semibold text-gray-800 mb-2">닉네임 설정 (관리자 전용)</h2>
-                <div className="flex gap-2 items-center">
-                  <input
-                    type="text"
-                    value={nickname}
-                    onChange={e => setNickname(e.target.value)}
-                    placeholder="닉네임을 입력하세요"
-                    className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                  />
+                <div className="space-y-4">
+                  <div>
+                    <input
+                      type="text"
+                      value={nickname}
+                      onChange={e => setNickname(e.target.value)}
+                      placeholder="닉네임을 입력하세요"
+                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    />
+                  </div>
                   <button
                     onClick={handleUpdateNickname}
                     disabled={isUpdating}
-                    className="bg-green-600 hover:bg-green-700 disabled:bg-gray-400 text-white font-medium py-2 px-4 rounded-md transition-colors"
+                    className="w-full bg-green-600 hover:bg-green-700 disabled:bg-gray-400 text-white font-medium py-2 px-4 rounded-md transition-colors"
                   >
-                    {isUpdating ? '저장 중...' : '닉네임 저장'}
+                    {isUpdating ? '저장 중...' : 'Nickname 업데이트'}
                   </button>
+                  {nicknameUpdateMessage && (
+                    <p className={`mt-2 text-sm ${nicknameUpdateMessage.includes('✅') ? 'text-green-600' : 'text-red-600'}`}>
+                      {nicknameUpdateMessage}
+                    </p>
+                  )}
                 </div>
-                {nicknameUpdateMessage && (
-                  <p className={`mt-2 text-sm ${nicknameUpdateMessage.includes('✅') ? 'text-green-600' : 'text-red-600'}`}>
-                    {nicknameUpdateMessage}
-                  </p>
-                )}
               </div>
             )}
 
