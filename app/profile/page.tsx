@@ -18,6 +18,9 @@ interface MemberInfo {
   created_at: string
   status: string | null
   withdrawn_at: string | null
+  profile_image: string | null
+  nickname?: string | null
+  type: string | null
 }
 
 export default function ProfilePage() {
@@ -29,6 +32,8 @@ export default function ProfilePage() {
   const [liveKlassId, setLiveKlassId] = useState('')
   const [updateMessage, setUpdateMessage] = useState('')
   const [sttResetMessage, setSttResetMessage] = useState('')
+  const [nickname, setNickname] = useState('')
+  const [nicknameUpdateMessage, setNicknameUpdateMessage] = useState('')
 
   // 회원 정보 불러오기
   useEffect(() => {
@@ -46,6 +51,7 @@ export default function ProfilePage() {
         } else {
           setMemberInfo(data)
           setLiveKlassId(data.ref_id || '')
+          setNickname(data.nickname || '')
         }
         setIsLoading(false)
       } else if (status === 'unauthenticated') {
@@ -89,6 +95,29 @@ export default function ProfilePage() {
     setTimeout(() => {
       setUpdateMessage('')
     }, 2000)
+  }
+
+  // 닉네임 업데이트 함수
+  const handleUpdateNickname = async () => {
+    if (!session?.user?.id) return
+    setIsUpdating(true)
+    setNicknameUpdateMessage('')
+    const { data: updatedData, error } = await supabase
+      .from('members')
+      .update({ nickname: nickname.trim() })
+      .eq('id', session.user.id)
+      .select()
+      .single()
+    if (error) {
+      setNicknameUpdateMessage(`❌ 닉네임 업데이트 실패: ${error.message}`)
+    } else if (!updatedData) {
+      setNicknameUpdateMessage('❌ 닉네임 업데이트 실패: 데이터를 수정할 권한이 없습니다.')
+    } else {
+      setNicknameUpdateMessage('✅ 닉네임이 성공적으로 업데이트되었습니다!')
+      setMemberInfo(updatedData)
+    }
+    setIsUpdating(false)
+    setTimeout(() => setNicknameUpdateMessage(''), 2000)
   }
 
   // 회원탈퇴
@@ -179,6 +208,9 @@ export default function ProfilePage() {
     )
   }
 
+  // memberInfo 값 콘솔 출력
+  console.log('memberInfo:', memberInfo);
+
   return (
     <div className="min-h-screen bg-gray-50 font-sans text-sm">
       <div className="max-w-7xl mx-auto py-10 px-4">
@@ -226,34 +258,64 @@ export default function ProfilePage() {
           {/* 오른쪽 영역 */}
           <div className="lg:col-span-3 flex flex-col gap-6">
             {/* LiveKlass ID 설정 */}
-            <div className="bg-white rounded-lg shadow-sm p-6 flex flex-col">
-              <h2 className="text-xl font-semibold text-gray-800 mb-4">LiveKlass ID 설정</h2>
-              <div className="space-y-4">
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">LiveKlass ID</label>
+            {memberInfo?.status && (
+              <div className="bg-white rounded-lg shadow-sm p-6 flex flex-col">
+                <h2 className="text-xl font-semibold text-gray-800 mb-4">LiveKlass ID 설정</h2>
+                <div className="space-y-4">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">LiveKlass ID</label>
+                    <input
+                      type="text"
+                      value={liveKlassId}
+                      onChange={(e) => setLiveKlassId(e.target.value)}
+                      placeholder="LiveKlass ID를 입력하세요"
+                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    />
+                  </div>
+                  <button
+                    onClick={handleUpdateLiveKlassId}
+                    disabled={isUpdating}
+                    className="w-full bg-blue-600 hover:bg-blue-700 disabled:bg-gray-400 text-white font-medium py-2 px-4 rounded-md transition-colors"
+                  >
+                    {isUpdating ? '업데이트 중...' : 'LiveKlass ID 업데이트'}
+                  </button>
+                  {updateMessage && (
+                    <p className={`text-sm ${updateMessage.includes('✅') ? 'text-green-600' : 'text-red-600'}`}>
+                      {updateMessage}
+                    </p>
+                  )}
+                </div>
+              </div>
+            )}
+            
+            {/* 닉네임 입력/수정 UI 조건: type이 'admin'일 때만 노출 */}
+            {memberInfo?.type === 'admin' && (
+              <div className="bg-white rounded-lg shadow-sm p-6 flex flex-col mt-6">
+                <h2 className="text-lg font-semibold text-gray-800 mb-2">닉네임 설정 (관리자 전용)</h2>
+                <div className="flex gap-2 items-center">
                   <input
                     type="text"
-                    value={liveKlassId}
-                    onChange={(e) => setLiveKlassId(e.target.value)}
-                    placeholder="LiveKlass ID를 입력하세요"
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    value={nickname}
+                    onChange={e => setNickname(e.target.value)}
+                    placeholder="닉네임을 입력하세요"
+                    className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                   />
+                  <button
+                    onClick={handleUpdateNickname}
+                    disabled={isUpdating}
+                    className="bg-green-600 hover:bg-green-700 disabled:bg-gray-400 text-white font-medium py-2 px-4 rounded-md transition-colors"
+                  >
+                    {isUpdating ? '저장 중...' : '닉네임 저장'}
+                  </button>
                 </div>
-                <button
-                  onClick={handleUpdateLiveKlassId}
-                  disabled={isUpdating}
-                  className="w-full bg-blue-600 hover:bg-blue-700 disabled:bg-gray-400 text-white font-medium py-2 px-4 rounded-md transition-colors"
-                >
-                  {isUpdating ? '업데이트 중...' : 'LiveKlass ID 업데이트'}
-                </button>
-                {updateMessage && (
-                  <p className={`text-sm ${updateMessage.includes('✅') ? 'text-green-600' : 'text-red-600'}`}>
-                    {updateMessage}
+                {nicknameUpdateMessage && (
+                  <p className={`mt-2 text-sm ${nicknameUpdateMessage.includes('✅') ? 'text-green-600' : 'text-red-600'}`}>
+                    {nicknameUpdateMessage}
                   </p>
                 )}
               </div>
-            </div>
-            
+            )}
+
             {/* 모바일 STT 설정 */}
             <div className="bg-white rounded-lg shadow-sm p-6 flex flex-col">
               <h2 className="text-xl font-semibold text-gray-800 mb-4">모바일 STT 설정</h2>
