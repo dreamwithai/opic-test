@@ -4,7 +4,7 @@ import { useSession, signOut } from "next-auth/react";
 import { useState, useEffect, useRef } from "react";
 import { usePathname } from 'next/navigation';
 import Image from 'next/image';
-import { LogOut, User, Settings, ClipboardList, FileText, HelpCircle, MessageSquare } from 'lucide-react';
+import { LogOut, User, Settings, ClipboardList, FileText, HelpCircle, MessageSquare, ChevronDown } from 'lucide-react';
 
 export default function LoginInfoHeader() {
   const { data: session, status } = useSession();
@@ -44,6 +44,21 @@ export default function LoginInfoHeader() {
     };
   }, [dropdownRef]);
 
+  // 이름/이메일/프로바이더/사용자 표시 함수
+  function getDisplayName(user: any) {
+    if (user?.name && user.name.trim() !== '') {
+      return user.name;
+    } else if (user?.email && user.email.trim() !== '') {
+      const [id, domain] = user.email.split('@');
+      return id.slice(0, 3) + '****@' + domain;
+    } else if (user?.provider) {
+      let kor = user.provider === 'kakao' ? '카카오' : user.provider === 'naver' ? '네이버' : user.provider === 'google' ? '구글' : user.provider;
+      return `${kor} 회원`;
+    } else {
+      return '사용자';
+    }
+  }
+
   return (
     <header className="bg-white border-b border-gray-200">
       <div className="max-w-5xl mx-auto px-4 flex justify-between items-center h-16">
@@ -65,8 +80,9 @@ export default function LoginInfoHeader() {
               <div className="relative" ref={dropdownRef}>
                 <button 
                   onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-                  className="flex items-center gap-2"
+                  className="flex items-center gap-2 px-2 py-1 rounded hover:bg-gray-100 transition-colors"
                 >
+                  <span className="text-gray-800 font-normal max-w-[120px] truncate text-sm">{getDisplayName(user) + ' 님'}</span>
                   <div className="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center overflow-hidden">
                     {user.image ? (
                       <Image 
@@ -83,6 +99,7 @@ export default function LoginInfoHeader() {
                       </svg>
                     )}
                   </div>
+                  <ChevronDown className="w-4 h-4 text-gray-400" />
                 </button>
                 
                 {isDropdownOpen && (
