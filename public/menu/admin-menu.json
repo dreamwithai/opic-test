@@ -1,0 +1,28 @@
+[
+  {
+    "id": 1,
+    "menu_name": "notices",
+    "menu_label": "공지사항",
+    "menu_path": "/notices",
+    "icon_name": "FileText",
+    "is_active": true,
+    "admin_access": true,
+    "user_access": true,
+    "guest_access": true,
+    "sort_order": 1,
+    "created_at": "2025-06-27T05:01:55.977134+00:00"
+  },
+  {
+    "id": 2,
+    "menu_name": "inquiries",
+    "menu_label": "1:1 문의하기",
+    "menu_path": "/inquiries",
+    "icon_name": "MessageSquare",
+    "is_active": true,
+    "admin_access": true,
+    "user_access": false,
+    "guest_access": false,
+    "sort_order": 2,
+    "created_at": "2025-06-27T05:01:55.977134+00:00"
+  }
+]

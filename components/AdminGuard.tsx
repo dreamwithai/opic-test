@@ -2,6 +2,8 @@
 
 import { useAdminAuth } from '@/lib/useAdminAuth'
 import FullScreenLoader from '@/app/components/FullScreenLoader'
+import { useStaticMenuPermissions } from '@/lib/useStaticMenuPermissions'
+import { useSession } from 'next-auth/react'
 
 interface AdminGuardProps {
   children: React.ReactNode
@@ -9,6 +11,8 @@ interface AdminGuardProps {
 
 export default function AdminGuard({ children }: AdminGuardProps) {
   const { isAdmin, isLoading } = useAdminAuth()
+  const { data: session, status } = useSession()
+  const { hasAccess, loading } = useStaticMenuPermissions()
 
   if (isLoading) {
     return <FullScreenLoader />

@@ -234,4 +234,25 @@ BEGIN
                    WHERE table_name = 'reviews' AND column_name = 'view_count') THEN
         ALTER TABLE reviews ADD COLUMN view_count INTEGER DEFAULT 0;
     END IF;
-END $$; 
+END $$;
+
+-- 메뉴 권한 관리 테이블
+CREATE TABLE menu_permissions (
+    id SERIAL PRIMARY KEY,
+    menu_name VARCHAR(50) NOT NULL UNIQUE,
+    menu_label VARCHAR(100) NOT NULL,
+    menu_path VARCHAR(200) NOT NULL,
+    icon_name VARCHAR(50),
+    is_active BOOLEAN DEFAULT true,
+    admin_access BOOLEAN DEFAULT true,
+    user_access BOOLEAN DEFAULT false,
+    guest_access BOOLEAN DEFAULT false,
+    sort_order INTEGER DEFAULT 0,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
+-- 기본 메뉴 데이터 삽입
+INSERT INTO menu_permissions (menu_name, menu_label, menu_path, icon_name, admin_access, user_access, guest_access, sort_order) VALUES
+('notices', '공지사항', '/notices', 'FileText', true, true, true, 1),
+('inquiries', '1:1 문의하기', '/inquiries', 'MessageSquare', true, true, false, 2),
+('reviews', '후기게시판', '/reviews', 'Star', true, true, true, 3); 

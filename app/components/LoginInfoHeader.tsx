@@ -4,8 +4,9 @@ import { useSession, signOut } from "next-auth/react";
 import { useState, useEffect, useRef } from "react";
 import { usePathname } from 'next/navigation';
 import Image from 'next/image';
-import { LogOut, User, Settings, ClipboardList, FileText, HelpCircle, MessageSquare, ChevronDown } from 'lucide-react';
+import { LogOut, User, Settings, ClipboardList, FileText, HelpCircle, MessageSquare, ChevronDown, Star } from 'lucide-react';
 import ImageWithFallback from './ImageWithFallback';
+import { useStaticMenuPermissions } from '@/lib/useStaticMenuPermissions';
 
 export default function LoginInfoHeader() {
   const { data: session, status } = useSession();
@@ -13,6 +14,7 @@ export default function LoginInfoHeader() {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const pathname = usePathname();
+  const { getAccessibleMenus, loading: menuLoading } = useStaticMenuPermissions();
 
   const handleLogout = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
@@ -59,6 +61,25 @@ export default function LoginInfoHeader() {
       return '사용자';
     }
   }
+
+  // 아이콘 매핑 함수
+  const getIconComponent = (iconName: string) => {
+    switch (iconName) {
+      case 'FileText':
+        return <FileText className="h-4 w-4" />
+      case 'MessageSquare':
+        return <MessageSquare className="h-4 w-4" />
+      case 'Star':
+        return <Star className="h-4 w-4" />
+      case 'HelpCircle':
+        return <HelpCircle className="h-4 w-4" />
+      default:
+        return <FileText className="h-4 w-4" />
+    }
+  }
+
+  // 접근 가능한 메뉴 가져오기
+  const accessibleMenus = getAccessibleMenus();
 
   return (
     <header className="bg-white border-b border-gray-200">
@@ -126,25 +147,22 @@ export default function LoginInfoHeader() {
                       설정
                     </Link>
                     
-                    {/* 게시판 메뉴 */}
-                    <div className="border-t border-gray-100 pt-1">
-                      <Link 
-                        href="/notices" 
-                        className="flex items-center gap-3 px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                        onClick={closeDropdown}
-                      >
-                        <FileText className="h-4 w-4" />
-                        공지사항
-                      </Link>
-                      <Link 
-                        href="/inquiries" 
-                        className="flex items-center gap-3 px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                        onClick={closeDropdown}
-                      >
-                        <MessageSquare className="h-4 w-4" />
-                        1:1 문의하기
-                      </Link>
-                    </div>
+                    {/* 동적 게시판 메뉴 */}
+                    {accessibleMenus.length > 0 && (
+                      <div className="border-t border-gray-100 pt-1">
+                        {accessibleMenus.map((menu) => (
+                          <Link 
+                            key={menu.id}
+                            href={menu.menu_path} 
+                            className="flex items-center gap-3 px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                            onClick={closeDropdown}
+                          >
+                            {getIconComponent(menu.icon_name)}
+                            {menu.menu_label}
+                          </Link>
+                        ))}
+                      </div>
+                    )}
                     
                     {user.type === 'admin' && (
                       <Link 

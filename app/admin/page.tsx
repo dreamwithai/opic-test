@@ -105,6 +105,14 @@ export default function AdminPage() {
       quickAction: true
     },
     {
+      title: '메뉴 관리',
+      description: '사이트 메뉴의 접근 권한을 관리합니다',
+      href: '/admin/menu-management',
+      icon: Settings,
+      color: 'bg-yellow-500',
+      quickAction: true
+    },
+    {
       title: '오디오파일 업로드',
       description: '오픽 음성 파일을 업로드합니다',
       href: '/admin/upload',
