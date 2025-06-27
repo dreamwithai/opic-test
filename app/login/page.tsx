@@ -1,7 +1,7 @@
 'use client';
 
 import { signIn } from 'next-auth/react'
-import Image from 'next/image'
+import ImageWithFallback from '../components/ImageWithFallback'
 
 export default function LoginPage() {
   return (
@@ -18,7 +18,7 @@ export default function LoginPage() {
             onClick={() => signIn('google', { callbackUrl: '/' })}
             className="flex items-center justify-center w-full px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
           >
-            <Image src="/google-logo.svg" alt="Google" width={20} height={20} className="mr-3" />
+            <ImageWithFallback src="/google-logo.svg" alt="Google" width={20} height={20} className="mr-3" fallbackSrc="/google-logo.svg" />
             Google 계정으로 시작하기
           </button>
           <button
@@ -26,7 +26,7 @@ export default function LoginPage() {
             style={{ backgroundColor: '#FEE500' }}
             className="flex items-center justify-center w-full px-4 py-2 text-sm font-medium text-black rounded-md shadow-sm hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-yellow-400"
           >
-            <Image src="/kakao-logo.svg" alt="Kakao" width={20} height={20} className="mr-3" />
+            <ImageWithFallback src="/kakao-logo.svg" alt="Kakao" width={20} height={20} className="mr-3" fallbackSrc="/kakao-logo.svg" />
             카카오 계정으로 시작하기
           </button>
           <button
@@ -34,7 +34,7 @@ export default function LoginPage() {
             style={{ backgroundColor: '#03C75A' }}
             className="flex items-center justify-center w-full px-4 py-2 text-sm font-medium text-white rounded-md shadow-sm hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
           >
-            <Image src="/naver-logo.svg" alt="Naver" width={20} height={20} className="mr-3" />
+            <ImageWithFallback src="/naver-logo.svg" alt="Naver" width={20} height={20} className="mr-3" fallbackSrc="/naver-logo.svg" />
             네이버 계정으로 시작하기
           </button>
         </div>

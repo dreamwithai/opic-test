@@ -1,7 +1,8 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { Download, Search, Filter, Calendar, User, FileText, Play, Pause } from 'lucide-react'
+import { Download, Search, Filter, Calendar, User, FileText, Play, Pause, ArrowLeft, Home } from 'lucide-react'
+import Link from 'next/link'
 import AdminGuard from '@/components/AdminGuard'
 import { supabase } from '@/lib/supabase'
 
@@ -354,6 +355,26 @@ export default function TestResultsPage() {
     <AdminGuard>
       <div className="min-h-screen bg-gray-50 font-sans">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+          {/* 네비게이션 */}
+          <div className="mb-6">
+            <div className="flex items-center space-x-4">
+              <Link
+                href="/admin"
+                className="inline-flex items-center px-3 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 transition-colors"
+              >
+                <ArrowLeft className="w-4 h-4 mr-2" />
+                뒤로가기
+              </Link>
+              <Link
+                href="/admin"
+                className="inline-flex items-center px-3 py-2 text-sm font-medium text-blue-600 bg-blue-50 border border-blue-200 rounded-md hover:bg-blue-100 transition-colors"
+              >
+                <Home className="w-4 h-4 mr-2" />
+                어드민 홈
+              </Link>
+            </div>
+          </div>
+
           {/* 헤더 */}
           <div className="mb-8">
             <h1 className="text-3xl font-bold text-gray-900 mb-2">시험 응시 데이터 관리</h1>
@@ -417,18 +438,6 @@ export default function TestResultsPage() {
             </div>
           </div>
 
-          {/* 전체 다운로드 버튼 */}
-          <div className="mb-6">
-            <button
-              onClick={downloadAllSessions}
-              className="bg-green-600 text-white py-2 px-4 rounded-md hover:bg-green-700 transition-colors flex items-center gap-2"
-              disabled={downloading}
-            >
-              <Download className="w-4 h-4" />
-              {downloading ? `다운로드 중... (${downloadProgress.current}/${downloadProgress.total})` : '전체 세션 다운로드'}
-            </button>
-          </div>
-
           {/* 결과 통계 */}
           <div className="bg-white rounded-lg shadow-sm border p-4 mb-6">
             <div className="grid grid-cols-1 md:grid-cols-4 gap-4 text-center">
@@ -457,6 +466,18 @@ export default function TestResultsPage() {
                 <div className="text-sm text-gray-600">최근 응시일</div>
               </div>
             </div>
+          </div>
+
+          {/* 전체 다운로드 버튼 */}
+          <div className="flex justify-end mb-6">
+            <button
+              onClick={downloadAllSessions}
+              className="bg-green-600 text-white py-2 px-4 rounded-md hover:bg-green-700 transition-colors flex items-center gap-2"
+              disabled={downloading}
+            >
+              <Download className="w-4 h-4" />
+              {downloading ? `다운로드 중... (${downloadProgress.current}/${downloadProgress.total})` : '전체 다운로드'}
+            </button>
           </div>
 
           {/* 세션 목록 */}

@@ -16,6 +16,8 @@ export async function GET(request: NextRequest) {
     const limit = parseInt(searchParams.get('limit') || '10')
     const status = searchParams.get('status')
     const category = searchParams.get('category')
+    const startDate = searchParams.get('startDate')
+    const endDate = searchParams.get('endDate')
     const userId = searchParams.get('userId')
     const offset = (page - 1) * limit
 
@@ -51,6 +53,14 @@ export async function GET(request: NextRequest) {
     // 카테고리 필터
     if (category) {
       query = query.eq('category', category)
+    }
+
+    // 날짜 범위 필터
+    if (startDate) {
+      query = query.gte('created_at', `${startDate}T00:00:00`)
+    }
+    if (endDate) {
+      query = query.lte('created_at', `${endDate}T23:59:59`)
     }
 
     const { data: inquiries, error, count } = await query

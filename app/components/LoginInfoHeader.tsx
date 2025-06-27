@@ -5,6 +5,7 @@ import { useState, useEffect, useRef } from "react";
 import { usePathname } from 'next/navigation';
 import Image from 'next/image';
 import { LogOut, User, Settings, ClipboardList, FileText, HelpCircle, MessageSquare, ChevronDown } from 'lucide-react';
+import ImageWithFallback from './ImageWithFallback';
 
 export default function LoginInfoHeader() {
   const { data: session, status } = useSession();
@@ -63,12 +64,13 @@ export default function LoginInfoHeader() {
     <header className="bg-white border-b border-gray-200">
       <div className="max-w-5xl mx-auto px-4 flex justify-between items-center h-16">
         <div onClick={handleLogoClick} className="cursor-pointer">
-          <Image
+          <ImageWithFallback
             src="/logo.png"
             alt="OPIc 모의테스트 로고"
             width={150}
             height={40}
             priority
+            fallbackSrc="/logo.png"
           />
         </div>
         
@@ -82,16 +84,19 @@ export default function LoginInfoHeader() {
                   onClick={() => setIsDropdownOpen(!isDropdownOpen)}
                   className="flex items-center gap-2 px-2 py-1 rounded hover:bg-gray-100 transition-colors"
                 >
-                  <span className="text-gray-800 font-normal max-w-[120px] truncate text-sm">{getDisplayName(user) + ' 님'}</span>
+                  <span className="text-gray-800 font-normal max-w-[120px] truncate text-sm">
+                    {getDisplayName(user) + ' 님'}
+                  </span>
                   <div className="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center overflow-hidden">
                     {user.image ? (
-                      <Image 
+                      <ImageWithFallback 
                         src={user.image} 
                         alt="프로필" 
                         width={32}
                         height={32}
                         className="w-full h-full object-cover rounded-full"
                         priority
+                        fallbackSrc="/default-profile.png"
                       />
                     ) : (
                       <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-gray-500" viewBox="0 0 20 20" fill="currentColor">
