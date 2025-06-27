@@ -440,7 +440,7 @@ export default function TestResultsPage() {
 
           {/* 결과 통계 */}
           <div className="bg-white rounded-lg shadow-sm border p-4 mb-6">
-            <div className="grid grid-cols-1 md:grid-cols-4 gap-4 text-center">
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
               <div>
                 <div className="text-2xl font-bold text-blue-600">{filteredSessions.length}</div>
                 <div className="text-sm text-gray-600">총 응시 수</div>
