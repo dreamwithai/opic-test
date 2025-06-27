@@ -275,7 +275,7 @@ export default function InquiriesPage() {
                     disabled={submitting}
                     className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed"
                   >
-                    {submitting ? '등록 중...' : '등록'}
+                    {submitting ? '등록 중...' : '문의하기'}
                   </button>
                 </div>
               </form>
