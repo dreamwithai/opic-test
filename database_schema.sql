@@ -63,6 +63,7 @@ CREATE TABLE IF NOT EXISTS reviews (
     member_id UUID NOT NULL REFERENCES members(id) ON DELETE CASCADE,
     title VARCHAR(255) NOT NULL,
     content TEXT NOT NULL,
+    view_count INTEGER DEFAULT 0,
     created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );
@@ -224,4 +225,13 @@ CREATE POLICY "공개 FAQ 조회수 업데이트 가능" ON faqs
         is_published = true
     ) WITH CHECK (
         is_published = true
-    ); 
+    );
+
+-- 기존 reviews 테이블에 view_count 컬럼 추가 (이미 존재하는 경우 무시)
+DO $$ 
+BEGIN
+    IF NOT EXISTS (SELECT 1 FROM information_schema.columns 
+                   WHERE table_name = 'reviews' AND column_name = 'view_count') THEN
+        ALTER TABLE reviews ADD COLUMN view_count INTEGER DEFAULT 0;
+    END IF;
+END $$; 

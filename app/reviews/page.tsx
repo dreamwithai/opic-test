@@ -51,73 +51,71 @@ export default function ReviewsPage() {
             { label: '후기 게시판', href: '/reviews' }
           ]} 
         />
-        <div className="max-w-2xl mx-auto">
-          <div className="bg-white rounded-lg shadow-sm border">
-            {/* 헤더 */}
-            <div className="px-6 py-4 border-b border-gray-200">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-2">
-                  <MessageSquare className="w-6 h-6 text-blue-600" />
-                  <h1 className="text-xl font-bold text-gray-900">후기 게시판</h1>
-                </div>
-                <Link
-                  href="/reviews/new"
-                  className="p-2 rounded-full hover:bg-blue-50 text-blue-600"
-                  title="새 후기 작성"
-                  aria-label="새 후기 작성"
-                >
-                  <span className="font-bold text-lg">＋</span>
-                </Link>
+        <div className="bg-white rounded-lg shadow-sm border">
+          {/* 헤더 */}
+          <div className="px-6 py-4 border-b border-gray-200">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <MessageSquare className="w-6 h-6 text-blue-600" />
+                <h1 className="text-xl font-bold text-gray-900">후기 게시판</h1>
               </div>
-              <p className="text-sm text-gray-600 mt-1">서비스를 이용한 후기를 자유롭게 남겨주세요.</p>
+              <Link
+                href="/reviews/new"
+                className="p-2 rounded-full hover:bg-blue-50 text-blue-600"
+                title="새 후기 작성"
+                aria-label="새 후기 작성"
+              >
+                <span className="font-bold text-lg">＋</span>
+              </Link>
             </div>
-            {/* 후기 목록 */}
-            {loading ? (
-              <div className="p-8 text-center">
-                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto"></div>
-                <p className="mt-2 text-gray-600">로딩 중...</p>
-              </div>
-            ) : reviews.length === 0 ? (
-              <div className="flex flex-col items-center justify-center py-12">
-                <MessageSquare className="w-12 h-12 text-gray-300 mb-4" />
-                <p className="text-gray-500">아직 작성된 후기가 없습니다.</p>
-              </div>
-            ) : (
-              <div className="divide-y divide-gray-200">
-                {reviews.map((review) => (
-                  <Link key={review.id} href={`/reviews/${review.id}`} className="block hover:bg-gray-50 transition-colors">
-                    <div className="py-4 px-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
-                      <div className="flex-1 min-w-0">
-                        <div className="flex items-center gap-2 mb-1">
-                          <span className="text-base font-semibold text-gray-900 truncate max-w-xs">{review.title}</span>
-                        </div>
-                        <div className="flex flex-wrap gap-4 text-xs text-gray-500 items-center">
-                          <span className="inline-flex items-center gap-1">
-                            <User className="w-3 h-3" />
-                            {review.member?.name || review.member?.email || review.member?.nickname || review.member?.provider || 'Unknown'}
-                          </span>
-                          <span className="inline-flex items-center gap-1">
-                            <Calendar className="w-3 h-3" />
-                            {formatDateTime(review.created_at)}
-                          </span>
-                        </div>
+            <p className="text-sm text-gray-600 mt-1">서비스를 이용한 후기를 자유롭게 남겨주세요.</p>
+          </div>
+          {/* 후기 목록 */}
+          {loading ? (
+            <div className="p-8 text-center">
+              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto"></div>
+              <p className="mt-2 text-gray-600">로딩 중...</p>
+            </div>
+          ) : reviews.length === 0 ? (
+            <div className="flex flex-col items-center justify-center py-12">
+              <MessageSquare className="w-12 h-12 text-gray-300 mb-4" />
+              <p className="text-gray-500">아직 작성된 후기가 없습니다.</p>
+            </div>
+          ) : (
+            <div className="divide-y divide-gray-200">
+              {reviews.map((review) => (
+                <Link key={review.id} href={`/reviews/${review.id}`} className="block hover:bg-gray-50 transition-colors">
+                  <div className="py-4 px-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center gap-2 mb-1">
+                        <span className="text-base font-semibold text-gray-900 truncate max-w-xs">{review.title}</span>
                       </div>
-                      <div className="flex flex-row gap-4 items-center mt-2 sm:mt-0">
-                        <span className="inline-flex items-center gap-1 text-xs text-gray-500">
-                          <Eye className="w-4 h-4" />
-                          {review.view_count || 0}
+                      <div className="flex flex-wrap gap-4 text-xs text-gray-500 items-center">
+                        <span className="inline-flex items-center gap-1">
+                          <User className="w-3 h-3" />
+                          {review.member?.name || review.member?.email || review.member?.nickname || review.member?.provider || 'Unknown'}
                         </span>
-                        <span className="inline-flex items-center gap-1 text-xs text-gray-500">
-                          <MessageCircle className="w-4 h-4" />
-                          {review.comments?.length ?? 0}
+                        <span className="inline-flex items-center gap-1">
+                          <Calendar className="w-3 h-3" />
+                          {formatDateTime(review.created_at)}
                         </span>
                       </div>
                     </div>
-                  </Link>
-                ))}
-              </div>
-            )}
-          </div>
+                    <div className="flex flex-row gap-4 items-center mt-2 sm:mt-0">
+                      <span className="inline-flex items-center gap-1 text-xs text-gray-500">
+                        <Eye className="w-4 h-4" />
+                        {review.view_count || 0}
+                      </span>
+                      <span className="inline-flex items-center gap-1 text-xs text-gray-500">
+                        <MessageCircle className="w-4 h-4" />
+                        {review.comments?.length ?? 0}
+                      </span>
+                    </div>
+                  </div>
+                </Link>
+              ))}
+            </div>
+          )}
         </div>
       </div>
     </div>

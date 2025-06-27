@@ -221,9 +221,11 @@ function AdminInquiriesUI() {
 
         {/* 헤더 */}
         <div className="mb-8">
-          <div>
-            <h1 className="text-3xl font-bold text-gray-900 mb-2">1:1 문의사항 관리</h1>
-            <p className="text-gray-600">사용자 문의사항을 관리하고 답변하세요</p>
+          <div className="flex items-center justify-between mb-4">
+            <div>
+              <h1 className="text-3xl font-bold text-gray-900 mb-2">1:1 문의사항 관리</h1>
+              <p className="text-gray-600">사용자 문의사항을 관리하고 답변하세요</p>
+            </div>
           </div>
         </div>
 

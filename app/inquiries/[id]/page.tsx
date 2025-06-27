@@ -205,12 +205,16 @@ export default function InquiryDetailPage() {
   return (
     <div className="min-h-screen bg-gray-50">
       <div className="max-w-4xl mx-auto px-4 py-8">
-        <Breadcrumb 
-          items={[
-            { label: '홈', href: '/' },
-            { label: '1:1 문의하기', href: '/inquiries' }
-          ]} 
-        />
+        <div className="mb-4">
+          <button
+            type="button"
+            onClick={() => router.back()}
+            className="inline-flex items-center px-4 py-2 bg-gray-100 text-gray-700 rounded-md hover:bg-gray-200 text-sm"
+          >
+            <ArrowLeft className="w-4 h-4 mr-2" />
+            목록으로
+          </button>
+        </div>
         <div className="bg-white rounded-lg shadow-sm border px-6 py-6">
           <div className="mb-6 pt-0 pb-0">
             <div className="flex items-center justify-between mb-1">
@@ -315,12 +319,6 @@ export default function InquiryDetailPage() {
                 답변하기
               </button>
             )}
-            <button
-              onClick={() => router.back()}
-              className="px-5 py-1.5 text-sm bg-gray-100 text-gray-700 rounded hover:bg-gray-200"
-            >
-              ← 목록
-            </button>
           </div>
         </div>
       </div>

@@ -184,172 +184,170 @@ export default function InquiriesPage() {
           ]} 
         />
 
-        <div className="max-w-2xl mx-auto">
-          <div className="bg-white rounded-lg shadow-sm border">
-            {/* 헤더 */}
-            <div className="px-6 py-4 border-b border-gray-200">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-2">
-                  <MessageSquare className="w-6 h-6 text-blue-600" />
-                  <h1 className="text-xl font-bold text-gray-900">1:1 문의하기</h1>
-                </div>
-                <button
-                  onClick={() => setShowForm(true)}
-                  className="p-2 rounded-full hover:bg-blue-50 text-blue-600"
-                  title="새 문의하기"
-                  aria-label="새 문의하기"
-                >
-                  <Plus className="w-5 h-5" />
-                </button>
+        <div className="bg-white rounded-lg shadow-sm border">
+          {/* 헤더 */}
+          <div className="px-6 py-4 border-b border-gray-200">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <MessageSquare className="w-6 h-6 text-blue-600" />
+                <h1 className="text-xl font-bold text-gray-900">1:1 문의하기</h1>
               </div>
-              <p className="text-sm text-gray-600 mt-1">궁금한 점이나 문제가 있으시면 언제든 문의해주세요</p>
+              <button
+                onClick={() => setShowForm(true)}
+                className="p-2 rounded-full hover:bg-blue-50 text-blue-600"
+                title="새 문의하기"
+                aria-label="새 문의하기"
+              >
+                <Plus className="w-5 h-5" />
+              </button>
             </div>
+            <p className="text-sm text-gray-600 mt-1">궁금한 점이나 문제가 있으시면 언제든 문의해주세요</p>
+          </div>
 
-            {/* 문의 작성 폼 */}
-            {showForm && (
-              <div className="px-6 py-4 border-b border-gray-200 bg-gray-50">
-                <form onSubmit={handleSubmit} className="space-y-4">
-                  <div>
-                    <label htmlFor="title" className="block text-sm font-medium text-gray-700 mb-2">
-                      제목 *
-                    </label>
-                    <input
-                      type="text"
-                      id="title"
-                      name="title"
-                      value={formData.title}
-                      onChange={handleInputChange}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-                      placeholder="문의 제목을 입력하세요"
-                      required
-                      maxLength={100}
-                    />
-                  </div>
-
-                  <div>
-                    <label htmlFor="category" className="block text-sm font-medium text-gray-700 mb-2">
-                      카테고리 *
-                    </label>
-                    <select
-                      id="category"
-                      name="category"
-                      value={formData.category}
-                      onChange={handleInputChange}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-                      required
-                    >
-                      {categories.map((category) => (
-                        <option key={category.value} value={category.value}>
-                          {category.label}
-                        </option>
-                      ))}
-                    </select>
-                  </div>
-
-                  <div>
-                    <label htmlFor="content" className="block text-sm font-medium text-gray-700 mb-2">
-                      문의 내용 *
-                    </label>
-                    <textarea
-                      id="content"
-                      name="content"
-                      value={formData.content}
-                      onChange={handleInputChange}
-                      rows={8}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-                      placeholder="문의하실 내용을 자세히 작성해주세요."
-                      required
-                      maxLength={2000}
-                    />
-                  </div>
-
-                  <div className="flex items-center justify-end space-x-3">
-                    <button
-                      type="button"
-                      onClick={() => setShowForm(false)}
-                      className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50"
-                    >
-                      취소
-                    </button>
-                    <button
-                      type="submit"
-                      disabled={submitting}
-                      className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed"
-                    >
-                      {submitting ? '등록 중...' : '등록'}
-                    </button>
-                  </div>
-                </form>
-              </div>
-            )}
-
-            {/* 문의사항 목록 */}
-            {loading ? (
-              <div className="p-8 text-center">
-                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto"></div>
-                <p className="mt-2 text-gray-600">로딩 중...</p>
-              </div>
-            ) : inquiries.length === 0 ? (
-              <div className="p-8 text-center">
-                <MessageSquare className="w-12 h-12 text-gray-400 mx-auto mb-4" />
-                <p className="text-gray-600">등록된 문의사항이 없습니다.</p>
-              </div>
-            ) : (
-              <>
-                <div className="divide-y divide-gray-200">
-                  {inquiries.map((inquiry) => (
-                    <div key={inquiry.id} className="py-4 px-6 border-b">
-                      <Link href={`/inquiries/${inquiry.id}`} className="block">
-                        <div className="flex items-center justify-between">
-                          <div className="flex items-center gap-2">
-                            {getStatusBadge(inquiry.status)}
-                            <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
-                              {getCategoryLabel(inquiry.category)}
-                            </span>
-                          </div>
-                          <span className="text-xs text-gray-400">
-                            {dayjs(inquiry.created_at).format('YYYY.MM.DD')}
-                          </span>
-                        </div>
-                        <div className="mt-2">
-                          <span className="block text-sm font-medium text-gray-900 truncate">
-                            {inquiry.title}
-                          </span>
-                        </div>
-                      </Link>
-                    </div>
-                  ))}
+          {/* 문의 작성 폼 */}
+          {showForm && (
+            <div className="px-6 py-4 border-b border-gray-200 bg-gray-50">
+              <form onSubmit={handleSubmit} className="space-y-4">
+                <div>
+                  <label htmlFor="title" className="block text-sm font-medium text-gray-700 mb-2">
+                    제목 *
+                  </label>
+                  <input
+                    type="text"
+                    id="title"
+                    name="title"
+                    value={formData.title}
+                    onChange={handleInputChange}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                    placeholder="문의 제목을 입력하세요"
+                    required
+                    maxLength={100}
+                  />
                 </div>
 
-                {/* 페이지네이션 */}
-                {totalPages > 1 && (
-                  <div className="px-6 py-4 border-t border-gray-200">
-                    <div className="flex items-center justify-between">
-                      <button
-                        onClick={() => setCurrentPage(prev => Math.max(1, prev - 1))}
-                        disabled={currentPage === 1}
-                        className="px-3 py-2 text-sm font-medium text-gray-500 bg-white border border-gray-300 rounded-md hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
-                      >
-                        이전
-                      </button>
-                      
-                      <span className="text-sm text-gray-700">
-                        {currentPage} / {totalPages}
-                      </span>
-                      
-                      <button
-                        onClick={() => setCurrentPage(prev => Math.min(totalPages, prev + 1))}
-                        disabled={currentPage === totalPages}
-                        className="px-3 py-2 text-sm font-medium text-gray-500 bg-white border border-gray-300 rounded-md hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
-                      >
-                        다음
-                      </button>
-                    </div>
+                <div>
+                  <label htmlFor="category" className="block text-sm font-medium text-gray-700 mb-2">
+                    카테고리 *
+                  </label>
+                  <select
+                    id="category"
+                    name="category"
+                    value={formData.category}
+                    onChange={handleInputChange}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                    required
+                  >
+                    {categories.map((category) => (
+                      <option key={category.value} value={category.value}>
+                        {category.label}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+
+                <div>
+                  <label htmlFor="content" className="block text-sm font-medium text-gray-700 mb-2">
+                    문의 내용 *
+                  </label>
+                  <textarea
+                    id="content"
+                    name="content"
+                    value={formData.content}
+                    onChange={handleInputChange}
+                    rows={8}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                    placeholder="문의하실 내용을 자세히 작성해주세요."
+                    required
+                    maxLength={2000}
+                  />
+                </div>
+
+                <div className="flex items-center justify-end space-x-3">
+                  <button
+                    type="button"
+                    onClick={() => setShowForm(false)}
+                    className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50"
+                  >
+                    취소
+                  </button>
+                  <button
+                    type="submit"
+                    disabled={submitting}
+                    className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed"
+                  >
+                    {submitting ? '등록 중...' : '등록'}
+                  </button>
+                </div>
+              </form>
+            </div>
+          )}
+
+          {/* 문의사항 목록 */}
+          {loading ? (
+            <div className="p-8 text-center">
+              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto"></div>
+              <p className="mt-2 text-gray-600">로딩 중...</p>
+            </div>
+          ) : inquiries.length === 0 ? (
+            <div className="p-8 text-center">
+              <MessageSquare className="w-12 h-12 text-gray-400 mx-auto mb-4" />
+              <p className="text-gray-600">등록된 문의사항이 없습니다.</p>
+            </div>
+          ) : (
+            <>
+              <div className="divide-y divide-gray-200">
+                {inquiries.map((inquiry) => (
+                  <div key={inquiry.id} className="py-4 px-6 border-b">
+                    <Link href={`/inquiries/${inquiry.id}`} className="block">
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-2">
+                          {getStatusBadge(inquiry.status)}
+                          <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
+                            {getCategoryLabel(inquiry.category)}
+                          </span>
+                        </div>
+                        <span className="text-xs text-gray-400">
+                          {dayjs(inquiry.created_at).format('YYYY.MM.DD')}
+                        </span>
+                      </div>
+                      <div className="mt-2">
+                        <span className="block text-sm font-medium text-gray-900 truncate">
+                          {inquiry.title}
+                        </span>
+                      </div>
+                    </Link>
                   </div>
-                )}
-              </>
-            )}
-          </div>
+                ))}
+              </div>
+
+              {/* 페이지네이션 */}
+              {totalPages > 1 && (
+                <div className="px-6 py-4 border-t border-gray-200">
+                  <div className="flex items-center justify-between">
+                    <button
+                      onClick={() => setCurrentPage(prev => Math.max(1, prev - 1))}
+                      disabled={currentPage === 1}
+                      className="px-3 py-2 text-sm font-medium text-gray-500 bg-white border border-gray-300 rounded-md hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+                    >
+                      이전
+                    </button>
+                    
+                    <span className="text-sm text-gray-700">
+                      {currentPage} / {totalPages}
+                    </span>
+                    
+                    <button
+                      onClick={() => setCurrentPage(prev => Math.min(totalPages, prev + 1))}
+                      disabled={currentPage === totalPages}
+                      className="px-3 py-2 text-sm font-medium text-gray-500 bg-white border border-gray-300 rounded-md hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+                    >
+                      다음
+                    </button>
+                  </div>
+                </div>
+              )}
+            </>
+          )}
         </div>
       </div>
     </div>

@@ -152,13 +152,16 @@ export default function NoticeDetailPage() {
   return (
     <div className="min-h-screen bg-gray-50">
       <div className="max-w-4xl mx-auto px-4 py-8">
-        <Breadcrumb 
-          items={[
-            { label: '홈', href: '/' },
-            { label: '공지사항', href: '/notices' }
-          ]} 
-        />
-
+        <div className="mb-4">
+          <button
+            type="button"
+            onClick={() => router.back()}
+            className="inline-flex items-center px-4 py-2 bg-gray-100 text-gray-700 rounded-md hover:bg-gray-200 text-sm"
+          >
+            <ArrowLeft className="w-4 h-4 mr-2" />
+            목록으로
+          </button>
+        </div>
         <div className="bg-white rounded-lg shadow-sm border">
           {/* 헤더(관리자 버튼 완전 제거) */}
 
@@ -190,16 +193,6 @@ export default function NoticeDetailPage() {
                 className="text-gray-800 leading-relaxed whitespace-pre-wrap"
                 dangerouslySetInnerHTML={{ __html: notice.content.replace(/\n/g, '<br>') }}
               />
-            </div>
-            {/* 닫기 버튼 */}
-            <div className="flex justify-center gap-3 mt-8">
-              <button
-                type="button"
-                onClick={() => router.back()}
-                className="px-5 py-1.5 text-sm bg-gray-100 text-gray-700 rounded hover:bg-gray-200"
-              >
-                ← 목록
-              </button>
             </div>
           </div>
         </div>
