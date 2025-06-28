@@ -5,39 +5,35 @@ import ImageWithFallback from '../components/ImageWithFallback'
 
 export default function LoginPage() {
   return (
-    <div className="flex flex-col items-center min-h-screen bg-gray-50 pt-40">
-      <div className="w-full max-w-sm p-8 space-y-8 bg-white rounded-lg shadow-md">
-        <div className="text-center">
-          <h2 className="text-2xl font-bold text-gray-800">소셜 로그인</h2>
-          <p className="mt-2 text-sm text-gray-600">
-            소셜 계정으로 간편하게 시작하세요.
-          </p>
+    <div className="min-h-screen flex flex-col items-center justify-center bg-gray-50">
+      <div className="bg-white p-8 rounded-lg shadow-md w-full max-w-sm">
+        <div className="mx-auto mb-6 flex flex-col items-center">
+          <span className="text-2xl font-bold text-blue-600">강지완's 4시간 오픽</span>
+          <span className="text-sm text-gray-500 mt-1">AI 오픽 모의고사 서비스</span>
         </div>
-        <div className="flex flex-col space-y-3">
-          <button
-            onClick={() => signIn('google', { callbackUrl: '/' })}
-            className="flex items-center justify-center w-full px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-          >
-            <ImageWithFallback src="/google-logo.svg" alt="Google" width={20} height={20} className="mr-3" fallbackSrc="/google-logo.svg" />
-            Google 계정으로 시작하기
-          </button>
-          <button
-            onClick={() => signIn('kakao', { callbackUrl: '/' })}
-            style={{ backgroundColor: '#FEE500' }}
-            className="flex items-center justify-center w-full px-4 py-2 text-sm font-medium text-black rounded-md shadow-sm hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-yellow-400"
-          >
-            <ImageWithFallback src="/kakao-logo.svg" alt="Kakao" width={20} height={20} className="mr-3" fallbackSrc="/kakao-logo.svg" />
-            카카오 계정으로 시작하기
-          </button>
-          <button
-            onClick={() => signIn('naver', { callbackUrl: '/' })}
-            style={{ backgroundColor: '#03C75A' }}
-            className="flex items-center justify-center w-full px-4 py-2 text-sm font-medium text-white rounded-md shadow-sm hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
-          >
-            <ImageWithFallback src="/naver-logo.svg" alt="Naver" width={20} height={20} className="mr-3" fallbackSrc="/naver-logo.svg" />
-            네이버 계정으로 시작하기
-          </button>
-        </div>
+        <h1 className="text-2xl font-bold text-center mb-2">로그인</h1>
+        <p className="text-center text-gray-500 mb-6">SNS 계정으로 간편하게 시작하세요</p>
+        <button
+          onClick={() => signIn('google')}
+          className="w-full flex items-center justify-center bg-white border border-gray-300 rounded-md py-2 mb-3 hover:bg-gray-100"
+        >
+          <img src="/google-logo.svg" alt="구글" className="w-5 h-5 mr-2" />
+          구글로 시작
+        </button>
+        <button
+          onClick={() => signIn('kakao')}
+          className="w-full flex items-center justify-center bg-yellow-400 rounded-md py-2 mb-3 hover:bg-yellow-300"
+        >
+          <img src="/kakao-logo.svg" alt="카카오" className="w-5 h-5 mr-2" />
+          카카오로 시작
+        </button>
+        <button
+          onClick={() => signIn('naver')}
+          className="w-full flex items-center justify-center bg-green-500 text-white rounded-md py-2 hover:bg-green-600"
+        >
+          <img src="/naver-logo.svg" alt="네이버" className="w-5 h-5 mr-2" />
+          네이버로 시작
+        </button>
       </div>
     </div>
   )
