@@ -8,6 +8,7 @@ import AdminGuard from '@/components/AdminGuard'
 import { ArrowLeft, Save, Eye, EyeOff, AlertTriangle, X } from 'lucide-react'
 import Link from 'next/link'
 import ImageUpload from '@/app/components/ImageUpload'
+import ReactMarkdown from 'react-markdown'
 
 export default function EditNoticePage() {
   return (
@@ -364,7 +365,17 @@ function EditNoticeUI() {
                       )}
                     </div>
                     <h4 className="font-medium text-gray-900 mb-2">{formData.title}</h4>
-                    <div className="text-gray-700 whitespace-pre-wrap">{formData.content}</div>
+                    <div className="text-gray-700 whitespace-pre-wrap">
+                      <ReactMarkdown
+                        components={{
+                          img: ({node, ...props}) => (
+                            <img {...props} className="max-w-full h-auto rounded-lg shadow-sm my-4" />
+                          )
+                        }}
+                      >
+                        {formData.content}
+                      </ReactMarkdown>
+                    </div>
                   </div>
                 </div>
               </div>
