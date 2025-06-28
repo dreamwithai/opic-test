@@ -5,8 +5,9 @@ import { useSession } from 'next-auth/react'
 import { useRouter, useParams } from 'next/navigation'
 import { Notice } from '@/app/data/types'
 import AdminGuard from '@/components/AdminGuard'
-import { ArrowLeft, Save, Eye, EyeOff, AlertTriangle } from 'lucide-react'
+import { ArrowLeft, Save, Eye, EyeOff, AlertTriangle, X } from 'lucide-react'
 import Link from 'next/link'
+import ImageUpload from '@/app/components/ImageUpload'
 
 export default function EditNoticePage() {
   return (
@@ -22,6 +23,7 @@ function EditNoticeUI() {
   const [loading, setLoading] = useState(true)
   const [submitting, setSubmitting] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const [uploadedImages, setUploadedImages] = useState<string[]>([])
   const [formData, setFormData] = useState({
     title: '',
     content: '',
@@ -82,6 +84,18 @@ function EditNoticeUI() {
 
     try {
       setSubmitting(true)
+      
+      // 이미지 URL들을 내용에 삽입
+      let finalContent = formData.content
+      uploadedImages.forEach((imageUrl, index) => {
+        const imageTag = `\n\n![이미지${index + 1}](${imageUrl})\n\n`
+        finalContent += imageTag
+      })
+
+      // priority를 숫자로 변환
+      const priorityMap: { [key: string]: number } = { low: 0, normal: 1, high: 2 }
+      const numericPriority = priorityMap[formData.priority] ?? 1
+
       const response = await fetch(`/api/notices/${noticeId}`, {
         method: 'PUT',
         headers: {
@@ -89,7 +103,8 @@ function EditNoticeUI() {
         },
         body: JSON.stringify({
           ...formData,
-          content: formData.content,
+          priority: numericPriority, // 숫자 priority 사용
+          content: finalContent,
           published_at: formData.published_at ? new Date(formData.published_at).toISOString() : null
         }),
       })
@@ -115,6 +130,14 @@ function EditNoticeUI() {
     } else {
       setFormData(prev => ({ ...prev, [name]: type === 'checkbox' ? (e.target as HTMLInputElement).checked : value }))
     }
+  }
+
+  const handleImageUpload = (imageUrl: string) => {
+    setUploadedImages(prev => [...prev, imageUrl])
+  }
+
+  const removeImage = (index: number) => {
+    setUploadedImages(prev => prev.filter((_, i) => i !== index))
   }
 
   const getPriorityLabel = (priority: string) => {
@@ -230,6 +253,42 @@ function EditNoticeUI() {
                 placeholder="공지사항 내용을 입력하세요"
                 required
               />
+            </div>
+
+            {/* 이미지 업로드 */}
+            <div>
+              <label htmlFor="images" className="block text-sm font-medium text-gray-700 mb-2">
+                이미지 업로드
+              </label>
+              <ImageUpload onImageUpload={handleImageUpload} />
+              
+              {/* 업로드된 이미지 목록 */}
+              {uploadedImages.length > 0 && (
+                <div className="mt-4">
+                  <h4 className="text-sm font-medium text-gray-700 mb-2">업로드된 이미지</h4>
+                  <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+                    {uploadedImages.map((imageUrl, index) => (
+                      <div key={index} className="relative group">
+                        <img
+                          src={imageUrl}
+                          alt={`업로드된 이미지 ${index + 1}`}
+                          className="w-full h-32 object-cover rounded-lg border"
+                        />
+                        <button
+                          type="button"
+                          onClick={() => removeImage(index)}
+                          className="absolute top-2 right-2 bg-red-500 text-white rounded-full p-1 opacity-0 group-hover:opacity-100 transition-opacity"
+                        >
+                          <X className="w-3 h-3" />
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+                  <p className="text-xs text-gray-500 mt-2">
+                    이미지들은 공지사항 내용 하단에 자동으로 추가됩니다.
+                  </p>
+                </div>
+              )}
             </div>
 
             {/* 우선순위 */}

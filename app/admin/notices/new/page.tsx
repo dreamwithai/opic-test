@@ -1,11 +1,12 @@
 'use client'
 
-import { useState, useRef } from 'react'
+import { useState } from 'react'
 import { useSession } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
-import AdminGuard from '@/components/AdminGuard'
-import { ArrowLeft, Save, AlertTriangle, FileText } from 'lucide-react'
 import Link from 'next/link'
+import { ArrowLeft, Save, Image as ImageIcon, X } from 'lucide-react'
+import AdminGuard from '@/components/AdminGuard'
+import ImageUpload from '@/app/components/ImageUpload'
 
 export default function NewNoticePage() {
   return (
@@ -24,6 +25,7 @@ function NewNoticeUI() {
     is_published: true,
     published_at: ''
   })
+  const [uploadedImages, setUploadedImages] = useState<string[]>([])
   const [loading, setLoading] = useState(false)
   const router = useRouter()
 
@@ -37,6 +39,14 @@ function NewNoticeUI() {
 
     try {
       setLoading(true)
+      
+      // 이미지 URL들을 내용에 삽입
+      let finalContent = formData.content
+      uploadedImages.forEach((imageUrl, index) => {
+        const imageTag = `\n\n![이미지${index + 1}](${imageUrl})\n\n`
+        finalContent += imageTag
+      })
+
       const response = await fetch('/api/notices', {
         method: 'POST',
         headers: {
@@ -44,6 +54,7 @@ function NewNoticeUI() {
         },
         body: JSON.stringify({
           ...formData,
+          content: finalContent,
           published_at: formData.published_at ? new Date(formData.published_at).toISOString() : null
         }),
       })
@@ -72,6 +83,14 @@ function NewNoticeUI() {
     } else {
       setFormData(prev => ({ ...prev, [name]: value }))
     }
+  }
+
+  const handleImageUpload = (imageUrl: string) => {
+    setUploadedImages(prev => [...prev, imageUrl])
+  }
+
+  const removeImage = (index: number) => {
+    setUploadedImages(prev => prev.filter((_, i) => i !== index))
   }
 
   if (status === 'loading') {
@@ -188,6 +207,42 @@ function NewNoticeUI() {
                   onChange={handleChange}
                   className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
                 />
+              </div>
+
+              {/* 이미지 업로드 */}
+              <div>
+                <label htmlFor="images" className="block text-sm font-medium text-gray-700 mb-2">
+                  이미지 업로드
+                </label>
+                <ImageUpload onImageUpload={handleImageUpload} />
+                
+                {/* 업로드된 이미지 목록 */}
+                {uploadedImages.length > 0 && (
+                  <div className="mt-4">
+                    <h4 className="text-sm font-medium text-gray-700 mb-2">업로드된 이미지</h4>
+                    <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+                      {uploadedImages.map((imageUrl, index) => (
+                        <div key={index} className="relative group">
+                          <img
+                            src={imageUrl}
+                            alt={`업로드된 이미지 ${index + 1}`}
+                            className="w-full h-32 object-cover rounded-lg border"
+                          />
+                          <button
+                            type="button"
+                            onClick={() => removeImage(index)}
+                            className="absolute top-2 right-2 bg-red-500 text-white rounded-full p-1 opacity-0 group-hover:opacity-100 transition-opacity"
+                          >
+                            <X className="w-3 h-3" />
+                          </button>
+                        </div>
+                      ))}
+                    </div>
+                    <p className="text-xs text-gray-500 mt-2">
+                      이미지들은 공지사항 내용 하단에 자동으로 추가됩니다.
+                    </p>
+                  </div>
+                )}
               </div>
 
               {/* 버튼 */}

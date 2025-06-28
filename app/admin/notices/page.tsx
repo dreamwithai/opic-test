@@ -36,7 +36,8 @@ function AdminNoticesUI() {
       setLoading(true)
       const params = new URLSearchParams({
         page: currentPage.toString(),
-        limit: '20'
+        limit: '20',
+        admin: '1',
       })
 
       const response = await fetch(`/api/notices?${params}`)
