@@ -32,7 +32,7 @@ export const authOptions: AuthOptions = {
       try {
         const { data: member, error } = await supabase
           .from('members')
-          .select('id, type')
+          .select('id, type, email, name, profile_image')
           .eq('provider', provider)
           .eq('provider_id', provider_id)
           .single();
@@ -42,18 +42,11 @@ export const authOptions: AuthOptions = {
           return false;
         }
 
-        if (!member) {
-          const email = user.email || null;
-          const name =
-            (profile && typeof profile.name === "string" && profile.name.trim() !== "")
-              ? profile.name
-              : (profile && (profile as any).response && typeof (profile as any).response.name === "string" && (profile as any).response.name.trim() !== "")
-                ? (profile as any).response.name
-                : null;
-          const profile_image = user.image || null;
-          // console.log('profile:', profile);
-          // console.log('DB에 저장할 name:', name);
+        const email = user.email || null;
+        const name = (user && typeof user.name === "string" && user.name.trim() !== "") ? user.name : null;
+        const profile_image = user.image || null;
 
+        if (!member) {
           const { data: newMember, error: insertError } = await supabase
             .from('members')
             .insert([
@@ -78,6 +71,13 @@ export const authOptions: AuthOptions = {
         } else {
           user.id = member.id;
           (user as any).type = member.type;
+          const updates: any = {};
+          if (member.email !== email) updates.email = email;
+          if (member.name !== name) updates.name = name;
+          if (member.profile_image !== profile_image) updates.profile_image = profile_image;
+          if (Object.keys(updates).length > 0) {
+            await supabase.from('members').update(updates).eq('id', member.id);
+          }
         }
         return true;
       } catch (e) {
