@@ -9,6 +9,7 @@ import FullScreenLoader from '../../components/FullScreenLoader'
 import { ArrowLeft, AlertTriangle, FileText, Eye, Calendar, User, Edit, Trash2 } from 'lucide-react'
 import dayjs from 'dayjs'
 import Link from 'next/link'
+import ReactMarkdown from 'react-markdown'
 
 export default function NoticeDetailPage() {
   const { data: session, status } = useSession()
@@ -189,10 +190,15 @@ export default function NoticeDetailPage() {
 
             {/* 본문 */}
             <div className="prose max-w-none">
-              <div 
-                className="text-gray-800 leading-relaxed whitespace-pre-wrap"
-                dangerouslySetInnerHTML={{ __html: notice.content.replace(/\n/g, '<br>') }}
-              />
+              <ReactMarkdown
+                components={{
+                  img: ({node, ...props}) => (
+                    <img {...props} className="max-w-full h-auto rounded-lg shadow-sm my-4" />
+                  )
+                }}
+              >
+                {notice.content}
+              </ReactMarkdown>
             </div>
           </div>
         </div>
