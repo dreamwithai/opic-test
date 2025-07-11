@@ -176,18 +176,11 @@ export default function AdminPage() {
     f.description.toLowerCase().includes(searchTerm.toLowerCase())
   )
 
-  const StatCard = ({ title, value, icon: Icon, color, href }: any) => (
+  const StatCard = ({ title, value, color, borderColor, href }: any) => (
     <Link href={href || '#'}>
-      <div className="bg-white rounded-lg shadow-sm border p-6 hover:shadow-md transition-shadow cursor-pointer">
-        <div className="flex items-center justify-between">
-          <div>
-            <p className="text-sm font-medium text-gray-600">{title}</p>
-            <p className="text-2xl font-bold text-gray-900">{loading ? '...' : value}</p>
-          </div>
-          <div className={`p-3 rounded-full ${color} text-white`}>
-            {Icon && <Icon className="w-6 h-6" />}
-          </div>
-        </div>
+      <div className={`bg-white rounded-lg shadow-sm border p-6 hover:shadow-md transition-shadow cursor-pointer border-t-4 ${borderColor}`}>
+        <p className="text-sm font-medium text-gray-600 mb-1">{title}</p>
+        <p className={`text-2xl font-extrabold ${color} bg-opacity-10 rounded px-2 py-1 inline-block`}>{loading ? '...' : value}</p>
       </div>
     </Link>
   )
@@ -207,29 +200,29 @@ export default function AdminPage() {
             <StatCard
               title="전체 회원"
               value={stats.totalMembers.toLocaleString()}
-              icon={Users}
-              color="bg-blue-500"
+              color="text-blue-600"
+              borderColor="border-blue-500"
               href="/admin/member-list"
             />
             <StatCard
               title="오늘 가입"
               value={stats.todayMembers}
-              icon={TrendingUp}
-              color="bg-green-500"
+              color="text-green-600"
+              borderColor="border-green-500"
               href="/admin/member-list"
             />
             <StatCard
               title="전체 테스트 (회원)"
               value={`${stats.totalTestSessions} (${stats.totalTestUsers})`}
-              icon={BarChart3}
-              color="bg-orange-500"
+              color="text-orange-600"
+              borderColor="border-orange-500"
               href="/admin/test-results"
             />
             <StatCard
               title="오늘 테스트 (회원)"
               value={`${stats.todayTestSessions} (${stats.todayTestUsers})`}
-              icon={Clock}
-              color="bg-purple-500"
+              color="text-purple-600"
+              borderColor="border-purple-500"
               href="/admin/test-results"
             />
           </div>
