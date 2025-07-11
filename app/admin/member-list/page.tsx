@@ -17,32 +17,32 @@ interface Member {
 }
 
 export default function MemberListPage() {
-  const [date, setDate] = useState(dayjs().format("YYYY-MM-DD"));
+  const [startDate, setStartDate] = useState(dayjs().subtract(6, 'day').format('YYYY-MM-DD'));
+  const [endDate, setEndDate] = useState(dayjs().format('YYYY-MM-DD'));
   const [members, setMembers] = useState<Member[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [selected, setSelected] = useState<string[]>([]);
   const [updating, setUpdating] = useState(false);
 
-  useEffect(() => {
-    setSelected([]); // 날짜 바뀌면 선택 초기화
-    const fetchMembers = async () => {
-      setLoading(true);
-      setError(null);
-      const start = dayjs(date).startOf("day").toISOString();
-      const end = dayjs(date).endOf("day").toISOString();
-      const { data, error } = await supabase
-        .from("members")
-        .select("id, email, name, provider, ref_site, ref_id, status, created_at")
-        .gte("created_at", start)
-        .lte("created_at", end)
-        .order("created_at", { ascending: true });
-      if (error) setError(error.message);
-      else setMembers(data || []);
-      setLoading(false);
-    };
-    fetchMembers();
-  }, [date]);
+  // useEffect 제거 (자동 조회 X)
+
+  const fetchMembers = async () => {
+    setSelected([]); // 검색 시 선택 초기화
+    setLoading(true);
+    setError(null);
+    const start = dayjs(startDate).startOf("day").toISOString();
+    const end = dayjs(endDate).endOf("day").toISOString();
+    const { data, error } = await supabase
+      .from("members")
+      .select("id, email, name, provider, ref_site, ref_id, status, created_at")
+      .gte("created_at", start)
+      .lte("created_at", end)
+      .order("created_at", { ascending: true });
+    if (error) setError(error.message);
+    else setMembers(data || []);
+    setLoading(false);
+  };
 
   const handleSelect = (id: string) => {
     setSelected((prev) => prev.includes(id) ? prev.filter(s => s !== id) : [...prev, id]);
@@ -118,7 +118,7 @@ export default function MemberListPage() {
     const link = document.createElement('a');
     const url = URL.createObjectURL(blob);
     link.setAttribute('href', url);
-    link.setAttribute('download', `members_${date}.csv`);
+    link.setAttribute('download', `members_${startDate}_to_${endDate}.csv`);
     link.style.visibility = 'hidden';
     document.body.appendChild(link);
     link.click();
@@ -157,17 +157,30 @@ export default function MemberListPage() {
 
       {/* 날짜 검색 */}
       <div className="bg-white rounded-lg shadow-sm border p-6 mb-6">
-        <div className="max-w-xs">
-          <label className="block text-sm font-medium text-gray-700 mb-2">조회 날짜</label>
-          <div className="relative">
-            <Calendar className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
-            <input
-              type="date"
-              value={date}
-              onChange={e => setDate(e.target.value)}
-              className="pl-10 pr-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent w-full"
-            />
-          </div>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <input
+            type="date"
+            value={startDate}
+            onChange={e => setStartDate(e.target.value)}
+            className="w-full text-sm pl-3 pr-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            max={endDate}
+            placeholder="시작일"
+          />
+          <input
+            type="date"
+            value={endDate}
+            onChange={e => setEndDate(e.target.value)}
+            className="w-full text-sm pl-3 pr-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            min={startDate}
+            max={dayjs().format('YYYY-MM-DD')}
+            placeholder="종료일"
+          />
+          <button
+            onClick={fetchMembers}
+            className="w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 transition-colors"
+          >
+            검색
+          </button>
         </div>
       </div>
 
@@ -262,7 +275,7 @@ export default function MemberListPage() {
                   <tr>
                     <td colSpan={8} className="px-6 py-12 text-center">
                       <Users className="w-12 h-12 text-gray-400 mx-auto mb-4" />
-                      <p className="text-gray-600">해당 날짜에 가입한 회원이 없습니다.</p>
+                      <p className="text-gray-600">해당 기간에 가입한 회원이 없습니다.</p>
                     </td>
                   </tr>
                 ) : (

@@ -6,12 +6,16 @@ import AdminGuard from '@/components/AdminGuard'
 import Link from 'next/link'
 import { supabase } from '@/lib/supabase'
 import dayjs from 'dayjs'
+import DashboardChart from '../components/DashboardChart'
+import DashboardBarChart from '../components/DashboardBarChart'
 
 interface DashboardStats {
   totalMembers: number
   todayMembers: number
-  pendingInquiries: number
-  publishedNotices: number
+  totalTestSessions: number
+  totalTestUsers: number
+  todayTestSessions: number
+  todayTestUsers: number
   recentActivity: any[]
 }
 
@@ -19,12 +23,15 @@ export default function AdminPage() {
   const [stats, setStats] = useState<DashboardStats>({
     totalMembers: 0,
     todayMembers: 0,
-    pendingInquiries: 0,
-    publishedNotices: 0,
+    totalTestSessions: 0,
+    totalTestUsers: 0,
+    todayTestSessions: 0,
+    todayTestUsers: 0,
     recentActivity: []
   })
   const [loading, setLoading] = useState(true)
   const [searchTerm, setSearchTerm] = useState('')
+  const [testMetric, setTestMetric] = useState<'sessions' | 'users'>('sessions')
 
   useEffect(() => {
     fetchDashboardStats()
@@ -45,23 +52,39 @@ export default function AdminPage() {
         .select('*', { count: 'exact', head: true })
         .gte('created_at', today)
 
-      // 대기중인 문의사항
-      const { count: pendingInquiries } = await supabase
-        .from('inquiries')
+      // 테스트 응시 통계
+      const { count: totalTestSessions } = await supabase
+        .from('test_session')
         .select('*', { count: 'exact', head: true })
-        .eq('status', 'pending')
+      
+      // 전체 테스트 응시자 수 (unique member_id)
+      const { data: totalTestUsersData } = await supabase
+        .from('test_session')
+        .select('member_id')
+      
+      const totalTestUsers = totalTestUsersData ? new Set(totalTestUsersData.map(s => s.member_id)).size : 0
 
-      // 공개된 공지사항
-      const { count: publishedNotices } = await supabase
-        .from('notices')
+      // 오늘 테스트 응시 수
+      const { count: todayTestSessions } = await supabase
+        .from('test_session')
         .select('*', { count: 'exact', head: true })
-        .eq('is_published', true)
+        .gte('started_at', today)
+
+      // 오늘 테스트 응시자 수 (unique member_id)
+      const { data: todayTestUsersData } = await supabase
+        .from('test_session')
+        .select('member_id')
+        .gte('started_at', today)
+      
+      const todayTestUsers = todayTestUsersData ? new Set(todayTestUsersData.map(s => s.member_id)).size : 0
 
       setStats({
         totalMembers: totalMembers || 0,
         todayMembers: todayMembers || 0,
-        pendingInquiries: pendingInquiries || 0,
-        publishedNotices: publishedNotices || 0,
+        totalTestSessions: totalTestSessions || 0,
+        totalTestUsers: totalTestUsers || 0,
+        todayTestSessions: todayTestSessions || 0,
+        todayTestUsers: todayTestUsers || 0,
         recentActivity: []
       })
     } catch (error) {
@@ -196,18 +219,40 @@ export default function AdminPage() {
               href="/admin/member-list"
             />
             <StatCard
-              title="대기 문의"
-              value={stats.pendingInquiries}
-              icon={Clock}
+              title="전체 테스트 (회원)"
+              value={`${stats.totalTestSessions} (${stats.totalTestUsers})`}
+              icon={BarChart3}
               color="bg-orange-500"
-              href="/admin/inquiries"
+              href="/admin/test-results"
             />
             <StatCard
-              title="공개 공지"
-              value={stats.publishedNotices}
-              icon={FileText}
+              title="오늘 테스트 (회원)"
+              value={`${stats.todayTestSessions} (${stats.todayTestUsers})`}
+              icon={Clock}
               color="bg-purple-500"
-              href="/admin/notices"
+              href="/admin/test-results"
+            />
+          </div>
+
+          {/* 차트 섹션 */}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+            <DashboardChart
+              title="회원가입 추이"
+              type="members"
+            />
+            <DashboardChart
+              title="테스트 응시 추이"
+              type="tests"
+              metric={testMetric}
+              onMetricChange={setTestMetric}
+            />
+            <DashboardBarChart
+              title="레벨별 분포도"
+              type="levels"
+            />
+            <DashboardBarChart
+              title="문항별 분포도"
+              type="topics"
             />
           </div>
 

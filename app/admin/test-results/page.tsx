@@ -393,16 +393,6 @@ export default function TestResultsPage() {
                 />
               </div>
               <select
-                value={typeFilter}
-                onChange={(e) => setTypeFilter(e.target.value)}
-                className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-              >
-                <option value="">모든 유형</option>
-                <option value="선택주제">선택주제</option>
-                <option value="롤플레이">롤플레이</option>
-                <option value="모의고사">모의고사</option>
-              </select>
-              <select
                 value={levelFilter}
                 onChange={(e) => setLevelFilter(e.target.value)}
                 className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
@@ -411,6 +401,16 @@ export default function TestResultsPage() {
                 <option value="IM2">IM2</option>
                 <option value="IH">IH</option>
                 <option value="AL">AL</option>
+              </select>
+              <select
+                value={typeFilter}
+                onChange={(e) => setTypeFilter(e.target.value)}
+                className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              >
+                <option value="">모든 유형</option>
+                <option value="선택주제">선택주제</option>
+                <option value="롤플레이">롤플레이</option>
+                <option value="모의고사">모의고사</option>
               </select>
               <button
                 onClick={fetchSessions}
