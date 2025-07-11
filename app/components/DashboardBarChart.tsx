@@ -131,26 +131,24 @@ export default function DashboardBarChart({ title, type }: DashboardBarChartProp
 
   return (
     <div className="bg-white rounded-lg shadow-sm border p-6">
-      <div className="flex items-center justify-between mb-4">
+      <div className="flex items-center justify-between mb-2">
         <h3 className="text-lg font-semibold text-gray-900">{title}</h3>
-        <div className="flex items-center">
-          <span className="text-xs text-gray-500 mr-2">{rangeText}</span>
-          <div className="flex bg-gray-100 rounded-lg p-1">
-            <button
-              onClick={() => setPeriod('week')}
-              className={`px-3 py-1 text-sm rounded-md transition-colors ${period === 'week' ? 'bg-white text-blue-600 shadow-sm' : 'text-gray-600 hover:text-gray-900'}`}
-            >
-              최근 1주일
-            </button>
-            <button
-              onClick={() => setPeriod('month')}
-              className={`px-3 py-1 text-sm rounded-md transition-colors ${period === 'month' ? 'bg-white text-blue-600 shadow-sm' : 'text-gray-600 hover:text-gray-900'}`}
-            >
-              이번 달
-            </button>
-          </div>
+        <div className="flex bg-gray-100 rounded-lg p-1">
+          <button
+            onClick={() => setPeriod('week')}
+            className={`px-3 py-1 text-sm rounded-md transition-colors ${period === 'week' ? 'bg-white text-blue-600 shadow-sm' : 'text-gray-600 hover:text-gray-900'}`}
+          >
+            최근 1주일
+          </button>
+          <button
+            onClick={() => setPeriod('month')}
+            className={`px-3 py-1 text-sm rounded-md transition-colors ${period === 'month' ? 'bg-white text-blue-600 shadow-sm' : 'text-gray-600 hover:text-gray-900'}`}
+          >
+            이번 달
+          </button>
         </div>
       </div>
+      <div className="text-xs text-gray-500 text-center mb-4">{rangeText}</div>
       <div className="h-64 flex items-center justify-center">
         {loading ? (
           <div className="text-gray-500">로딩 중...</div>
