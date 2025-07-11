@@ -71,7 +71,8 @@ export default function TestResultsPage() {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
   const [searchTerm, setSearchTerm] = useState('')
-  const [dateFilter, setDateFilter] = useState(getTodayString())
+  const [startDate, setStartDate] = useState(getTodayString())
+  const [endDate, setEndDate] = useState(getTodayString())
   const [typeFilter, setTypeFilter] = useState('')
   const [levelFilter, setLevelFilter] = useState('')
   const [currentAudio, setCurrentAudio] = useState<HTMLAudioElement | null>(null)
@@ -102,11 +103,11 @@ export default function TestResultsPage() {
       if (searchTerm) {
         query = query.or(`member.email.ilike.%${searchTerm}%,member.name.ilike.%${searchTerm}%,theme.ilike.%${searchTerm}%`)
       }
-      if (dateFilter) {
-        const startDate = new Date(dateFilter)
-        const endDate = new Date(dateFilter)
-        endDate.setDate(endDate.getDate() + 1)
-        query = query.gte('started_at', startDate.toISOString()).lt('started_at', endDate.toISOString())
+      if (startDate && endDate) {
+        const start = new Date(startDate)
+        const end = new Date(endDate)
+        end.setHours(23, 59, 59, 999)
+        query = query.gte('started_at', start.toISOString()).lte('started_at', end.toISOString())
       }
       if (typeFilter) {
         query = query.eq('type', typeFilter)
@@ -383,15 +384,24 @@ export default function TestResultsPage() {
 
           {/* 검색(서버) 영역 */}
           <div className="bg-white rounded-lg shadow-sm border p-6 mb-2">
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-              <div>
-                <input
-                  type="date"
-                  value={dateFilter}
-                  onChange={(e) => setDateFilter(e.target.value)}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                />
-              </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
+              <input
+                type="date"
+                value={startDate}
+                onChange={e => setStartDate(e.target.value)}
+                className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                max={endDate}
+                placeholder="시작일"
+              />
+              <input
+                type="date"
+                value={endDate}
+                onChange={e => setEndDate(e.target.value)}
+                className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                min={startDate}
+                max={getTodayString()}
+                placeholder="종료일"
+              />
               <select
                 value={levelFilter}
                 onChange={(e) => setLevelFilter(e.target.value)}
